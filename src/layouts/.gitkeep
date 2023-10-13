@@ -1,0 +1,3 @@
+The layouts/ folder is used to define the layout structure of the pages in the application.
+
+Layouts are the skeleton of a page, and they contain the common elements that are shared across multiple pages, such as headers, footers, navigation menus, and so on. By defining a default layout for a page, you can avoid repeating the same code across all pages and ensure consistency across the application.

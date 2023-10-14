@@ -27,17 +27,17 @@ It's important to use continuous integration. This involves integrating the code
 > test/auth-service
 >
 > hotfix/bem-naming
-> 
+>
 > refactor/auth-controller
 >
 > fix/libs/workbooks-view
-> 
+>
 > featture/questions
 >
 > refactor/user/questions/question-form
 
-&nbsp;
----
+## &nbsp;
+
 ---
 
 ## 🟢 Политика слияния [Semi-linear merge](https://devblogs.microsoft.com/devops/pull-requests-with-rebase/)
@@ -51,9 +51,10 @@ It's important to use continuous integration. This involves integrating the code
 
 Сочетает в себе лучшие из двух миров: отдельные коммиты сохраняются, чтобы мы могли видеть, как равивалась работа, но вместо простого ребейза у нас создается мерж коммит, чтобы мы могли увидеть начало и конец работы в каждом PR.
 
-&nbsp;
+## &nbsp;
+
 ---
----
+
 ## 🟢 Conventional commits
 
 https://www.conventionalcommits.org/ru/v1.0.0-beta.2/
@@ -112,11 +113,11 @@ _chore_ - изменение, не подпадающее под перечис�
 >
 > _feat: добавлен сервис для конвертации md в pdf_ - «После применения данного коммита будет добавлен сервис для конвертации md в pdf»
 >
-Ещё примеры коммитов:
+> Ещё примеры коммитов:
 > refactor: remove unused methods
-> 
+>
 > refactor(activity-calendar): delete circle import
-> 
+>
 > feat: change title
 >
 > style: change padding and icon style
@@ -125,10 +126,9 @@ _chore_ - изменение, не подпадающее под перечис�
 >
 > chore: update file with version
 
-&nbsp;
----
----
+## &nbsp;
 
+---
 
 ## 🟢 kebab-case for File and Folder Names
 
@@ -142,7 +142,7 @@ On your Mac (or PC), you can import a file with a slightly incorrect filename, l
 
 Notice the my in ./myWidget. This will work ok, but when you deploy, it will fail. These kinds of errors are difficult to find and fix, and you are usually under pressure to get things working, so are perhaps not as calm as you should be.
 
-To avoid this problem, it's better to make ALL filenames/foldernames are lower case, and use kebab-case, which makes it easy to read. 
+To avoid this problem, it's better to make ALL filenames/foldernames are lower case, and use kebab-case, which makes it easy to read.
 
 > ❗ instead of MyComponent.js, write my-component.js.
 

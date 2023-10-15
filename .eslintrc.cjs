@@ -5,6 +5,7 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react-hooks/recommended',
+		'plugin:storybook/recommended',
 		'eslint-config-prettier',
 		'prettier',
 	],
@@ -14,4 +15,14 @@ module.exports = {
 	rules: {
 		'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 	},
+	overrides: [
+		{
+			files: ['**/*.stories.*', 'src/stories/**/*'],
+			rules: {
+				'import/no-anonymous-default-export': 'off',
+				'import/no-extraneous-dependencies': 'off',
+			},
+		},
+	],
+	ignorePatterns: ['!.storybook'],
 };

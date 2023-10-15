@@ -41,6 +41,7 @@
 		"husky": "^8.0.0",
 		"lint-staged": "15.0.0",
 		"prettier": "3.0.3",
+		"sass": "1.69.3",
 		"storybook": "7.4.6",
 		"typescript": "^5.0.2",
 		"vite": "^4.4.5"

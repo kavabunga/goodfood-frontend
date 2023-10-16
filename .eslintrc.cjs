@@ -9,7 +9,7 @@ module.exports = {
 		'eslint-config-prettier',
 		'prettier',
 	],
-	ignorePatterns: ['dist', '.eslintrc.cjs'],
+	ignorePatterns: ['dist', '.eslintrc.cjs', '!.storybook'],
 	parser: '@typescript-eslint/parser',
 	plugins: ['react-refresh'],
 	rules: {
@@ -24,5 +24,4 @@ module.exports = {
 			},
 		},
 	],
-	ignorePatterns: ['!.storybook'],
 };

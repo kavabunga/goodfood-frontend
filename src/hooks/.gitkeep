@@ -1,0 +1,1 @@
+The hooks/ folder will only store the global hooks that are utilized across multiple pages, as opposed to storing every hook globally in your application. Some of the hooks will be moved to the specific components in your components folder.

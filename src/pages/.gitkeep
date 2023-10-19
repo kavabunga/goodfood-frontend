@@ -1,0 +1,1 @@
+The pages/ folder should have a folder for each page in your application. Within each page folder, there should be a single root file (usually index.js).

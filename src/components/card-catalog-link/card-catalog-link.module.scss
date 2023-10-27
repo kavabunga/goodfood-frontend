@@ -1,0 +1,59 @@
+.card-catalog-link {
+	width: 100%;
+	max-width: 1024px;
+	margin: 0 auto;
+}
+
+.card-catalog-link__title-container {
+	display: flex;
+	gap: 5px;
+	transition: 0.2s;
+	max-width: max-content;
+
+	&:hover {
+		cursor: pointer;
+		opacity: 0.7;
+	}
+}
+
+.card-catalog-link__title-container_type_card-block-link {
+	margin-bottom: 28px;
+}
+
+.card-catalog-link__title-container_type_product-card {
+	margin-bottom: 16px;
+}
+
+.card-catalog-link__title {
+	margin: 0;
+}
+
+.card-catalog-link__arrow {
+	width: 20px;
+	height: 32px;
+	margin-top: auto;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-image: url('@images/chevron-right.svg');
+}
+
+.card-catalog-link__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	gap: 20px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(328px, 1fr));
+	margin-bottom: 20px;
+
+	&:last-of-type() {
+		margin-bottom: 0;
+	}
+}
+
+.card-catalog-link__list-item {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}

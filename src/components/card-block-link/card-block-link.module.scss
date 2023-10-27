@@ -9,6 +9,9 @@
 	background-repeat: no-repeat;
 	background-size: cover;
 	box-sizing: border-box;
+	display: inline-block;
+	text-decoration: none;
+	color: #fff;
 
 	&:hover {
 		cursor: pointer;

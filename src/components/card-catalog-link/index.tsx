@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { splitIntoSubArrays } from '../../utils/utils';
+import CardBlockLink from '../card-block-link';
+import ProductCard from '../product-card';
 import styles from './card-catalog-link.module.scss';
 
 type CardCatalogLinkProps = {
 	title: string;
 	array: Record<string, any>[];
-	type: 'card-block-link' | 'product-card';
+	type: 'bento-grid' | 'single-row';
 };
 
 function CardCatalogLink({ title, array, type }: CardCatalogLinkProps) {
@@ -25,39 +27,20 @@ function CardCatalogLink({ title, array, type }: CardCatalogLinkProps) {
 				<ul className={styles['card-catalog-link__list']} key={index}>
 					{subArray.map((item: Record<string, any>, index: number) => (
 						<li className={styles['card-catalog-link__list-item']} key={index}>
-							{type === 'card-block-link' && (
-								<div
-									style={{
-										borderRadius: `16px`,
-										width: `100%`,
-										height: `200px`,
-										backgroundColor: `blue`,
-										display: `flex`,
-										justifyContent: `center`,
-										alignItems: `center`,
-										fontSize: `24px`,
-										color: `white`,
-									}}
-								>
-									{item.name}
-								</div>
+							{type === 'bento-grid' && (
+								<CardBlockLink
+									title={item.title}
+									link={item.link}
+									backgroundImage={item.backgroundImage}
+								/>
 							)}
-							{type === 'product-card' && (
-								<div
-									style={{
-										borderRadius: `16px`,
-										width: `100%`,
-										height: `357px`,
-										backgroundColor: `red`,
-										display: `flex`,
-										justifyContent: `center`,
-										alignItems: `center`,
-										fontSize: `20px`,
-										color: `white`,
-									}}
-								>
-									{item.name}
-								</div>
+							{type === 'single-row' && (
+								<ProductCard
+									cardName={item.cardName}
+									price={item.price}
+									weight={item.weight}
+									buttonText={item.buttonText}
+								/>
 							)}
 						</li>
 					))}

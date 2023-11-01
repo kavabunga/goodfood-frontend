@@ -7,6 +7,7 @@ import roundTheClockDelivery from '@images/round-the-clock-delivery.svg';
 import CardCatalogLink from '@components/card-catalog-link';
 import { mainPageBlockLinks } from '../../data/dataExamples.ts';
 import TopSellingThisWeek from '@components/top-selling-this-week';
+import AboutCompany from '@components/about-company/index.tsx';
 
 const Home: React.FC = () => {
 	return (
@@ -33,6 +34,9 @@ const Home: React.FC = () => {
 			</section>
 			<section className={styles.home__topSellingThisWeek}>
 				<TopSellingThisWeek />
+			</section>
+			<section className={styles.home__aboutCompany}>
+				<AboutCompany />
 			</section>
 		</div>
 	);

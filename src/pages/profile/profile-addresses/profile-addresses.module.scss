@@ -3,7 +3,6 @@
 
 .wrapper {
 	margin-left: 107px;
-	max-width: 420px;
 }
 
 .title {
@@ -12,18 +11,15 @@
 }
 
 .form {
-	font-family: $ubuntu-font;
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
+	gap: 40px;
 }
 
-.text {
-	@extend %zero-padding-margin;
-}
-
-.text__red {
-	color: $error-color;
+.inputs {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
 }
 
 .buttons {
@@ -31,8 +27,7 @@
 	gap: 40px;
 }
 
-.button__safe,
-.button__cancel {
+.button {
 	padding: 8px 16px;
 	display: flex;
 	justify-content: center;
@@ -58,7 +53,6 @@
 }
 
 .button__cancel {
-	background: #fff;
+	background: $gray-button;
 	color: $active-text-color;
-	border: 1px solid $form-button-color;
 }

@@ -1,10 +1,6 @@
 @use '../../../scss/variables.scss' as *;
 @use '../../../scss/_mixins.scss' as *;
 
-// Вынести в общие переменные!!
-$primary-300: #59bf35;
-$primary-500: #328c12;
-
 .list {
 	display: flex;
 	flex-direction: column;
@@ -22,7 +18,7 @@ $primary-500: #328c12;
 	border-bottom: solid 1px $unactive-text-color;
 
 	&.active {
-		border-color: $primary-500;
+		border-color: $form-button-color;
 	}
 
 	&__title {
@@ -35,20 +31,20 @@ $primary-500: #328c12;
 		transition: stroke 0.2s;
 
 		.active & {
-			stroke: $primary-500;
+			stroke: $form-button-color;
 		}
 	}
 
 	.active &__title {
-		color: $primary-500;
+		color: $form-button-color;
 	}
 
 	&:hover:not(.active) &__title {
-		color: $primary-300;
+		color: $accent-color-bright-green;
 	}
 
 	&:hover:not(.active) &__icon {
-		stroke: $primary-300;
+		stroke: $accent-color-bright-green;
 	}
 }
 
@@ -73,10 +69,10 @@ $primary-500: #328c12;
 	}
 
 	&:hover &__title {
-		color: $primary-300;
+		color: $accent-color-bright-green;
 	}
 
 	&:hover &__icon {
-		fill: $primary-300;
+		fill: $accent-color-bright-green;
 	}
 }

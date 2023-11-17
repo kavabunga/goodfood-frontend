@@ -13,6 +13,8 @@ import ProfileUser from '@pages/profile/profile-user/index.tsx';
 import PopupCheckEmail from '@components/popups/popup-check-email/index.tsx';
 import ProfileAddresses from '@pages/profile/profile-addresses/index.tsx';
 import Category from '@pages/category';
+import ProfileFavorites from '@pages/profile/profile-favorites/index.tsx';
+
 // импорт временных массивов для отображения каталогов и продуктов
 // временное решение для верстки, потом удалить
 
@@ -40,7 +42,7 @@ function App() {
 						<Route path="user" element={<ProfileUser />} />
 						<Route index element={<h2>Мои заказы</h2>} />
 						<Route path="addresses" element={<ProfileAddresses />} />
-						<Route path="favorites" element={<h2>Избранное</h2>} />
+						<Route path="favorites" element={<ProfileFavorites />} />
 					</Route>
 				</Routes>
 			</Layout>

@@ -8,6 +8,7 @@ type ProductCardProps = {
 	cardImage?: string;
 	category?: string;
 	idCard?: number;
+	checkboxControl?: { checked: boolean; onChange: () => void };
 	// добавить в пропсы cardImage когда будет готов массив карточек продуктов
 	// cardImage: string;
 };
@@ -19,6 +20,7 @@ const ProductCard = ({
 	cardImage,
 	category,
 	idCard,
+	checkboxControl,
 }: ProductCardProps) => {
 	const baseUrl = 'https://goodfood.acceleratorpracticum.ru';
 
@@ -43,7 +45,15 @@ const ProductCard = ({
 			<div className={styles['card__button-container']}>
 				{/* кнопку "В корзину" заменить на кноку из UI-kit */}
 				<button className={styles['card__cart-button']}>В корзину</button>
-				<button className={styles['card__like-button']} />
+				{checkboxControl ? (
+					<input
+						type="checkbox"
+						onChange={checkboxControl.onChange}
+						checked={checkboxControl.checked}
+					/>
+				) : (
+					<button className={styles['card__like-button']} />
+				)}
 			</div>
 		</div>
 	);

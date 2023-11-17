@@ -1,0 +1,71 @@
+@use '../../../scss/variables.scss' as *;
+@use '../../../scss/_mixins.scss' as *;
+
+.wrapper {
+	margin-left: 87px;
+}
+
+.title {
+	color: $active-text-color;
+	margin-bottom: 50px;
+	display: flex;
+	justify-content: space-between;
+
+	&__button {
+		background-color: transparent;
+		border: none;
+		font-size: 20px;
+		font-family: $ubuntu-font;
+		cursor: pointer;
+		color: $active-text-color;
+	}
+}
+
+.favorites__list {
+	@extend %zero-padding-margin;
+
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 40px 20px;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.favorites__item {
+	place-self: center;
+}
+
+.list__empty {
+	font-family: $ubuntu-font;
+	font-size: 20px;
+	text-align: center;
+	grid-column: span 2;
+}
+
+.link {
+	text-decoration: none;
+	color: $green-primary-700;
+	font-weight: 700;
+}
+
+.button {
+	padding: 8px 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-radius: 16px;
+	font-size: 18px;
+	font-family: $ubuntu-font;
+	line-height: 1.4;
+	cursor: pointer;
+	color: #fff;
+	background: $form-button-color;
+}
+
+.button:disabled {
+	cursor: default;
+	background: $accent-color-lightest-green;
+	user-select: none;
+	pointer-events: none;
+}

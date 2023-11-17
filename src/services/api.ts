@@ -181,6 +181,10 @@ class Api {
 	usersPartialUpdate(id: number, data: User) {
 		return this._request(`users/${id}/`, {
 			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${Cookies.get('token')}`,
+			},
 			body: JSON.stringify(data),
 		});
 	}
@@ -266,8 +270,14 @@ class Api {
 
 	/* ----------------------------- Products ----------------------------- */
 	productsList(slug: string) {
+		const token = Cookies.get('token');
+		const headers: Record<string, unknown> = { 'Content-Type': 'application/json' };
+		if (token) {
+			headers.Authorization = `Token ${Cookies.get('token')}`;
+		}
 		return this._request(`products${'/' + slug}`, {
 			method: 'GET',
+			headers,
 		});
 	}
 
@@ -300,6 +310,10 @@ class Api {
 	productsFavoriteCreate(id: number, data: FavoriteProductCreate) {
 		return this._request(`products/${id}/favorite/`, {
 			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${Cookies.get('token')}`,
+			},
 			body: JSON.stringify(data),
 		});
 	}

@@ -327,6 +327,9 @@ class Api {
 	/* -------------------------- FavoriteProducts -------------------------- */
 	favoriteProductsList() {
 		return this._request('favorite-products/', {
+			headers: {
+				'Content-Type': 'application/json',
+			},
 			method: 'GET',
 		});
 	}

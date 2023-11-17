@@ -14,6 +14,9 @@ import PopupCheckEmail from '@components/popups/popup-check-email/index.tsx';
 import ProfileAddresses from '@pages/profile/profile-addresses/index.tsx';
 import Category from '@pages/category';
 import ProfileFavorites from '@pages/profile/profile-favorites/index.tsx';
+// import Checkout from '@pages/checkout/index.tsx';
+import ShoppingCart from '@pages/shopping-cart/index.tsx';
+
 
 // импорт временных массивов для отображения каталогов и продуктов
 // временное решение для верстки, потом удалить
@@ -35,6 +38,7 @@ function App() {
 					<Route path={URLS.CATALOG} element={<Catalog />} />
 					<Route path="/catalog/:category" element={<Category />} />
 					<Route path="/catalog/:category/:id" element={<Product />} />
+					<Route path="/cart" element={<ShoppingCart />} />
 					<Route
 						path={URLS.PROFILE}
 						element={<ProtectedRoute element={Profile} loggedIn={true} />}

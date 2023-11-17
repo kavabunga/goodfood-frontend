@@ -2,15 +2,14 @@ import { Link } from 'react-router-dom';
 import styles from './product-card.module.scss';
 
 type ProductCardProps = {
-	cardName?: string;
-	price?: number;
-	weight?: string;
-	cardImage?: string;
+	cardName: string;
+	price: string;
+	weight: string;
+	buttonText: string;
+	cardImage: string;
 	category?: string;
 	idCard?: number;
-	checkboxControl?: { checked: boolean; onChange: () => void };
-	// добавить в пропсы cardImage когда будет готов массив карточек продуктов
-	// cardImage: string;
+  checkboxControl?: { checked: boolean; onChange: () => void };
 };
 
 const ProductCard = ({
@@ -45,6 +44,7 @@ const ProductCard = ({
 			<div className={styles['card__button-container']}>
 				{/* кнопку "В корзину" заменить на кноку из UI-kit */}
 				<button className={styles['card__cart-button']}>В корзину</button>
+
 				{checkboxControl ? (
 					<input
 						type="checkbox"

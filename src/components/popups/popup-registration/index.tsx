@@ -39,7 +39,6 @@ const PopupRegistration: React.FC = () => {
 				.then(() => {
 					handleClosePopup('openPopupRegistration');
 					resetForm();
-					handleOpenPopup('openPopupLogin');
 				})
 				.catch((err) => {
 					console.log(err);
@@ -133,7 +132,7 @@ const PopupRegistration: React.FC = () => {
 					</button>
 				</form>
 				<p className={styles['popupLogin__registration-prompt']}>
-					Есть аккаунт?{' '}
+					Нет аккаунта?{' '}
 					<button
 						className={styles['popupLogin__registration-button']}
 						type="button"

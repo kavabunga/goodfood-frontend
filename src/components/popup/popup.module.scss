@@ -14,8 +14,6 @@
 	background: rgb(3 3 3 / 60%);
 	backdrop-filter: blur(10px);
 	z-index: 1111;
-	top: 0;
-	left: 0;
 }
 
 .popup__inner {
@@ -42,7 +40,6 @@
 	border: none;
 	transition: 0.3s;
 	cursor: pointer;
-	border-radius: 50%;
 
 	&:hover {
 		opacity: 0.7;

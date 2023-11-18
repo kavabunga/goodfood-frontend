@@ -6,7 +6,7 @@ type AuthContextType = {
 	user: Record<string, unknown>;
 	loading: boolean;
 	updateUsers: (newUserData: Record<string, unknown>) => void;
-	checkAuthentication: () => Promise<void>;
+	checkAuthentication: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType>({
 	user: {},
 	loading: true,
 	updateUsers: () => {},
-	checkAuthentication: () => Promise.resolve(),
+	checkAuthentication: () => {},
 });
 
 type AuthProviderProps = {

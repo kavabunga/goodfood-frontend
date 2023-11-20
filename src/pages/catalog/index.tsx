@@ -4,6 +4,7 @@ import SliderComponent from '@components/slider-component';
 import CardCatalogLink from '@components/card-catalog-link';
 import api from '@services/api.ts';
 import Preloader from '@components/preloader';
+import Breadcrumbs from '@components/breadcrumbs';
 
 type Catalog = {
 	id: number;
@@ -40,6 +41,7 @@ const Catalog: React.FC = () => {
 					<Preloader />
 				) : (
 					<div className={styles.catalog}>
+						<Breadcrumbs />
 						<h1 className={styles.title}>Каталог товаров</h1>
 						<div
 							className={`${styles['catalog__cardlist']}, ${

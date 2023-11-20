@@ -260,7 +260,7 @@ export interface Product {
 	 */
 	price: number;
 	/** Final price */
-	final_price?: string;
+	final_price?: number;
 	promotions?: PromotionLight[];
 	/** Promotion quantity */
 	promotion_quantity?: string;

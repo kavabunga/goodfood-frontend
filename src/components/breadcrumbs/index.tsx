@@ -1,20 +1,69 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import api from '@services/api';
+import type { Category } from '@services/generated-api/data-contracts';
+import styles from './breadcrumbs.module.scss';
 
-const Breadcrumbs: React.FC = () => {
+type BreadcrumbsProps = {
+	productName?: string;
+};
+
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName }) => {
+	const [categories, setCategories] = useState<Record<string, string>>({
+		catalog: 'Каталог товаров',
+		profile: 'Личный кабинет',
+		cart: 'Корзина',
+		addresses: 'Мои адреса',
+		favorites: 'Избранное',
+		user: 'Пользователь',
+	});
+
+	useEffect(() => {
+		const translatedCategoriesObject: Record<string, string> = {};
+		api.categoriesList().then((categories: Category[]) => {
+			categories.map((category) => {
+				const categoryRussianName = category.name.trim();
+
+				if (category.slug) {
+					return (translatedCategoriesObject[category.slug] = categoryRussianName);
+				}
+				return category;
+			});
+			setCategories((prevState) => ({ ...prevState, ...translatedCategoriesObject }));
+		});
+	}, []);
+
 	const location = useLocation();
-	const pathnames = location.pathname.split('/').filter((x) => x);
+	const translatedPathnames = location.pathname.split('/').map((path) => {
+		if (Object.keys(categories).includes(path)) {
+			return (path = categories[path]);
+		}
+
+		return path;
+	});
 
 	return (
-		<div>
-			{pathnames.map((name, index) => {
-				const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
-				const isLast = index === pathnames.length - 1;
+		<div className={styles.breadcrumbs}>
+			{['Главная', ...translatedPathnames.slice(1)].map((name, index, arr) => {
+				const routeTo =
+					index === 0
+						? '/'
+						: `${location.pathname
+								.split('/')
+								.slice(0, index + 1)
+								.join('/')}`;
+				const isLast = index === arr.length - 1;
 				return isLast ? (
-					<span key={name}>{name}</span>
+					<span className={styles.breadcrumbs__last} key={name}>
+						{productName !== undefined ? productName : name}
+					</span>
 				) : (
-					<Link key={name} to={routeTo}>
+					<Link className={styles.breadcrumbs__item} key={name} to={routeTo}>
 						{name}
+						<span
+							onClick={(e) => e.preventDefault()}
+							className={styles.breadcrumbs__arrow}
+						/>
 					</Link>
 				);
 			})}

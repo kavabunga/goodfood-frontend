@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import api from '@services/api.ts';
 import Preloader from '@components/preloader';
 import ReviewStar from '@images/review-star.svg';
+import Breadcrumbs from '@components/breadcrumbs';
 
 type ProductItem = {
 	id: number;
@@ -77,6 +78,7 @@ const Product: React.FC = () => {
 						productItem && styles['product__section-active']
 					}`}
 				>
+					<Breadcrumbs productName={productItem.name} />
 					<div className={styles.product__main}>
 						<div className={styles.product__info}>
 							<div className={styles.product__container}>

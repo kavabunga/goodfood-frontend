@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 import api from '@services/api';
 import type { Category } from '@services/generated-api/data-contracts';
 import styles from './breadcrumbs.module.scss';
 
 type BreadcrumbsProps = {
 	productName?: string;
+	isProfilePage?: boolean;
 };
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isProfilePage }) => {
 	const [categories, setCategories] = useState<Record<string, string>>({
 		catalog: 'Каталог товаров',
 		profile: 'Личный кабинет',
@@ -43,7 +45,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName }) => {
 	});
 
 	return (
-		<div className={styles.breadcrumbs}>
+		<div
+			className={clsx(styles.breadcrumbs, {
+				[styles.breadcrumbs_type_profile]: isProfilePage,
+			})}
+		>
 			{['Главная', ...translatedPathnames.slice(1)].map((name, index, arr) => {
 				const routeTo =
 					index === 0

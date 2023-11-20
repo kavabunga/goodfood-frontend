@@ -5,6 +5,7 @@ import api from '@services/api.ts';
 import { useParams } from 'react-router';
 import Preloader from '@components/preloader';
 import SliderComponent from '@components/slider-component';
+import Breadcrumbs from '@components/breadcrumbs';
 import filter from '@images/Filter.png';
 
 type CategoryType = {
@@ -55,6 +56,7 @@ const Category: React.FC = () => {
 							!isLoading && styles['category__content-active']
 						}`}
 					>
+						<Breadcrumbs />
 						<div className={styles['category__sorting']}>
 							<img src={filter} alt="filter" />
 							<p>↑это картинка заглушка↑</p>

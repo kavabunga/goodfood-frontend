@@ -4,6 +4,7 @@ import ProductCard from '@components/product-card';
 import { products } from '@data/dataExamples.ts';
 import Button from '@components/Button';
 import ShoppingList from '@components/shopping-list';
+import Breadcrumbs from '@components/breadcrumbs';
 
 type Product = {
 	cardName: string;
@@ -15,6 +16,7 @@ type Product = {
 const ShoppingCart: React.FC = () => {
 	return (
 		<section className={styles.cart}>
+			<Breadcrumbs />
 			<div className={styles.details}>
 				<div className={styles.products}>
 					<div className={styles.products__title}>

@@ -4,10 +4,9 @@
 .cart {
 	margin: 0 auto;
 	width: calc(100% - 128px * 2);
-	padding-top: 148px;
+	padding-top: 50px;
 	display: flex;
 	flex-direction: column;
-	gap: 120px;
 	justify-content: center;
 }
 
@@ -21,6 +20,7 @@
 }
 
 .cart__recomendation {
+	padding-top: 120px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;

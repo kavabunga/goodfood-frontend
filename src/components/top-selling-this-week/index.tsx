@@ -102,7 +102,7 @@ const TopSellingThisWeek: React.FC = () => {
 						key={product.id}
 						idCard={product.id}
 						cardName={product.name}
-						price={`${product.final_price} руб.`}
+						price={product?.final_price || 0}
 						weight={
 							(product.amount &&
 								product.measure_unit &&

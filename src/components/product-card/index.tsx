@@ -3,7 +3,8 @@ import styles from './product-card.module.scss';
 
 type ProductCardProps = {
 	cardName: string;
-	price: string;
+	price: number;
+	final_price?: number;
 	weight: string;
 	cardImage: string;
 	category?: string;

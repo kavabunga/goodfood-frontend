@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react';
 import styles from './profile-favorites.module.scss';
 // import clsx from 'clsx';
 import api from '@services/api';
+import type { CategoryLight } from '@services/generated-api/data-contracts';
 import ProductCard from '@components/product-card';
 import { Link } from 'react-router-dom';
 
 type Product = {
 	name: string;
-	price: string;
+	price: number;
 	amount: string;
 	id: number;
 	photo: string;
-	category: string;
+	category: CategoryLight;
 	isCheckable: boolean;
 } & Record<string, unknown>;
 
@@ -35,7 +36,7 @@ export default function ProfileFavorites() {
 			error: '',
 		});
 		api
-			.productsList('?is_favorited=1&limited=1000')
+			.productsList('?is_favorited&limit=100')
 			.then((list) => {
 				setProducts(list.results);
 				setProductsLoadingStatus({
@@ -87,7 +88,7 @@ export default function ProfileFavorites() {
 								weight={product.amount}
 								cardImage={product.photo}
 								idCard={product.id}
-								category={product.category}
+								category={product.category.category_slug}
 								checkboxControl={
 									checkboxesValues.length
 										? {

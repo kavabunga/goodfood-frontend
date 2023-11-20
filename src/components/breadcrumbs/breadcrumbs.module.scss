@@ -1,0 +1,29 @@
+@use '@scss/_variables' as *;
+
+.breadcrumbs {
+	font-family: $ubuntu-font;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 140%;
+	padding: 0 0 72px;
+
+	&__item {
+		color: $footer-background-color;
+		text-decoration: none;
+	}
+
+	&__last {
+		color: $footer-background-color;
+	}
+
+	&__arrow {
+		display: inline-block;
+		background-image: url('@images/arrow-icon.svg');
+		background-position: center;
+		background-repeat: no-repeat;
+		width: 16px;
+		height: 16px;
+		padding: 0 8px;
+		cursor: text;
+	}
+}

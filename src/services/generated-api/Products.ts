@@ -10,19 +10,25 @@
  */
 
 import {
+	ErrorResponse401,
+	ErrorResponse403,
+	ErrorResponse404,
 	FavoriteProductCreate,
 	Product,
 	ProductCreate,
 	ProductUpdate,
+	Promotion,
+	ValidationErrorResponse,
 } from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
 export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
 	/**
-	 * @description Viewset for products.
+	 * @description Returns a list of all the products
 	 *
 	 * @tags products
 	 * @name ProductsList
+	 * @summary List all products
 	 * @request GET:/products/
 	 * @secure
 	 */
@@ -57,17 +63,7 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 		},
 		params: RequestParams = {}
 	) =>
-		this.request<
-			{
-				count: number;
-				/** @format uri */
-				next?: string | null;
-				/** @format uri */
-				previous?: string | null;
-				results: Product[];
-			},
-			any
-		>({
+		this.request<Product, any>({
 			path: `/products/`,
 			method: 'GET',
 			query: query,
@@ -76,15 +72,19 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 			...params,
 		});
 	/**
-	 * @description Viewset for products.
+	 * @description Creates a product (admin only)
 	 *
 	 * @tags products
 	 * @name ProductsCreate
+	 * @summary Create product
 	 * @request POST:/products/
 	 * @secure
 	 */
 	productsCreate = (data: ProductCreate, params: RequestParams = {}) =>
-		this.request<ProductCreate, any>({
+		this.request<
+			ProductCreate,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403
+		>({
 			path: `/products/`,
 			method: 'POST',
 			body: data,
@@ -94,15 +94,16 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 			...params,
 		});
 	/**
-	 * @description Increments the views_number field when someone views this product.
+	 * @description Retrieves a product by its id
 	 *
 	 * @tags products
 	 * @name ProductsRead
+	 * @summary Get product by id
 	 * @request GET:/products/{id}/
 	 * @secure
 	 */
 	productsRead = (id: number, params: RequestParams = {}) =>
-		this.request<Product, any>({
+		this.request<Product, ErrorResponse404>({
 			path: `/products/${id}/`,
 			method: 'GET',
 			secure: true,
@@ -110,15 +111,19 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 			...params,
 		});
 	/**
-	 * @description Viewset for products.
+	 * @description Edits a product by its id (admin only)
 	 *
 	 * @tags products
 	 * @name ProductsPartialUpdate
+	 * @summary Edit product
 	 * @request PATCH:/products/{id}/
 	 * @secure
 	 */
 	productsPartialUpdate = (id: number, data: ProductUpdate, params: RequestParams = {}) =>
-		this.request<ProductUpdate, any>({
+		this.request<
+			Promotion,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403 | ErrorResponse404
+		>({
 			path: `/products/${id}/`,
 			method: 'PATCH',
 			body: data,
@@ -128,25 +133,27 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 			...params,
 		});
 	/**
-	 * @description Viewset for products.
+	 * @description Deletes a product by its id (admin only)
 	 *
 	 * @tags products
 	 * @name ProductsDelete
+	 * @summary Delete product
 	 * @request DELETE:/products/{id}/
 	 * @secure
 	 */
 	productsDelete = (id: number, params: RequestParams = {}) =>
-		this.request<void, any>({
+		this.request<void, ErrorResponse401 | ErrorResponse403 | ErrorResponse404>({
 			path: `/products/${id}/`,
 			method: 'DELETE',
 			secure: true,
 			...params,
 		});
 	/**
-	 * @description Viewset for products.
+	 * @description Adds a product to a user's favorites (authorized user only)
 	 *
 	 * @tags products
 	 * @name ProductsFavoriteCreate
+	 * @summary Add favorite product
 	 * @request POST:/products/{id}/favorite/
 	 * @secure
 	 */
@@ -155,7 +162,7 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 		data: FavoriteProductCreate,
 		params: RequestParams = {}
 	) =>
-		this.request<FavoriteProductCreate, any>({
+		this.request<FavoriteProductCreate, void | ErrorResponse401 | ErrorResponse404>({
 			path: `/products/${id}/favorite/`,
 			method: 'POST',
 			body: data,
@@ -165,15 +172,16 @@ export class Products<SecurityDataType = unknown> extends HttpClient<SecurityDat
 			...params,
 		});
 	/**
-	 * @description Viewset for products.
+	 * @description Deletes a product from a user's favorites (authorized user only)
 	 *
 	 * @tags products
 	 * @name ProductsFavoriteDelete
+	 * @summary Delete favorite product
 	 * @request DELETE:/products/{id}/favorite/
 	 * @secure
 	 */
 	productsFavoriteDelete = (id: number, params: RequestParams = {}) =>
-		this.request<void, any>({
+		this.request<void, void | ErrorResponse401 | ErrorResponse404>({
 			path: `/products/${id}/favorite/`,
 			method: 'DELETE',
 			secure: true,

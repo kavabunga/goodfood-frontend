@@ -12,17 +12,19 @@
 import {
 	Activation,
 	Address,
+	ErrorResponse401,
+	ErrorResponse403,
+	ErrorResponse404,
 	OrderList,
 	OrderPostDelete,
 	PasswordResetConfirm,
 	SendEmailReset,
 	SetPassword,
 	SetUsername,
-	ShoppingCartGet,
-	ShoppingCartPostUpdateDelete,
 	User,
 	UserCreate,
 	UsernameResetConfirm,
+	ValidationErrorResponse,
 } from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
@@ -333,15 +335,16 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Viewset for addresses.
+	 * @description Returns a list of addresses of a user (admin only)
 	 *
 	 * @tags users
 	 * @name UsersAddressesList
+	 * @summary List all addresses
 	 * @request GET:/users/{user_id}/addresses/
 	 * @secure
 	 */
 	usersAddressesList = (userId: string, params: RequestParams = {}) =>
-		this.request<Address[], any>({
+		this.request<Address, ErrorResponse401 | ErrorResponse403>({
 			path: `/users/${userId}/addresses/`,
 			method: 'GET',
 			secure: true,
@@ -349,15 +352,16 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Viewset for addresses.
+	 * @description Retrieves an address of a user (admin only)
 	 *
 	 * @tags users
 	 * @name UsersAddressesRead
+	 * @summary Get address by id
 	 * @request GET:/users/{user_id}/addresses/{id}/
 	 * @secure
 	 */
 	usersAddressesRead = (userId: string, id: string, params: RequestParams = {}) =>
-		this.request<Address, any>({
+		this.request<Address, ErrorResponse401 | ErrorResponse403>({
 			path: `/users/${userId}/addresses/${id}/`,
 			method: 'GET',
 			secure: true,
@@ -365,15 +369,16 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Viewset for Order.
+	 * @description Returns a list of all the orders of a user (admin or authorized user)
 	 *
 	 * @tags users
 	 * @name UsersOrderList
+	 * @summary List all orders
 	 * @request GET:/users/{user_id}/order/
 	 * @secure
 	 */
 	usersOrderList = (userId: string, params: RequestParams = {}) =>
-		this.request<OrderList[], any>({
+		this.request<OrderList, ErrorResponse401 | ErrorResponse403>({
 			path: `/users/${userId}/order/`,
 			method: 'GET',
 			secure: true,
@@ -381,10 +386,11 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Viewset for Order.
+	 * @description Creates an order of a user (authorized only)
 	 *
 	 * @tags users
 	 * @name UsersOrderCreate
+	 * @summary Create order
 	 * @request POST:/users/{user_id}/order/
 	 * @secure
 	 */
@@ -393,7 +399,10 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 		data: OrderPostDelete,
 		params: RequestParams = {}
 	) =>
-		this.request<OrderPostDelete, any>({
+		this.request<
+			OrderPostDelete,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403
+		>({
 			path: `/users/${userId}/order/`,
 			method: 'POST',
 			body: data,
@@ -403,15 +412,16 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Viewset for Order.
+	 * @description Retrieves an order of a user by its id (admin or authorized user)
 	 *
 	 * @tags users
 	 * @name UsersOrderRead
+	 * @summary Get order by id
 	 * @request GET:/users/{user_id}/order/{id}/
 	 * @secure
 	 */
 	usersOrderRead = (userId: string, id: number, params: RequestParams = {}) =>
-		this.request<OrderList, any>({
+		this.request<OrderList, ErrorResponse401 | ErrorResponse403 | ErrorResponse404>({
 			path: `/users/${userId}/order/${id}/`,
 			method: 'GET',
 			secure: true,
@@ -419,106 +429,17 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Viewset for Order.
+	 * @description Deletes an order by its id (authorized only)
 	 *
 	 * @tags users
 	 * @name UsersOrderDelete
+	 * @summary Delete order
 	 * @request DELETE:/users/{user_id}/order/{id}/
 	 * @secure
 	 */
 	usersOrderDelete = (userId: string, id: number, params: RequestParams = {}) =>
-		this.request<void, any>({
+		this.request<void, ErrorResponse401 | ErrorResponse403 | ErrorResponse404>({
 			path: `/users/${userId}/order/${id}/`,
-			method: 'DELETE',
-			secure: true,
-			...params,
-		});
-	/**
-	 * @description Viewset for ShoppingCart.
-	 *
-	 * @tags users
-	 * @name UsersShoppingCartList
-	 * @request GET:/users/{user_id}/shopping_cart/
-	 * @secure
-	 */
-	usersShoppingCartList = (userId: string, params: RequestParams = {}) =>
-		this.request<ShoppingCartGet[], any>({
-			path: `/users/${userId}/shopping_cart/`,
-			method: 'GET',
-			secure: true,
-			format: 'json',
-			...params,
-		});
-	/**
-	 * @description Viewset for ShoppingCart.
-	 *
-	 * @tags users
-	 * @name UsersShoppingCartCreate
-	 * @request POST:/users/{user_id}/shopping_cart/
-	 * @secure
-	 */
-	usersShoppingCartCreate = (
-		userId: string,
-		data: ShoppingCartPostUpdateDelete,
-		params: RequestParams = {}
-	) =>
-		this.request<ShoppingCartPostUpdateDelete, any>({
-			path: `/users/${userId}/shopping_cart/`,
-			method: 'POST',
-			body: data,
-			secure: true,
-			format: 'json',
-			...params,
-		});
-	/**
-	 * @description Viewset for ShoppingCart.
-	 *
-	 * @tags users
-	 * @name UsersShoppingCartRead
-	 * @request GET:/users/{user_id}/shopping_cart/{id}/
-	 * @secure
-	 */
-	usersShoppingCartRead = (userId: string, id: number, params: RequestParams = {}) =>
-		this.request<ShoppingCartGet, any>({
-			path: `/users/${userId}/shopping_cart/${id}/`,
-			method: 'GET',
-			secure: true,
-			format: 'json',
-			...params,
-		});
-	/**
-	 * @description Viewset for ShoppingCart.
-	 *
-	 * @tags users
-	 * @name UsersShoppingCartPartialUpdate
-	 * @request PATCH:/users/{user_id}/shopping_cart/{id}/
-	 * @secure
-	 */
-	usersShoppingCartPartialUpdate = (
-		userId: string,
-		id: number,
-		data: ShoppingCartPostUpdateDelete,
-		params: RequestParams = {}
-	) =>
-		this.request<ShoppingCartPostUpdateDelete, any>({
-			path: `/users/${userId}/shopping_cart/${id}/`,
-			method: 'PATCH',
-			body: data,
-			secure: true,
-			format: 'json',
-			...params,
-		});
-	/**
-	 * @description Viewset for ShoppingCart.
-	 *
-	 * @tags users
-	 * @name UsersShoppingCartDelete
-	 * @request DELETE:/users/{user_id}/shopping_cart/{id}/
-	 * @secure
-	 */
-	usersShoppingCartDelete = (userId: string, id: number, params: RequestParams = {}) =>
-		this.request<void, any>({
-			path: `/users/${userId}/shopping_cart/${id}/`,
 			method: 'DELETE',
 			secure: true,
 			...params,

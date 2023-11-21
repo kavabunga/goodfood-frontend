@@ -7,10 +7,10 @@ import styles from './breadcrumbs.module.scss';
 
 type BreadcrumbsProps = {
 	productName?: string;
-	isProfilePage?: boolean;
+	isTall?: boolean;
 };
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isProfilePage }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isTall }) => {
 	const [categories, setCategories] = useState<Record<string, string>>({
 		catalog: 'Каталог товаров',
 		profile: 'Личный кабинет',
@@ -47,7 +47,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isProfilePage })
 	return (
 		<div
 			className={clsx(styles.breadcrumbs, {
-				[styles.breadcrumbs_type_profile]: isProfilePage,
+				[styles.breadcrumbs_type_tall]: isTall,
 			})}
 		>
 			{['Главная', ...translatedPathnames.slice(1)].map((name, index, arr) => {

@@ -7,7 +7,7 @@ import Preloader from '@components/preloader';
 import SliderComponent from '@components/slider-component';
 import Breadcrumbs from '@components/breadcrumbs';
 import type { Product } from '@services/generated-api/data-contracts';
-import filter from '@images/Filter.png';
+import Filter from '@components/filter';
 
 // type CategoryType = {
 // 	id: number;
@@ -48,42 +48,45 @@ const Category: React.FC = () => {
 	return (
 		<>
 			<SliderComponent />
-			<section className={styles.category}>
-				{isLoading ? (
-					<Preloader />
-				) : (
-					<div
-						className={`${styles['category__content']}, ${
-							!isLoading && styles['category__content-active']
-						}`}
-					>
-						<Breadcrumbs />
-						<div className={styles['category__sorting']}>
-							<img src={filter} alt="filter" />
-							<p>↑это картинка заглушка↑</p>
+			<section>
+				<div className={styles['breadcrumbs-container']}>
+					<Breadcrumbs isTall={true} />
+				</div>
+				<div className={styles.category}>
+					{isLoading ? (
+						<Preloader />
+					) : (
+						<div
+							className={`${styles['category__content']}, ${
+								!isLoading && styles['category__content-active']
+							}`}
+						>
+							<div className={styles['category__sorting']}>
+								<Filter></Filter>
+							</div>
+							<div className={styles['category__product']}>
+								<h1 className={styles['category__product-title']}>
+									{categoryItem[0]?.category?.category_name}
+								</h1>
+								<ul className={styles['product__product-container']}>
+									{categoryItem.map((item) => (
+										<li key={item.id}>
+											<ProductCard
+												cardName={item.name}
+												price={item.price}
+												weight={item.amount || 0}
+												cardImage={item.photo || ''}
+												idCard={item.id}
+												category={category}
+												measureUnit={item.measure_unit}
+											/>
+										</li>
+									))}
+								</ul>
+							</div>
 						</div>
-						<div className={styles['category__product']}>
-							<h1 className={styles['category__product-title']}>
-								{categoryItem[0]?.category?.category_name}
-							</h1>
-							<ul className={styles['product__product-container']}>
-								{categoryItem.map((item) => (
-									<li key={item.id}>
-										<ProductCard
-											cardName={item.name}
-											price={item.price}
-											weight={item.amount || 0}
-											cardImage={item.photo || ''}
-											idCard={item.id}
-											category={category}
-											measureUnit={item.measure_unit}
-										/>
-									</li>
-								))}
-							</ul>
-						</div>
-					</div>
-				)}
+					)}
+				</div>
 			</section>
 		</>
 	);

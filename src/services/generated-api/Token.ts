@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* tslint:disable */
 /*
  * ---------------------------------------------------------------
@@ -9,20 +8,26 @@
  * ---------------------------------------------------------------
  */
 
-import { TokenCreate } from './data-contracts';
+import {
+	ErrorResponse401,
+	Token,
+	TokenCreate,
+	ValidationErrorResponse,
+} from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
 export class Token<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
 	/**
-	 * @description Use this endpoint to obtain user authentication token.
+	 * @description Allows to obtain a user authentication token
 	 *
 	 * @tags token
 	 * @name TokenLoginCreate
+	 * @summary Obtain auth token
 	 * @request POST:/token/login/
 	 * @secure
 	 */
 	tokenLoginCreate = (data: TokenCreate, params: RequestParams = {}) =>
-		this.request<TokenCreate, any>({
+		this.request<Token, ValidationErrorResponse>({
 			path: `/token/login/`,
 			method: 'POST',
 			body: data,
@@ -32,15 +37,16 @@ export class Token<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
 			...params,
 		});
 	/**
-	 * @description Use this endpoint to logout user (remove user authentication token).
+	 * @description Allows to remove a user authentication token
 	 *
 	 * @tags token
 	 * @name TokenLogoutCreate
+	 * @summary Remove auth token
 	 * @request POST:/token/logout/
 	 * @secure
 	 */
 	tokenLogoutCreate = (params: RequestParams = {}) =>
-		this.request<void, any>({
+		this.request<void, ErrorResponse401>({
 			path: `/token/logout/`,
 			method: 'POST',
 			secure: true,

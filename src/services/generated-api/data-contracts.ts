@@ -1,4 +1,3 @@
-// /* eslint-disable */
 /* tslint:disable */
 /*
  * ---------------------------------------------------------------
@@ -60,6 +59,93 @@ export interface CategoryCreate {
 	slug?: string;
 }
 
+export interface ValidationError {
+	/**
+	 * Code
+	 * @minLength 1
+	 */
+	code: string;
+	/**
+	 * Detail
+	 * @minLength 1
+	 */
+	detail: string;
+	/**
+	 * Attr
+	 * @minLength 1
+	 */
+	attr: string;
+}
+
+export interface ValidationErrorResponse {
+	/** Type */
+	type: 'validation_error';
+	errors: ValidationError[];
+}
+
+export interface Error401 {
+	/** Code */
+	code: 'authentication_failed' | 'not_authenticated';
+	/**
+	 * Detail
+	 * @minLength 1
+	 */
+	detail: string;
+	/**
+	 * Attr
+	 * @minLength 1
+	 */
+	attr?: string | null;
+}
+
+export interface ErrorResponse401 {
+	/** Type */
+	type: 'client_error';
+	errors: Error401[];
+}
+
+export interface Error403 {
+	/** Code */
+	code: 'permission_denied';
+	/**
+	 * Detail
+	 * @minLength 1
+	 */
+	detail: string;
+	/**
+	 * Attr
+	 * @minLength 1
+	 */
+	attr?: string | null;
+}
+
+export interface ErrorResponse403 {
+	/** Type */
+	type: 'client_error';
+	errors: Error403[];
+}
+
+export interface Error404 {
+	/** Code */
+	code: 'not_found';
+	/**
+	 * Detail
+	 * @minLength 1
+	 */
+	detail: string;
+	/**
+	 * Attr
+	 * @minLength 1
+	 */
+	attr?: string | null;
+}
+
+export interface ErrorResponse404 {
+	/** Type */
+	type: 'client_error';
+	errors: Error404[];
+}
+
 export interface Component {
 	/** ID */
 	id?: number;
@@ -83,8 +169,10 @@ export interface Component {
 export interface UserLight {
 	/**
 	 * Username
+	 * 150 characters or fewer. Letters, digits and @/./+/-/_ only.
 	 * @minLength 1
 	 * @maxLength 150
+	 * @pattern ^[\w.@+-]+$
 	 */
 	username: string;
 	/**
@@ -494,11 +582,6 @@ export interface ProductUpdate {
 	carbohydrates: number;
 }
 
-export interface FavoriteProductCreate {
-	/** ID */
-	id?: number;
-}
-
 export interface Promotion {
 	/** ID */
 	id?: number;
@@ -550,6 +633,84 @@ export interface Promotion {
 	 * @format date-time
 	 */
 	end_time?: string | null;
+}
+
+export interface FavoriteProductCreate {
+	/** ID */
+	id?: number;
+}
+
+export interface UserPresent {
+	/**
+	 * Username
+	 * 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+	 * @minLength 1
+	 * @maxLength 150
+	 * @pattern ^[\w.@+-]+$
+	 */
+	username: string;
+	/**
+	 * Имя
+	 * @maxLength 150
+	 */
+	first_name?: string;
+	/**
+	 * Фамилия
+	 * @maxLength 150
+	 */
+	last_name?: string;
+}
+
+export interface ShoppingCartProductList {
+	/** Id */
+	id?: string;
+	/** Name */
+	name?: string;
+	/** Measure unit */
+	measure_unit?: string;
+	/** Price */
+	price?: string;
+	/** Final price */
+	final_price?: string;
+	/** Amount */
+	amount?: string;
+	/**
+	 * Количество
+	 * @min 1
+	 * @max 10000
+	 */
+	quantity?: number;
+	/** Is favorited by user */
+	is_favorited_by_user?: string;
+}
+
+export interface ShoppingCartGet {
+	/** ID */
+	id?: number;
+	user?: UserPresent;
+	products?: ShoppingCartProductList[];
+	/**
+	 * Total price
+	 * @min 0
+	 * @max 2147483647
+	 */
+	total_price?: number;
+	/** Status */
+	status?: 'Ordered' | 'In Work';
+}
+
+export interface ShoppingCartProductCreateUpdate {
+	/** Id */
+	id: number;
+	/**
+	 * Quantity
+	 * @default 1
+	 */
+	quantity?: number;
+}
+
+export interface ShoppingCartPostUpdateDelete {
+	products: ShoppingCartProductCreateUpdate[];
 }
 
 export interface Subcategory {
@@ -605,6 +766,14 @@ export interface TokenCreate {
 	email?: string;
 }
 
+export interface Token {
+	/**
+	 * Auth token
+	 * @minLength 1
+	 */
+	auth_token: string;
+}
+
 export interface Address {
 	/** ID */
 	id?: number;
@@ -622,8 +791,10 @@ export interface User {
 	id?: number;
 	/**
 	 * Username
+	 * 150 characters or fewer. Letters, digits and @/./+/-/_ only.
 	 * @minLength 1
 	 * @maxLength 150
+	 * @pattern ^[\w.@+-]+$
 	 */
 	username: string;
 	/**
@@ -643,12 +814,10 @@ export interface User {
 	 * @maxLength 150
 	 */
 	last_name?: string;
-	/** Role */
-	role?: 'user' | 'moderator' | 'admin';
 	/** City */
 	city?: 'Moscow';
 	/**
-	 * Birth_date
+	 * Birth date
 	 * @format date
 	 */
 	birth_date?: string | null;
@@ -656,8 +825,9 @@ export interface User {
 	/** Address quantity */
 	address_quantity?: string;
 	/**
-	 * Phone_number
-	 * @maxLength 128
+	 * Phone number
+	 * @maxLength 17
+	 * @pattern ^(\+7|7|8)\d{10}$
 	 */
 	phone_number?: string;
 	/**
@@ -768,63 +938,6 @@ export interface SetUsername {
 	new_email: string;
 }
 
-export interface UserPresent {
-	/**
-	 * Username
-	 * @minLength 1
-	 * @maxLength 150
-	 */
-	username: string;
-	/**
-	 * Имя
-	 * @maxLength 150
-	 */
-	first_name?: string;
-	/**
-	 * Фамилия
-	 * @maxLength 150
-	 */
-	last_name?: string;
-}
-
-export interface ShoppingCartProductList {
-	/** Id */
-	id?: string;
-	/** Name */
-	name?: string;
-	/** Measure unit */
-	measure_unit?: string;
-	/** Price */
-	price?: string;
-	/** Final price */
-	final_price?: string;
-	/** Amount */
-	amount?: string;
-	/**
-	 * Количество
-	 * @min 1
-	 * @max 10000
-	 */
-	quantity?: number;
-	/** Is favorited by user */
-	is_favorited_by_user?: string;
-}
-
-export interface ShoppingCartGet {
-	/** ID */
-	id?: number;
-	user?: UserPresent;
-	products?: ShoppingCartProductList[];
-	/**
-	 * Total price
-	 * @min 0
-	 * @max 2147483647
-	 */
-	total_price?: number;
-	/** Status */
-	status?: 'Ordered' | 'In Work';
-}
-
 export interface OrderList {
 	/** ID */
 	id?: number;
@@ -885,18 +998,4 @@ export interface OrderPostDelete {
 	comment?: string | null;
 	/** User's address */
 	address?: number | null;
-}
-
-export interface ShoppingCartProductCreateUpdate {
-	/** Id */
-	id: number;
-	/**
-	 * Quantity
-	 * @default 1
-	 */
-	quantity?: number;
-}
-
-export interface ShoppingCartPostUpdateDelete {
-	products: ShoppingCartProductCreateUpdate[];
 }

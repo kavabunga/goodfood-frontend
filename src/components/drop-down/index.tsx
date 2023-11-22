@@ -1,29 +1,37 @@
-import React, { useState } from 'react'
-import './drop-down.scss'
-import Select from 'react-select'
+import React, { useState } from 'react';
+import Select from 'react-select';
+import './drop-down.scss';
 
-const options = [
-  { value: 'popular', label: 'По популярности' },
-  { value: 'cheap', label: 'Сначала дешевые' },
-  { value: 'expensive', label: 'Сначала дорогие' },
-	{ value: 'rating', label: 'По рейтингу' }
-]
+type SelectOptionType = { label: string; value: string };
+
+const options: SelectOptionType[] = [
+	{ value: 'popular', label: 'По популярности' },
+	{ value: 'cheap', label: 'Сначала дешевые' },
+	{ value: 'expensive', label: 'Сначала дорогие' },
+	{ value: 'rating', label: 'По рейтингу' },
+];
 
 const DropDown: React.FC = () => {
-	const [currentChoose, setCurrentChoose] = useState({value: 'choose', label: 'Выбрать'});
+	const [currentOption, setCurrentOption] = useState({
+		value: 'choose',
+		label: 'Выбрать',
+	});
 
-	const onChange = (newValue: any) => {
-		setCurrentChoose(newValue)
-	}
+	const handleSelectionChange = (option: SelectOptionType | null) => {
+		if (option) {
+			setCurrentOption(option);
+		}
+	};
 
 	return (
 		<Select
-		classNamePrefix='custom-select'
-			placeholder='Выбрать'
-			onChange={onChange}
-			value={currentChoose}
-			options={options} />
-	)
-}
+			classNamePrefix="custom-select"
+			placeholder="Выбрать"
+			onChange={handleSelectionChange}
+			value={currentOption}
+			options={options}
+		/>
+	);
+};
 
 export default DropDown;

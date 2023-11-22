@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
 import './drop-down.scss';
-import Select, { SingleValue } from 'react-select';
 
-const options = [
+type SelectOptionType = { label: string; value: string };
+
+const options: SelectOptionType[] = [
 	{ value: 'popular', label: 'По популярности' },
 	{ value: 'cheap', label: 'Сначала дешевые' },
 	{ value: 'expensive', label: 'Сначала дорогие' },
@@ -10,21 +12,23 @@ const options = [
 ];
 
 const DropDown: React.FC = () => {
-	const [currentChoose, setCurrentChoose] = useState({
+	const [currentOption, setCurrentOption] = useState({
 		value: 'choose',
 		label: 'Выбрать',
 	});
 
-	const onChange = (newValue: SingleValue<{ value: string; label: string }>) => {
-		newValue && setCurrentChoose(newValue);
+	const handleSelectionChange = (option: SelectOptionType | null) => {
+		if (option) {
+			setCurrentOption(option);
+		}
 	};
 
 	return (
 		<Select
 			classNamePrefix="custom-select"
 			placeholder="Выбрать"
-			onChange={onChange}
-			value={currentChoose}
+			onChange={handleSelectionChange}
+			value={currentOption}
 			options={options}
 		/>
 	);

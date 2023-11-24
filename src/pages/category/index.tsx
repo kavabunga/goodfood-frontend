@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import ProductCard from '@components/product-card';
 import styles from './category.module.scss';
 import api from '@services/api.ts';
@@ -21,9 +21,23 @@ import Filter from '@components/filter';
 // 	};
 // };
 
+type filteredType = {
+	[key: string]: boolean;
+};
+type SelectOptionType = { label: string; value: string };
+
 const Category: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true);
-	const [categoryItem, setCategoryItem] = useState<Product[]>([]);
+	const [products, setProducts] = useState<Product[]>([]);
+	const [categoryName, setCategoryName] = useState('');
+	const [checkboxState, setCheckboxState] = useState<filteredType>({
+		// проверить чтобы названия соответствовали тэгам
+		vegetarian: false,
+		sugarFree: false,
+		glutenFree: false,
+		'lactose-free': false,
+		forChildren: false,
+	});
 
 	const { category } = useParams();
 
@@ -32,18 +46,115 @@ const Category: React.FC = () => {
 		api
 			.productsList(`?category=${category}`)
 			.then((data) => {
-				setCategoryItem(data.results);
+				setProducts(data.results);
+				setCategoryName(data.results[0]?.category?.category_name);
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
 	}, [category]);
 
-	console.log(categoryItem);
-
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
+
+	const changeCheckboxState = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.name === 'vegetarian') {
+			setCheckboxState((prev) => ({ ...prev, vegetarian: !prev.vegetarian }));
+		}
+		if (e.target.name === 'sugarFree') {
+			// проверить чтобы название соответствовало тэгу
+			setCheckboxState((prev) => ({ ...prev, sugarFree: !prev.sugarFree }));
+		}
+		if (e.target.name === 'glutenFree') {
+			// проверить чтобы название соответствовало тэгу
+			setCheckboxState((prev) => ({ ...prev, glutenFree: !prev.glutenFree }));
+		}
+		if (e.target.name === 'lactose-free') {
+			setCheckboxState((prev) => ({ ...prev, 'lactose-free': !prev['lactose-free'] }));
+		}
+		if (e.target.name === 'forChildren') {
+			// проверить чтобы название соответствовало тэгу
+			setCheckboxState((prev) => ({ ...prev, forChildren: !prev.forChildren }));
+		}
+	};
+
+	const handleFilter = (item: Product) => {
+		const chosenTags = Object.keys(checkboxState).filter(
+			(item: string) => checkboxState[item]
+		);
+		const productTags = item?.tags?.map((item) => item.tag_slug);
+		const intersection = productTags?.filter((tag) => chosenTags?.includes(tag));
+		const difference = chosenTags.filter((tag) => !productTags?.includes(tag));
+
+		if (chosenTags.length !== 0) {
+			if (intersection?.length !== 0 && difference.length === 0) {
+				return true;
+			}
+			return false;
+		}
+
+		return true;
+	};
+
+	const sortByProperty = (
+		arr: Product[],
+		property: 'views_number' | 'final_price' | 'promotion_quantity',
+		order: 'asc' | 'desc' = 'desc'
+	) => {
+		return arr.sort((a, b) => {
+			const aProp = a[property];
+			const bProp = b[property];
+
+			if (aProp !== undefined && bProp !== undefined) {
+				return order === 'asc' ? aProp - bProp : bProp - aProp;
+			}
+			return 0;
+		});
+	};
+
+	const sortProducts = (option: SelectOptionType | null) => {
+		if (option) {
+			let sortedProducts: Product[] = [];
+
+			switch (option.value) {
+				case 'popular':
+					sortedProducts = sortByProperty(products, 'views_number');
+					break;
+				case 'expensive':
+					sortedProducts = sortByProperty(products, 'final_price');
+					break;
+				case 'cheap':
+					sortedProducts = sortByProperty(products, 'final_price', 'asc');
+					break;
+				case 'rating':
+					sortedProducts = sortByProperty(products, 'promotion_quantity');
+					break;
+				default:
+			}
+			setProducts([...sortedProducts]);
+		}
+	};
+
+	// const sortProducts = (option: SelectOptionType | null) => {
+	// 	if (option) {
+	// 		let sortedProducts: Product[] = [];
+
+	// 		if (option.value === 'popular') {
+	// 			sortedProducts = sortByProperty(products, 'views_number');
+	// 		}
+	// 		if (option.value === 'expensive') {
+	// 			sortedProducts = sortByProperty(products, 'final_price');
+	// 		}
+	// 		if (option.value === 'cheap') {
+	// 			sortedProducts = sortByProperty(products, 'final_price', 'asc');
+	// 		}
+	// 		if (option.value === 'rating') {
+	// 			sortedProducts = sortByProperty(products, 'promotion_quantity');
+	// 		}
+	// 		setProducts([...sortedProducts]);
+	// 	}
+	// };
 
 	return (
 		<>
@@ -62,26 +173,30 @@ const Category: React.FC = () => {
 							}`}
 						>
 							<div className={styles['category__sorting']}>
-								<Filter></Filter>
+								<Filter
+									sortProducts={sortProducts}
+									changeCheckboxState={changeCheckboxState}
+								></Filter>
 							</div>
 							<div className={styles['category__product']}>
-								<h1 className={styles['category__product-title']}>
-									{categoryItem[0]?.category?.category_name}
-								</h1>
+								<h1 className={styles['category__product-title']}>{categoryName}</h1>
 								<ul className={styles['product__product-container']}>
-									{categoryItem.map((item) => (
-										<li key={item.id}>
-											<ProductCard
-												cardName={item.name}
-												price={item.price}
-												weight={item.amount || 0}
-												cardImage={item.photo || ''}
-												idCard={item.id}
-												category={category}
-												measureUnit={item.measure_unit}
-											/>
-										</li>
-									))}
+									{products &&
+										products
+											.filter((item) => handleFilter(item))
+											.map((item) => (
+												<li key={item.id}>
+													<ProductCard
+														cardName={item.name}
+														price={item.price}
+														weight={item.amount || 0}
+														cardImage={item.photo || ''}
+														idCard={item.id}
+														category={category}
+														measureUnit={item.measure_unit}
+													/>
+												</li>
+											))}
 								</ul>
 							</div>
 						</div>

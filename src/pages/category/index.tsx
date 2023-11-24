@@ -9,18 +9,6 @@ import Breadcrumbs from '@components/breadcrumbs';
 import type { Product } from '@services/generated-api/data-contracts';
 import Filter from '@components/filter';
 
-// type CategoryType = {
-// 	id: number;
-// 	name: string;
-// 	price: number;
-// 	amount: number;
-// 	photo: string;
-// 	top_three_products: Record<string, unknown>[];
-// 	category: {
-// 		category_name: string;
-// 	};
-// };
-
 type filteredType = {
 	[key: string]: boolean;
 };
@@ -135,26 +123,6 @@ const Category: React.FC = () => {
 			setProducts([...sortedProducts]);
 		}
 	};
-
-	// const sortProducts = (option: SelectOptionType | null) => {
-	// 	if (option) {
-	// 		let sortedProducts: Product[] = [];
-
-	// 		if (option.value === 'popular') {
-	// 			sortedProducts = sortByProperty(products, 'views_number');
-	// 		}
-	// 		if (option.value === 'expensive') {
-	// 			sortedProducts = sortByProperty(products, 'final_price');
-	// 		}
-	// 		if (option.value === 'cheap') {
-	// 			sortedProducts = sortByProperty(products, 'final_price', 'asc');
-	// 		}
-	// 		if (option.value === 'rating') {
-	// 			sortedProducts = sortByProperty(products, 'promotion_quantity');
-	// 		}
-	// 		setProducts([...sortedProducts]);
-	// 	}
-	// };
 
 	return (
 		<>

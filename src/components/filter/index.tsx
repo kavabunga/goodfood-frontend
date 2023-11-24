@@ -1,50 +1,82 @@
+import React, { ChangeEvent } from 'react';
 import DropDown from '@components/drop-down';
 import styles from './filter.module.scss';
 
-const Filter: React.FC = () => {
+type FilterProps = {
+	sortProducts: (option: { label: string; value: string }) => void;
+	changeCheckboxState: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+const Filter: React.FC<FilterProps> = ({ sortProducts, changeCheckboxState }) => {
+	const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+		changeCheckboxState(e);
+	};
 
 	return (
 		<>
 			<div className={styles.filterDropDown}>
-
-			<DropDown />
+				<DropDown sortProducts={sortProducts} />
 			</div>
 			<div className={styles.filterBox}>
 				<ul className={styles.filterColumn}>
 					<li className={styles.filterList}>
-    				<label className={styles.filterCheck}>
-							<input className={styles.filterCheckInput} type="checkbox" />
+						<label className={styles.filterCheck}>
+							<input
+								name="vegetarian"
+								className={styles.filterCheckInput}
+								type="checkbox"
+								onChange={handleCheckboxChange}
+							/>
 							<span className={styles.filterCheckbox}></span>
-								Подходит вегетарианцам
+							Подходит вегетарианцам
 						</label>
 					</li>
 					<li className={styles.filterList}>
-    				<label className={styles.filterCheck}>
-							<input className={styles.filterCheckInput} type="checkbox" />
+						<label className={styles.filterCheck}>
+							<input
+								name="sugarFree"
+								className={styles.filterCheckInput}
+								type="checkbox"
+								onChange={handleCheckboxChange}
+							/>
 							<span className={styles.filterCheckbox}></span>
-								Без белого сахара
+							Без белого сахара
 						</label>
 					</li>
 					<li className={styles.filterList}>
-    				<label className={styles.filterCheck}>
-							<input className={styles.filterCheckInput} type="checkbox" />
+						<label className={styles.filterCheck}>
+							<input
+								name="glutenFree"
+								className={styles.filterCheckInput}
+								type="checkbox"
+								onChange={handleCheckboxChange}
+							/>
 							<span className={styles.filterCheckbox}></span>
-								Без глютена
-						</label>
-					</li>
-					<li className={`${styles['filterList']}
-							${styles['filterList_disabled']}`}>
-    				<label className={styles.filterCheck}>
-							<input className={styles.filterCheckInput} type="checkbox" disabled={true}/>
-							<span className={styles.filterCheckbox}></span>
-								Без лактозы
+							Без глютена
 						</label>
 					</li>
 					<li className={styles.filterList}>
-    				<label className={styles.filterCheck}>
-							<input className={styles.filterCheckInput} type="checkbox" />
+						<label className={styles.filterCheck}>
+							<input
+								name="lactose-free"
+								className={styles.filterCheckInput}
+								type="checkbox"
+								onChange={handleCheckboxChange}
+							/>
 							<span className={styles.filterCheckbox}></span>
-								Для детей
+							Без лактозы
+						</label>
+					</li>
+					<li className={styles.filterList}>
+						<label className={styles.filterCheck}>
+							<input
+								name="forChildren"
+								className={styles.filterCheckInput}
+								type="checkbox"
+								onChange={handleCheckboxChange}
+							/>
+							<span className={styles.filterCheckbox}></span>
+							Для детей
 						</label>
 					</li>
 				</ul>

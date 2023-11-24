@@ -1,5 +1,5 @@
-@use '../../scss/mixins' as *;
-@use '../../scss/_variables' as *;
+@use '@scss/mixins' as *;
+@use '@scss/_variables' as *;
 
 @keyframes fade-in {
 	from {
@@ -13,8 +13,14 @@
 	}
 }
 
+.breadcrumbs-container {
+	display: flex;
+	width: 80%;
+	margin: auto;
+}
+
 .category {
-	margin: 151px 0 0;
+	margin: 0;
 	display: flex;
 	justify-content: center;
 }

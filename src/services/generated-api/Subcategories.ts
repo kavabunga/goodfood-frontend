@@ -9,22 +9,29 @@
  * ---------------------------------------------------------------
  */
 
-import { Subcategory } from './data-contracts';
+import {
+	ErrorResponse401,
+	ErrorResponse403,
+	ErrorResponse404,
+	Subcategory,
+	ValidationErrorResponse,
+} from './data-contracts';
 import { HttpClient, RequestParams } from './http-client';
 
 export class Subcategories<
 	SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
 	/**
-	 * @description Viewset for subcategories.
+	 * @description Returns a list of all the subcategories
 	 *
 	 * @tags subcategories
 	 * @name SubcategoriesList
+	 * @summary List all subcategories
 	 * @request GET:/subcategories/
 	 * @secure
 	 */
 	subcategoriesList = (params: RequestParams = {}) =>
-		this.request<Subcategory[], any>({
+		this.request<Subcategory, any>({
 			path: `/subcategories/`,
 			method: 'GET',
 			secure: true,
@@ -32,15 +39,19 @@ export class Subcategories<
 			...params,
 		});
 	/**
-	 * @description Viewset for subcategories.
+	 * @description Creates a subcategory (admin only)
 	 *
 	 * @tags subcategories
 	 * @name SubcategoriesCreate
+	 * @summary Create subcategory
 	 * @request POST:/subcategories/
 	 * @secure
 	 */
 	subcategoriesCreate = (data: Subcategory, params: RequestParams = {}) =>
-		this.request<Subcategory, any>({
+		this.request<
+			Subcategory,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403
+		>({
 			path: `/subcategories/`,
 			method: 'POST',
 			body: data,
@@ -49,15 +60,16 @@ export class Subcategories<
 			...params,
 		});
 	/**
-	 * @description Viewset for subcategories.
+	 * @description Retrieves a subcategory by its id
 	 *
 	 * @tags subcategories
 	 * @name SubcategoriesRead
+	 * @summary Get subcategory by id
 	 * @request GET:/subcategories/{id}/
 	 * @secure
 	 */
 	subcategoriesRead = (id: number, params: RequestParams = {}) =>
-		this.request<Subcategory, any>({
+		this.request<Subcategory, ErrorResponse404>({
 			path: `/subcategories/${id}/`,
 			method: 'GET',
 			secure: true,
@@ -65,10 +77,11 @@ export class Subcategories<
 			...params,
 		});
 	/**
-	 * @description Viewset for subcategories.
+	 * @description Edits a subcategory by its id (admin only)
 	 *
 	 * @tags subcategories
 	 * @name SubcategoriesPartialUpdate
+	 * @summary Edit subcategory
 	 * @request PATCH:/subcategories/{id}/
 	 * @secure
 	 */
@@ -77,7 +90,10 @@ export class Subcategories<
 		data: Subcategory,
 		params: RequestParams = {}
 	) =>
-		this.request<Subcategory, any>({
+		this.request<
+			Subcategory,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403 | ErrorResponse404
+		>({
 			path: `/subcategories/${id}/`,
 			method: 'PATCH',
 			body: data,
@@ -86,15 +102,16 @@ export class Subcategories<
 			...params,
 		});
 	/**
-	 * @description Viewset for subcategories.
+	 * @description Deletes a subcategory by its id (admin only)
 	 *
 	 * @tags subcategories
 	 * @name SubcategoriesDelete
+	 * @summary Delete subcategory
 	 * @request DELETE:/subcategories/{id}/
 	 * @secure
 	 */
 	subcategoriesDelete = (id: number, params: RequestParams = {}) =>
-		this.request<void, any>({
+		this.request<void, ErrorResponse401 | ErrorResponse403 | ErrorResponse404>({
 			path: `/subcategories/${id}/`,
 			method: 'DELETE',
 			secure: true,

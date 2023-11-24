@@ -9,20 +9,28 @@
  * ---------------------------------------------------------------
  */
 
-import { Category, CategoryCreate } from './data-contracts';
+import {
+	Category,
+	CategoryCreate,
+	ErrorResponse401,
+	ErrorResponse403,
+	ErrorResponse404,
+	ValidationErrorResponse,
+} from './data-contracts';
 import { HttpClient, RequestParams } from './http-client';
 
 export class Categories<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
 	/**
-	 * @description Viewset for categories.
+	 * @description Returns a list of all the categories
 	 *
 	 * @tags categories
 	 * @name CategoriesList
+	 * @summary List all categories
 	 * @request GET:/categories/
 	 * @secure
 	 */
 	categoriesList = (params: RequestParams = {}) =>
-		this.request<Category[], any>({
+		this.request<Category, any>({
 			path: `/categories/`,
 			method: 'GET',
 			secure: true,
@@ -30,15 +38,19 @@ export class Categories<SecurityDataType = unknown> extends HttpClient<SecurityD
 			...params,
 		});
 	/**
-	 * @description Viewset for categories.
+	 * @description Creates a category (admin only)
 	 *
 	 * @tags categories
 	 * @name CategoriesCreate
+	 * @summary Create category
 	 * @request POST:/categories/
 	 * @secure
 	 */
 	categoriesCreate = (data: CategoryCreate, params: RequestParams = {}) =>
-		this.request<CategoryCreate, any>({
+		this.request<
+			CategoryCreate,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403
+		>({
 			path: `/categories/`,
 			method: 'POST',
 			body: data,
@@ -47,15 +59,16 @@ export class Categories<SecurityDataType = unknown> extends HttpClient<SecurityD
 			...params,
 		});
 	/**
-	 * @description Viewset for categories.
+	 * @description Retrieves a category by its id
 	 *
 	 * @tags categories
 	 * @name CategoriesRead
+	 * @summary Get category by id
 	 * @request GET:/categories/{id}/
 	 * @secure
 	 */
 	categoriesRead = (id: number, params: RequestParams = {}) =>
-		this.request<Category, any>({
+		this.request<Category, ErrorResponse404>({
 			path: `/categories/${id}/`,
 			method: 'GET',
 			secure: true,
@@ -63,10 +76,11 @@ export class Categories<SecurityDataType = unknown> extends HttpClient<SecurityD
 			...params,
 		});
 	/**
-	 * @description Viewset for categories.
+	 * @description Edits a category by its id (admin only)
 	 *
 	 * @tags categories
 	 * @name CategoriesPartialUpdate
+	 * @summary Edit category
 	 * @request PATCH:/categories/{id}/
 	 * @secure
 	 */
@@ -75,7 +89,10 @@ export class Categories<SecurityDataType = unknown> extends HttpClient<SecurityD
 		data: CategoryCreate,
 		params: RequestParams = {}
 	) =>
-		this.request<CategoryCreate, any>({
+		this.request<
+			CategoryCreate,
+			ValidationErrorResponse | ErrorResponse401 | ErrorResponse403 | ErrorResponse404
+		>({
 			path: `/categories/${id}/`,
 			method: 'PATCH',
 			body: data,
@@ -84,15 +101,16 @@ export class Categories<SecurityDataType = unknown> extends HttpClient<SecurityD
 			...params,
 		});
 	/**
-	 * @description Viewset for categories.
+	 * @description Deletes a category by its id (admin only)
 	 *
 	 * @tags categories
 	 * @name CategoriesDelete
+	 * @summary Delete category
 	 * @request DELETE:/categories/{id}/
 	 * @secure
 	 */
 	categoriesDelete = (id: number, params: RequestParams = {}) =>
-		this.request<void, any>({
+		this.request<void, ErrorResponse401 | ErrorResponse403 | ErrorResponse404>({
 			path: `/categories/${id}/`,
 			method: 'DELETE',
 			secure: true,

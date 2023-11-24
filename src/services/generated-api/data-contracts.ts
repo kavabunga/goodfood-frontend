@@ -351,7 +351,7 @@ export interface Product {
 	final_price?: number;
 	promotions?: PromotionLight[];
 	/** Promotion quantity */
-	promotion_quantity?: string;
+	promotion_quantity?: number;
 	/**
 	 * Photo
 	 * @format uri

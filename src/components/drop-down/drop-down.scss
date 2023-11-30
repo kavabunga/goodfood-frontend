@@ -27,6 +27,11 @@
 		&--is-focused {
 			box-shadow: none !important;
 		}
+
+		@media screen and (width <= 768px) {
+			font-size: 14px !important;
+			font-weight: 500 !important;
+		}
 	}
 
 	.custom-select__control:focus {
@@ -43,6 +48,11 @@
 		font-size: 20px !important;
 		line-height: 140% !important;
 		animation: scale 0.1s ease-in-out;
+
+		@media screen and (width <= 768px) {
+			font-size: 14px !important;
+			font-weight: 500 !important;
+		}
 	}
 
 	&__option {

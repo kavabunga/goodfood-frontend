@@ -126,7 +126,7 @@ const Category: React.FC = () => {
 	return (
 		<>
 			<SliderComponent />
-			<section>
+			<section className={styles['section-container']}>
 				<div className={styles['breadcrumbs-container']}>
 					<Breadcrumbs isTall={true} />
 				</div>

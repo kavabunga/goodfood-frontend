@@ -48,7 +48,7 @@
 	width: 80%;
 	display: flex;
 
-	@media screen and (width <= 1024px) {
+	@media screen and (width < 1230px) {
 		justify-content: space-around;
 	}
 
@@ -87,7 +87,7 @@
 
 	@media screen and (width <= 768px) {
 		font-size: 18px;
-		padding-top: 20px;
+		padding-top: 51px;
 	}
 }
 
@@ -97,7 +97,7 @@
 	grid-template-columns: repeat(2, 1fr);
 	gap: 20px;
 
-	@media screen and (width <= 1024px) {
+	@media screen and (width < 1230px) {
 		grid-template-columns: 1fr;
 	}
 

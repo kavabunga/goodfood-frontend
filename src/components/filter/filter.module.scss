@@ -28,20 +28,19 @@
 	font-size: 20px;
 }
 
-// .filterChooseArrow {
-// 	width: 26px;
-// 	height: 28px;
-// 	background: url('@images/vector.svg');
-// 	background-repeat: no-repeat;
-// 	background-position: center;
-// }
-
 .filterBox {
 	margin: 10px 0 0;
 	width: 328px;
 	height: 340px;
 	border-radius: 16px;
 	border: 1px solid var(--inactive, #cfcfcf);
+
+	@media screen and (width <= 768px) {
+		box-sizing: border-box;
+		max-width: 280px;
+		max-height: 284px;
+		margin-top: 20px;
+	}
 }
 
 .filterColumn {
@@ -50,6 +49,12 @@
 	font-family: Ubuntu, sans-serif;
 	font-size: 20px;
 	line-height: 140%;
+
+	@media screen and (width <= 768px) {
+		margin: 17px 0 0 20px;
+		font-size: 14px;
+		font-weight: 500;
+	}
 }
 
 .filterList {
@@ -76,6 +81,11 @@
 	border-radius: 4px;
 	background-color: white;
 	box-shadow: 0 0 0 0.1em #2b7a0f;
+
+	@media screen and (width <= 768px) {
+		width: 18px;
+		height: 18px;
+	}
 }
 
 .filterCheckInput {

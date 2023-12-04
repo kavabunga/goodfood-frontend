@@ -3,12 +3,11 @@ import CardBlockLink from '../card-block-link';
 import ProductCard from '../product-card';
 import styles from './card-catalog-link.module.scss';
 import { Link } from 'react-router-dom';
-import { Product } from '@services/generated-api/data-contracts';
 
 type CardCatalogLinkProps = {
 	title: string;
 	category?: string;
-	array: Product[];
+	array: { title: string; link: string; backgroundImage: string }[];
 	type: 'bento-grid' | 'single-row';
 };
 

@@ -95,6 +95,7 @@ const ShoppingCart: React.FC = () => {
 				<div className={styles.cart__advertisement}>
 					{products.map((product: Product, index: number) => (
 						<ProductCard
+							idCard={1}
 							key={index}
 							cardImage={product.cardImage}
 							cardName={product.cardName}

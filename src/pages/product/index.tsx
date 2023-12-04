@@ -11,8 +11,7 @@ import { useAuth } from '@hooks/use-auth';
 import { usePopup } from '@hooks/use-popup';
 
 type ShoppingCartPostUpdateDelete = {
-	id: number;
-	quantity: number;
+	products: { id: number; quantity: number }[];
 };
 
 const Product: React.FC = () => {

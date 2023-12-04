@@ -12,8 +12,8 @@ type PopupState = {
 
 type PopupContextType = {
 	popupState: PopupState;
-	handleOpenPopup: (popupName: keyof PopupState) => void;
-	handleClosePopup: (popupName: keyof PopupState) => void;
+	handleClosePopup: (popupName: string) => void;
+	handleOpenPopup: (popupName: string) => void;
 };
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);

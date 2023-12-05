@@ -3,6 +3,11 @@
 
 .wrapper {
 	margin-left: 87px;
+
+	@media screen and (width <= 768px) {
+		max-width: 320px;
+		margin: auto;
+	}
 }
 
 .title {
@@ -18,6 +23,11 @@
 		font-family: $ubuntu-font;
 		cursor: pointer;
 		color: $active-text-color;
+
+		@media screen and (width <= 768px) {
+			font-size: 15px;
+			font-weight: 700;
+		}
 	}
 }
 
@@ -29,10 +39,18 @@
 	gap: 40px 20px;
 	justify-content: space-between;
 	margin-bottom: 20px;
+
+	@media screen and (width <= 768px) {
+		gap: 4px;
+	}
 }
 
 .favorites__item {
 	place-self: center;
+
+	@media screen and (width <= 768px) {
+		max-width: 138px;
+	}
 }
 
 .list__empty {

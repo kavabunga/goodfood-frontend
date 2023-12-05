@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import styles from './profile-favorites.module.scss';
 import api from '@services/api';
 import ProductCard from '@components/product-card';
+import ReturnBackButton from '@components/profile-components/return-back-button';
+import { useProfile } from '@hooks/use-profile';
 import type { Product } from '@services/generated-api/data-contracts';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +15,7 @@ export default function ProfileFavorites() {
 	});
 	const [products, setProducts] = useState<Array<Product>>([]);
 	const [checkboxesValues, setCheckboxesValue] = useState<boolean[]>([]);
+	const { isMobileScreen } = useProfile();
 
 	useEffect(() => {
 		products && setCheckboxesValue(products.map(() => false));
@@ -64,6 +67,7 @@ export default function ProfileFavorites() {
 				<button className={styles.title__button} onClick={toggleAll} type="button">
 					{isChooseAll ? 'Удалить все' : 'Выбрать все'}
 				</button>
+				{isMobileScreen && <ReturnBackButton />}
 			</div>
 			<ul className={styles.favorites__list}>
 				{!productsLoadingStatus.inProcess && products.length ? (

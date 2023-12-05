@@ -1,30 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useProfile } from '@hooks/use-profile';
+import { useState } from 'react';
 import ProfileOrder from '@components/profile-components/profile-order';
 import ProfileOrderMobile from '@components/profile-components/profile-order-mobile';
+import ReturnBackButton from '@components/profile-components/return-back-button';
+import { useProfile } from '@hooks/use-profile';
 import styles from './profile-orders.module.scss';
 
 const ordersArray = [...new Array(4)];
 
 export default function ProfileOrders() {
 	const [isOpenDetails, setIsOpenDetails] = useState<number>();
-	const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth <= 768);
-	const [width, setWidth] = useState(window.innerWidth);
-	const { setIsProfileMenuOpen } = useProfile();
-
-	const onResize = () => {
-		setIsMobileScreen(window.innerWidth <= 768);
-		setWidth(window.innerWidth);
-	};
-
-	useEffect(() => {
-		setTimeout(() => {
-			window.addEventListener('resize', onResize);
-		}, 100);
-		return () => {
-			window.removeEventListener('resize', onResize);
-		};
-	}, [width]);
+	const { isMobileScreen } = useProfile();
 
 	const showDetails = (index: number) => {
 		return () => {
@@ -46,15 +31,7 @@ export default function ProfileOrders() {
 						Назад к заказам
 					</button>
 				)}
-				{isMobileScreen && (
-					<button
-						onClick={() => setIsProfileMenuOpen(true)}
-						className={styles['profile-orders__title-button']}
-						type="button"
-					>
-						Назад к меню
-					</button>
-				)}
+				{isMobileScreen && <ReturnBackButton />}
 			</div>
 			<div className={styles['profile-orders__list']}>
 				{ordersArray

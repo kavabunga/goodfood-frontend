@@ -1,8 +1,12 @@
 import React from 'react';
 import styles from '../slider-item-three/slider-item-three.module.scss';
 import vegetablesSlider from '@images/vegetables_slider_03.png';
+import infoSliderImage from '@images/slider_info_card1.svg';
+import { useProfile } from '@hooks/use-profile';
 
 const SliderItemTwo: React.FC = () => {
+	const { isMobileScreen } = useProfile();
+
 	return (
 		<div className={styles.slider__ItemContent}>
 			<div className={styles.slider__content}>
@@ -11,7 +15,11 @@ const SliderItemTwo: React.FC = () => {
 					<span className={styles.secondLine}>доставка</span>
 				</h1>
 			</div>
-			<img className={styles.slider__image} src={vegetablesSlider} alt="Описание" />
+			<img
+				className={styles.slider__image}
+				src={isMobileScreen ? infoSliderImage : vegetablesSlider}
+				alt="Описание"
+			/>
 		</div>
 	);
 };

@@ -12,12 +12,9 @@ export default function ProfileOrders() {
 	const [orders, setOrders] = useState<OrderList[]>([]);
 	const { isMobileScreen } = useProfile();
 
-
 	useEffect(() => {
 		api.usersOrderList().then((data) => setOrders(data));
 	}, []);
-
-
 
 	const showDetails = (index: number) => {
 		return () => {

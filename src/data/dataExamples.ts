@@ -3,7 +3,7 @@ import TomatoesForProductPage from '@images/tomatoes_for_product_page.png';
 export const mainPageBlockLinks = [
 	{
 		title: 'Овощи',
-		link: 'vegetables',
+		link: 'vegetables-and-herbs',
 		backgroundImage: '/383bea75365411fd84f9c6c47e081cab.jpeg',
 		gridArea: 'a',
 	},

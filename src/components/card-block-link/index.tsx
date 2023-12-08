@@ -15,7 +15,9 @@ function CardBlockLink({ title, link, backgroundImage }: CardBlockLinkProps) {
 			// дописать маршрут
 			to={`/catalog/${link}`}
 		>
-			<h3 className={styles['card-block-link__title']}>{title}</h3>
+			<div className={styles['card-block-link__title-wrapper']}>
+				<h3 className={styles['card-block-link__title']}>{title}</h3>
+			</div>
 		</Link>
 	);
 }

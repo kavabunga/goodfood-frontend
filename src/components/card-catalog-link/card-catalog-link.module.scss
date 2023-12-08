@@ -2,9 +2,12 @@
 @use '@scss/base.scss' as *;
 
 .card-catalog-link {
-	width: 100%;
-	max-width: 1024px;
+	width: 80%;
 	margin: 0 auto;
+
+	@media screen and (width <= 768px) {
+		width: calc(100% - 2 * 20px);
+	}
 }
 
 .card-catalog-link__title-container {
@@ -30,6 +33,10 @@
 .card-catalog-link__title {
 	margin: 0;
 	color: #1a1a1a;
+
+	@media screen and (width <= 768px) {
+		font-size: 24px;
+	}
 }
 
 .card-catalog-link__arrow {
@@ -48,27 +55,21 @@
 	list-style: none;
 	gap: 20px;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(328px, 1fr));
+	grid-template-areas:
+		'a a b b c c'
+		'd d d e e e';
 	margin-bottom: 13px;
+
+	@media screen and (width <= 768px) {
+		grid-template-areas:
+			'a b'
+			'c d'
+			'e .';
+		gap: 4px;
+	}
 
 	&:last-of-type {
 		margin-bottom: 0;
-	}
-
-	@media screen and (width < 768px) {
-		gap: 4px;
-		grid-template-columns: minmax(138px, 33%) minmax(138px, 33%) minmax(138px, 33%);
-		grid-template-rows: 228px;
-		white-space: nowrap;
-		overflow-x: auto;
-	}
-
-	@media screen and (width >= 768px) and (width < 1280px) {
-		gap: 4px;
-		grid-template-columns: minmax(328px, 33%) minmax(328px, 33%) minmax(328px, 33%);
-		grid-template-rows: 375px;
-		white-space: nowrap;
-		overflow-x: auto;
 	}
 }
 

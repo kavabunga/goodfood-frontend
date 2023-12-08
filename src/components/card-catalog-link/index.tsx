@@ -30,7 +30,11 @@ function CardCatalogLink({ title, array, type, category }: CardCatalogLinkProps)
 			</div>
 			<ul className={styles['card-catalog-link__list']}>
 				{array.map((item: Record<string, any>, index: number) => (
-					<li className={styles['card-catalog-link__list-item']} key={index}>
+					<li
+						className={styles['card-catalog-link__list-item']}
+						key={index}
+						style={{ gridArea: item.gridArea }}
+					>
 						{type === 'bento-grid' && (
 							<CardBlockLink
 								title={item.title}

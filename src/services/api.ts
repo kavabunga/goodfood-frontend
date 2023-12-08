@@ -273,7 +273,7 @@ class Api {
 			},
 		});
 	}
-	// userId: string
+
 	usersShoppingCartCreate(data: ShoppingCartPostUpdateDelete) {
 		return this._request(`shopping_cart/`, {
 			method: 'POST',
@@ -282,6 +282,16 @@ class Api {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(data),
+		});
+	}
+
+	usersShoppingCartDelete(id: number) {
+		return this._request(`shopping_cart/${id}/`, {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 
@@ -299,12 +309,6 @@ class Api {
 		return this._request(`users/${userId}/shopping_cart/${id}/`, {
 			method: 'PATCH',
 			body: JSON.stringify(data),
-		});
-	}
-
-	usersShoppingCartDelete(userId: string, id: number) {
-		return this._request(`users/${userId}/shopping_cart/${id}/`, {
-			method: 'DELETE',
 		});
 	}
 

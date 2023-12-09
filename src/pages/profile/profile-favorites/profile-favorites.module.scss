@@ -35,12 +35,13 @@
 	@extend %zero-padding-margin;
 
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(auto-fit, 328px);
 	gap: 40px 20px;
-	justify-content: space-between;
+	justify-content: center;
 	margin-bottom: 20px;
 
 	@media screen and (width <= 768px) {
+		grid-template-columns: repeat(auto-fit, 138px);
 		gap: 4px;
 	}
 }

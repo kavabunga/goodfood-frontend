@@ -1,5 +1,6 @@
 /* eslint-disable */
 import CardBlockLink from '../card-block-link';
+import clsx from 'clsx';
 import ProductCard from '../product-card';
 import styles from './card-catalog-link.module.scss';
 import { Link } from 'react-router-dom';
@@ -28,7 +29,12 @@ function CardCatalogLink({ title, array, type, category }: CardCatalogLinkProps)
 				</Link>
 				<span className={styles['card-catalog-link__arrow']} />
 			</div>
-			<ul className={styles['card-catalog-link__list']}>
+			<ul
+				className={clsx(
+					type === 'single-row' && styles['card-catalog-link__list-single'],
+					type === 'bento-grid' && styles['card-catalog-link__list-bento']
+				)}
+			>
 				{array.map((item: Record<string, any>, index: number) => (
 					<li
 						className={styles['card-catalog-link__list-item']}

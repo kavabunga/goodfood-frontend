@@ -5,7 +5,7 @@ import styles from './our-block.module.scss';
 const OurBlock: React.FC = () => {
 	return (
 		<div className={styles['our-blog']}>
-			<h2 className={styles['our-blog__title']}>Наш блог</h2>
+			<h2 className={styles['our-blog__title']}>Рецепты</h2>
 			<div className={styles['our-blog__topic-list']}>
 				<TopicCard
 					cardName="Оладьи без яиц"

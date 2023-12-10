@@ -860,6 +860,51 @@ export interface UserCreate {
 	city?: string;
 }
 
+export interface ProductsInRecipe {
+	/** Id */
+	id?: string;
+	/** Name */
+	name?: string;
+	/** Measure unit */
+	measure_unit?: string;
+	/** Quantity */
+	quantity?: string;
+}
+
+export interface Recipe {
+	/** ID */
+	id?: number;
+	/** Recipe author */
+	author: number;
+	/**
+	 * Recipe title
+	 * @minLength 1
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
+	 * Recipe description
+	 * @minLength 1
+	 */
+	text: string;
+	/**
+	 * Dish image
+	 * @format uri
+	 */
+	image?: string;
+	ingredients: ProductsInRecipe[];
+	/** Total ingredients */
+	total_ingredients?: string;
+	/** Recipe nutrients */
+	recipe_nutrients?: string;
+	/**
+	 * Cooking time
+	 * @min 1
+	 * @max 2147483647
+	 */
+	cooking_time: number;
+}
+
 export interface Activation {
 	/**
 	 * Uid

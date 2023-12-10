@@ -7,7 +7,7 @@ const meta: Meta<typeof TopicCard> = {
 	title: 'TopicCard',
 	tags: ['autodocs'],
 	argTypes: {
-		cardDate: {
+		recipe: {
 			control: { type: 'text' },
 			// control: { type: 'radio' },
 			// options: [1, 2, 3],
@@ -22,9 +22,14 @@ type Story = StoryObj<typeof meta>;
 /**  comments shows in TopicCard story Docks  */
 export const Default: Story = {
 	args: {
-		cardName: 'Оладьи без яиц',
-		cardDescription: 'Итальянская классика за 30 минут на вашем столе.',
-		cardDate: '29 окт. 2023',
+		recipe: {
+			author: 1,
+			name: 'aaa',
+			text: 'bbb',
+			ingredients: [],
+			cooking_time: 30,
+			image: 'https://goodfood.acceleratorpracticum.ru/media/images/recipes/1.jpg',
+		},
 	},
 	render: (args) => (
 		<BrowserRouter>

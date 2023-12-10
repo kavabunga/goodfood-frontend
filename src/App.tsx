@@ -18,6 +18,8 @@ import ShoppingCart from '@pages/shopping-cart/index.tsx';
 import ProfileOrders from '@pages/profile/profile-orders/index.tsx';
 import Recipes from '@pages/recipe/index.tsx';
 import Contacts from '@pages/contacts/index.tsx';
+import NotFound from '@pages/not_found/not-found.tsx';
+import { CartProvider } from '@contexts/cart-context.tsx';
 
 // импорт временных массивов для отображения каталогов и продуктов
 // временное решение для верстки, потом удалить
@@ -32,31 +34,34 @@ function App() {
 	const { isLoggedIn } = useAuth();
 
 	return (
-		<div className="app">
-			<Layout>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path={URLS.CATALOG} element={<Catalog />} />
-					<Route path="/catalog/:category" element={<Category />} />
-					<Route path="/catalog/:category/:id" element={<Product />} />
-					<Route path="/cart" element={<ShoppingCart />} />
-					<Route path="/cart/order" element={<Checkout />} />
-					<Route path="/recipes" element={<Recipes />} />
-					<Route path="/contacts" element={<Contacts />} />
-					<Route
-						path={URLS.PROFILE}
-						element={<ProtectedRoute element={Profile} loggedIn={isLoggedIn} />}
-					>
-						<Route index element={<ProfileUser />} />
-						<Route path="orders" element={<ProfileOrders />} />
-						<Route path="addresses" element={<ProfileAddresses />} />
-						<Route path="favorites" element={<ProfileFavorites />} />
-					</Route>
-				</Routes>
-			</Layout>
-			<PopupLogin />
-			<PopupRegistration />
-		</div>
+		<CartProvider>
+			<div className="app">
+				<Layout>
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path={URLS.CATALOG} element={<Catalog />} />
+						<Route path="/catalog/:category" element={<Category />} />
+						<Route path="/catalog/:category/:id" element={<Product />} />
+						<Route path="/cart" element={<ShoppingCart />} />
+						<Route path="/cart/order" element={<Checkout />} />
+						<Route path="/recipes" element={<Recipes />} />
+						<Route path="/contacts" element={<Contacts />} />
+						<Route
+							path={URLS.PROFILE}
+							element={<ProtectedRoute element={Profile} loggedIn={isLoggedIn} />}
+						>
+							<Route index element={<ProfileUser />} />
+							<Route path="orders" element={<ProfileOrders />} />
+							<Route path="addresses" element={<ProfileAddresses />} />
+							<Route path="favorites" element={<ProfileFavorites />} />
+						</Route>
+						<Route path="*" element={<NotFound />} />
+					</Routes>
+				</Layout>
+				<PopupLogin />
+				<PopupRegistration />
+			</div>
+		</CartProvider>
 	);
 }
 

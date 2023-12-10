@@ -19,7 +19,7 @@ const Header: React.FC = () => {
 	// )}
 	// const { isLoggedIn } = useAuth();
 	const [openBurger, setOpenBurger] = useState(false);
-	console.log(openBurger);
+
 	function ClickOpen() {
 		if (!openBurger) {
 			setOpenBurger(true);

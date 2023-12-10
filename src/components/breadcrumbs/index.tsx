@@ -1,17 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
-import api from '@services/api';
-import type { Category } from '@services/generated-api/data-contracts';
 import styles from './breadcrumbs.module.scss';
 
 type BreadcrumbsProps = {
 	productName?: string;
+	category?: {
+		category_name: string;
+		category_slug: string;
+	};
 	isTall?: boolean;
 };
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isTall }) => {
-	const [categories, setCategories] = useState<Record<string, string>>({
+type Categories = {
+	catalog: string;
+	profile: string;
+	cart: string;
+	addresses: string;
+	favorites: string;
+	recipes: string;
+	contacts: string;
+	orders: string;
+	[key: string]: string;
+};
+
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, category, isTall }) => {
+	const categories: Categories = {
 		catalog: 'Каталог товаров',
 		profile: 'Личный кабинет',
 		cart: 'Корзина',
@@ -20,22 +34,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isTall }) => {
 		recipes: 'Рецепты',
 		contacts: 'Контакты',
 		orders: 'Мои заказы',
-	});
+	};
 
-	useEffect(() => {
-		const translatedCategoriesObject: Record<string, string> = {};
-		api.categoriesList().then((categories: Category[]) => {
-			categories.map((category) => {
-				const categoryRussianName = category.name.trim();
-
-				if (category.slug) {
-					return (translatedCategoriesObject[category.slug] = categoryRussianName);
-				}
-				return category;
-			});
-			setCategories((prevState) => ({ ...prevState, ...translatedCategoriesObject }));
-		});
-	}, []);
+	if (category) {
+		categories[category.category_slug] = category.category_name;
+	}
 
 	const location = useLocation();
 	const translatedPathnames = location.pathname.split('/').map((path) => {
@@ -43,7 +46,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isTall }) => {
 			return (path = categories[path]);
 		}
 
-		return path;
+		return null;
 	});
 
 	const breadcrumbsArray = ['Главная', ...translatedPathnames.slice(1)];
@@ -69,7 +72,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ productName, isTall }) => {
 					</span>
 				) : (
 					<Link className={styles.breadcrumbs__item} key={name} to={routeTo}>
-						{name}
+						{name || ' '}
 						<span
 							onClick={(e) => e.preventDefault()}
 							className={styles.breadcrumbs__arrow}

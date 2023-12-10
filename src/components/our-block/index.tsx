@@ -1,27 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TopicCard from '@components/topic-card';
 import styles from './our-block.module.scss';
+import api from '@services/api';
+import type { Recipe } from '@services/generated-api/data-contracts';
 
 const OurBlock: React.FC = () => {
+	const [recipes, setRecipes] = useState<Recipe[]>([]);
+
+	useEffect(() => {
+		api.recipesList().then((recipes) => setRecipes(recipes.slice(0, 3)));
+	}, []);
+
 	return (
 		<div className={styles['our-blog']}>
 			<h2 className={styles['our-blog__title']}>Рецепты</h2>
 			<div className={styles['our-blog__topic-list']}>
-				<TopicCard
-					cardName="Оладьи без яиц"
-					cardDescription="Простой рецепт для уютного завтрака с семьёй."
-					cardDate="30 минут"
-				/>
-				<TopicCard
-					cardName="Вегетарианский суп"
-					cardDescription="Согревающий суп, как раз для начала осени."
-					cardDate="40 минут"
-				/>
-				<TopicCard
-					cardName="Паста болоньезе"
-					cardDescription="Итальянская класстка за 30 минут на вашем столе."
-					cardDate="60 минут"
-				/>
+				{recipes.map((recipe) => {
+					return <TopicCard key={recipe.id} recipe={recipe} />;
+				})}
 			</div>
 		</div>
 	);

@@ -602,6 +602,13 @@ class Api {
 			method: 'DELETE',
 		});
 	}
+
+	/* ------------------------------- Recipes ------------------------------- */
+	recipesList() {
+		return this._request('recipes/', {
+			method: 'GET',
+		});
+	}
 }
 
 const api = new Api(BACKEND_URL);

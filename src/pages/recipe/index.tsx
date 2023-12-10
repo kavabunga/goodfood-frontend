@@ -3,6 +3,7 @@ import Breadcrumbs from '@components/breadcrumbs';
 import IngredientsList from '@components/recipes-components/ingredients-list';
 import { declOfNum } from '@utils/utils';
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import RecipeInfo from '@components/recipes-components/recipe-info';
 import { usePopup } from '@hooks/use-popup';
 import PopupRecipe from '@components/popups/popup-recipe';
@@ -17,6 +18,11 @@ const instructions = [
 export default function Recipe() {
 	const { handleOpenPopup } = usePopup();
 	const numeralizeWord = declOfNum(cookingTime, ['минута', 'минуты', 'минут']);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<div className={styles.recipes}>
 			<div className={styles.recipes__container}>

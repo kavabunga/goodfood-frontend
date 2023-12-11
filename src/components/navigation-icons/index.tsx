@@ -33,11 +33,10 @@ const NavigationIcons: React.FC = () => {
 						type="button"
 						onClick={() => handleOpenPopup('openPopupLogin')}
 					/>
-					<button
+					<Link
 						className={`${styles.navigation__icon} ${styles.navigation__icon_busket}`}
-						type="button"
-						onClick={() => handleOpenPopup('openPopupLogin')}
-					/>
+						to={'/cart'}
+					></Link>
 					<button
 						className={`${styles.navigation__icon} ${styles.navigation__icon_profile}`}
 						type="button"

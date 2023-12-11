@@ -18,6 +18,7 @@ const Category: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [products, setProducts] = useState<Product[]>([]);
 	const [categoryName, setCategoryName] = useState('');
+	const [categoryObj, setCategoryObj] = useState(undefined);
 	const [checkboxState, setCheckboxState] = useState<filteredType>({
 		vegetarian: false,
 		sugarless: false,
@@ -38,6 +39,7 @@ const Category: React.FC = () => {
 			.then((data) => {
 				setProducts(data.results);
 				setCategoryName(data.results[0]?.category?.category_name);
+				setCategoryObj(data.results[0]?.category);
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -128,7 +130,7 @@ const Category: React.FC = () => {
 			<SliderComponent />
 			<section className={styles['section-container']}>
 				<div className={styles['breadcrumbs-container']}>
-					<Breadcrumbs />
+					<Breadcrumbs category={categoryObj} />
 				</div>
 				<div className={styles.category}>
 					{isLoading ? (

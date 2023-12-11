@@ -17,9 +17,12 @@ type ShoppingCartItem = {
 type ProductItem = {
 	id: number;
 	name: string;
+	photo: string;
+	category: string;
 	quantity: number;
-	final_price: number;
 	created_at: number;
+	final_price: number;
+	total_price: number;
 };
 
 type CartDataItem = {
@@ -30,6 +33,7 @@ type CartDataItem = {
 
 type CartContextType = {
 	cartData: CartDataItem;
+	loading: boolean;
 	loadCartData: () => void;
 	updateCart: (id: number, quantity: number) => void;
 	deleteCart: (id: number) => void;
@@ -43,6 +47,7 @@ const CartContext = createContext<CartContextType>({
 		products: [],
 		total_price: 0,
 	},
+	loading: true,
 	loadCartData: () => {},
 	updateCart: () => {},
 	deleteCart: () => {},
@@ -56,15 +61,23 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 		products: [],
 		total_price: 0,
 	});
+	const [cartUpdating, setCartUpdating] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const loadCartData = () => {
 		api
 			.usersShoppingCartList()
 			.then((data) => {
 				setCartData(data);
+				setCartUpdating(true);
+				setLoading(true);
 			})
 			.catch((error) => {
 				console.error('Error loading cart data:', error);
+			})
+			.finally(() => {
+				setCartUpdating(false);
+				setLoading(false);
 			});
 	};
 
@@ -81,13 +94,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 		api
 			.usersShoppingCartCreate(updatedCartItem)
 			.then((data) => {
-				setCartData((prevCartData) => ({
-					...prevCartData,
-					...data,
-				}));
+				setCartData(data);
+				setCartUpdating(true);
 			})
 			.catch((error) => {
 				console.error('Error updating cart:', error);
+			})
+			.finally(() => {
+				setCartUpdating(false);
 			});
 	};
 
@@ -103,31 +117,42 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 	};
 
 	const addItemToCart = (productId: number) => {
-		const existingProductIndex = cartData.products.findIndex(
-			(product) => product.id === productId
-		);
+		if (!cartUpdating) {
+			console.log(cartUpdating);
+			const existingProductIndex = cartData.products.findIndex(
+				(product) => product.id === productId
+			);
 
-		if (existingProductIndex !== -1) {
-			cartData.products[existingProductIndex].quantity += 1;
+			if (existingProductIndex !== -1) {
+				if (cartData.products[existingProductIndex].quantity < 10) {
+					cartData.products[existingProductIndex].quantity += 1;
+					updateCart(productId, cartData.products[existingProductIndex]?.quantity);
+				} else {
+					console.error('Превышено максимальное количество товара в корзине');
+				}
+			}
+		} else {
+			console.log('Корзина обновляется. Пожалуйста, подождите.');
 		}
-
-		// Обновляем контекст корзины с обновленными данными
-		updateCart(productId, cartData.products[existingProductIndex]?.quantity);
 	};
 
 	const removeItemFromCart = (productId: number) => {
-		const existingItemIndex = cartData.products.findIndex(
-			(item) => item.id === productId
-		);
+		if (!cartUpdating) {
+			const existingItemIndex = cartData.products.findIndex(
+				(item) => item.id === productId
+			);
 
-		if (existingItemIndex !== -1) {
-			const existingItem = cartData.products[existingItemIndex];
+			if (existingItemIndex !== -1) {
+				const existingItem = cartData.products[existingItemIndex];
 
-			if (existingItem.quantity > 1) {
-				existingItem.quantity -= 1;
+				if (existingItem.quantity > 1) {
+					existingItem.quantity -= 1;
+				}
+
+				updateCart(productId, existingItem?.quantity || 0);
 			}
-
-			updateCart(productId, existingItem?.quantity || 0);
+		} else {
+			console.log('Корзина обновляется. Пожалуйста, подождите.');
 		}
 	};
 
@@ -139,6 +164,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 		<CartContext.Provider
 			value={{
 				cartData,
+				loading,
 				loadCartData,
 				updateCart,
 				deleteCart,

@@ -9,19 +9,17 @@ import Breadcrumbs from '@components/breadcrumbs';
 import { Product as ProductType } from '@services/generated-api/data-contracts';
 import { useAuth } from '@hooks/use-auth';
 import { usePopup } from '@hooks/use-popup';
-
-type ShoppingCartPostUpdateDelete = {
-	products: { id: number; quantity: number }[];
-};
+import { useCart } from '@hooks/use-cart-context.ts';
 
 const Product: React.FC = () => {
+	const { cartData, updateCart, deleteCart } = useCart();
 	const [isInCart, setIsInCart] = React.useState<boolean>(false);
+	const [isProductInCart, setIsProductInCart] = React.useState<boolean>(false);
 	const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
 	const [productItem, setProductItem] = React.useState<ProductType | null>(null);
 
 	const { isLoggedIn } = useAuth();
 	const { handleOpenPopup } = usePopup();
-
 	const { id } = useParams();
 
 	useEffect(() => {
@@ -37,44 +35,34 @@ const Product: React.FC = () => {
 	}, [id]);
 
 	useEffect(() => {
+		if (id !== undefined) {
+			const numericId: number = parseInt(id, 10);
+			const isProductInCart = cartData.products.some(
+				(product) => product.id === numericId
+			);
+			setIsProductInCart(isProductInCart);
+			setIsInCart(isProductInCart);
+		}
+	}, [cartData, id]);
+
+	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	function handleAddCartClick() {
-		if (!productItem) {
-			return;
+	const handleAddCartClick = () => {
+		if (isLoaded || !productItem) return;
+		if (id !== undefined) {
+			const numericId: number = parseInt(id, 10);
+			setIsInCart(isProductInCart);
+			if (!isProductInCart) {
+				updateCart(numericId, 1);
+				setIsInCart(true);
+			} else {
+				deleteCart(numericId);
+				setIsInCart(false);
+			}
 		}
-
-		const shoppingCartItem: ShoppingCartPostUpdateDelete = {
-			products: [
-				{
-					id: 1,
-					quantity: 1,
-				},
-			],
-		};
-
-		console.log(shoppingCartItem);
-
-		api
-			.usersShoppingCartCreate(shoppingCartItem)
-			.then(() => {
-				api
-					.usersShoppingCartList()
-					.then((data) => console.log(data))
-					.catch()
-					.finally();
-			})
-			.catch(() => {})
-			.finally();
-
-		setIsInCart(!isInCart);
-		if (!isInCart) {
-			console.log('убрали из корзины((((');
-		}
-		console.log('кнопка В Корзину нажата!');
-		console.log(isInCart);
-	}
+	};
 
 	function handleAddToFavorities() {
 		if (isLoaded || !productItem) return;
@@ -101,7 +89,7 @@ const Product: React.FC = () => {
 						productItem && styles['product__section-active']
 					}`}
 				>
-					<Breadcrumbs productName={productItem.name} />
+					<Breadcrumbs category={productItem.category} productName={productItem.name} />
 					<div className={styles.product__main}>
 						<div className={styles.product__info}>
 							<div className={styles.product__container}>
@@ -123,15 +111,17 @@ const Product: React.FC = () => {
 							<div className={styles.product__btns}>
 								<Button
 									buttonText={isInCart ? 'В корзине' : 'В корзину'}
-									buttonStyle={isInCart ? 'green-border-button__active' : 'cart-button'}
+									buttonStyle={
+										isInCart ? 'green-border-button' : 'green-border-button__active'
+									}
 									onClick={handleAddCartClick}
 								/>
 								<Button
 									buttonText={productItem.is_favorited ? 'В избранном' : 'В избранное'}
 									buttonStyle={
 										productItem.is_favorited
-											? 'green-border-button__active'
-											: 'green-border-button'
+											? 'green-border-button'
+											: 'green-border-button__active'
 									}
 									onClick={handleAddToFavorities}
 								/>

@@ -4,25 +4,18 @@ import ProductCard from '@components/product-card';
 import { products } from '@data/dataExamples.ts';
 import ShoppingList from '@components/shopping-list';
 import Breadcrumbs from '@components/breadcrumbs';
-// import type { Product } from '@services/generated-api/data-contracts';
 import { useNavigate } from 'react-router-dom';
 import MakingOrderBtn from '@components/making-order-btn';
-
-type Product = {
-	cardName: string;
-	price: number;
-	weight: number;
-	cardImage: string;
-	measure_unit?: string;
-};
+import { useCart } from '@hooks/use-cart-context.ts';
+import Preloader from '@components/preloader';
 
 const ShoppingCart: React.FC = () => {
+	const { cartData, loading } = useCart();
 	const [activeButton, setActiveButton] = React.useState<string>('shipment');
 	const navigate = useNavigate();
 
 	const handleOrderTypeClick = (type: string) => {
 		setActiveButton(type);
-		console.log(type);
 	};
 
 	const handleSubmitOrderClick = () => {
@@ -38,62 +31,75 @@ const ShoppingCart: React.FC = () => {
 	return (
 		<section className={styles.cart}>
 			<Breadcrumbs />
-			<div className={styles.details}>
-				<div className={styles.products}>
-					<div className={styles.products__title}>
-						<h3 className={styles.products__title_mob}>5 товаров</h3>
-						<button className={styles.products__btn}>Очистить корзину</button>
-					</div>
-					<ShoppingList />
-				</div>
-				<div className={styles.details__form}>
-					<div className={styles.details__sum}>
-						<p className={`text-m`}>Итого</p>
-						<p className={`text-m`}>670 руб.</p>
-					</div>
-					<div className={styles.delivery}>
-						<div
-							className={`${styles.delivery__btn} ${styles.delivery__btn_byCar} ${
-								activeButton === 'pickup' && styles.delivery__btn_byCar_unactive
-							} ${activeButton === 'pickup' && styles.delivery__btn_unactive}`}
-							onClick={() => {
-								handleOrderTypeClick('shipment');
-							}}
-						>
-							<div
-								className={`${styles.delivery__icon} ${styles.delivery__icon_truck}`}
-							></div>
-							<p className={`text_type_u ${styles.delivery__title}`}>Доставка</p>
+			{loading ? (
+				<Preloader />
+			) : (
+				<div className={`${styles['details']}, ${!loading && styles['details-active']}`}>
+					<div className={styles.products}>
+						<div className={styles.products__title}>
+							<h3
+								className={styles.products__title_mob}
+							>{`${cartData.count_of_products} товаров`}</h3>
+							<button className={styles.products__btn}>Очистить корзину</button>
 						</div>
-						<div
-							className={`${styles.delivery__btn} ${
-								activeButton === 'shipment' && styles.delivery__btn_unactive
-							} ${styles.delivery__btn_byThemselves}`}
-							onClick={() => {
-								handleOrderTypeClick('pickup');
-							}}
-						>
-							<div
-								className={`${styles.delivery__icon} ${
-									activeButton === 'shipment' && styles.delivery__icon_flag_unactive
-								} ${activeButton === 'pickup' && styles.delivery__icon_flag}`}
-							></div>
-							<p
-								className={`text_type_u ${styles.delivery__title} ${
-									activeButton === 'shipment' && styles.delivery__title_unactive
-								}`}
-							>
-								Самовывоз
+
+						{cartData.products.length > 0 ? (
+							<ShoppingList products={cartData.products} />
+						) : (
+							<p>Добавьте продукт</p>
+						)}
+					</div>
+					<div className={styles.details__form}>
+						<div className={styles.details__sum}>
+							<p className={`text-m`}>Итого</p>
+							<p className={`text-m`}>
+								{cartData.total_price ? `${cartData.total_price.toFixed(2)} руб.` : 'N/A'}
 							</p>
 						</div>
+						<div className={styles.delivery}>
+							<div
+								className={`${styles.delivery__btn} ${styles.delivery__btn_byCar} ${
+									activeButton === 'pickup' && styles.delivery__btn_byCar_unactive
+								} ${activeButton === 'pickup' && styles.delivery__btn_unactive}`}
+								onClick={() => {
+									handleOrderTypeClick('shipment');
+								}}
+							>
+								<div
+									className={`${styles.delivery__icon} ${styles.delivery__icon_truck}`}
+								></div>
+								<p className={`text_type_u ${styles.delivery__title}`}>Доставка</p>
+							</div>
+							<div
+								className={`${styles.delivery__btn} ${
+									activeButton === 'shipment' && styles.delivery__btn_unactive
+								} ${styles.delivery__btn_byThemselves}`}
+								onClick={() => {
+									handleOrderTypeClick('pickup');
+								}}
+							>
+								<div
+									className={`${styles.delivery__icon} ${
+										activeButton === 'shipment' && styles.delivery__icon_flag_unactive
+									} ${activeButton === 'pickup' && styles.delivery__icon_flag}`}
+								></div>
+								<p
+									className={`text_type_u ${styles.delivery__title} ${
+										activeButton === 'shipment' && styles.delivery__title_unactive
+									}`}
+								>
+									Самовывоз
+								</p>
+							</div>
+						</div>
+						<MakingOrderBtn onClick={handleSubmitOrderClick} />
 					</div>
-					<MakingOrderBtn onClick={handleSubmitOrderClick} />
 				</div>
-			</div>
+			)}
 			<div className={styles.cart__recomendation}>
 				<h2 className={styles.cart__title}>Вас также может заинтересовать</h2>
 				<div className={styles.cart__advertisement}>
-					{products.map((product: Product, index: number) => (
+					{products.map((product, index: number) => (
 						<ProductCard
 							idCard={1}
 							key={index}

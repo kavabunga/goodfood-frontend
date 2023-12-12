@@ -609,6 +609,12 @@ class Api {
 			method: 'GET',
 		});
 	}
+
+	getRecipeById(id: number) {
+		return this._request(`recipes/${id}`, {
+			method: 'GET',
+		});
+	}
 }
 
 const api = new Api(BACKEND_URL);

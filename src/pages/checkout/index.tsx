@@ -15,7 +15,7 @@ type Address = {
 
 const Checkout: React.FC = () => {
 	const { isLoggedIn, user } = useAuth();
-	const { loadCartData } = useCart();
+	const { loadCartData, cartData } = useCart();
 	const location = useLocation();
 	const recievedType = location.state?.orderType;
 	const { values, handleChange, errors, isValid } = useFormAndValidation();
@@ -363,7 +363,7 @@ const Checkout: React.FC = () => {
 										className={styles.execution__radio}
 										onChange={handlePaymentChange}
 									/>
-									<label htmlFor="payment_cash">Наличными при получении курьера</label>
+									<label htmlFor="payment_cash">Наличными курьеру</label>
 								</div>
 								<hr className={styles.pricelist__divider} />
 								<div className={styles.execution__item}>
@@ -375,7 +375,7 @@ const Checkout: React.FC = () => {
 										className={styles.execution__radio}
 										onChange={handlePaymentChange}
 									/>
-									<label htmlFor="payment_offline">оплата в пункте выдачи</label>
+									<label htmlFor="payment_offline">Оплата в пункте выдачи</label>
 								</div>
 							</div>
 						</label>
@@ -396,11 +396,13 @@ const Checkout: React.FC = () => {
 						<div className={styles.pricelist}>
 							<div className={styles.pricelist__item}>
 								<p className={`text_type_u ${styles.summary__title}`}>Товары</p>
-								<p className={`text_type_u ${styles.pricelist__price}`}>670 руб.</p>
+								<p
+									className={`text_type_u ${styles.pricelist__price}`}
+								>{`${cartData.total_price} руб.`}</p>
 							</div>
 							<div className={styles.pricelist__item}>
 								<p className={`text_type_u ${styles.summary__title}`}>Упаковка</p>
-								<p className={`text_type_u ${styles.pricelist__price}`}>12 руб.</p>
+								<p className={`text_type_u ${styles.pricelist__price}`}>0 руб.</p>
 							</div>
 							<div className={styles.pricelist__item}>
 								<p className={styles.pricelist__title}>

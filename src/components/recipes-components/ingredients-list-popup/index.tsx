@@ -1,23 +1,37 @@
+import React from 'react';
 import styles from './ingredients-list-popup.module.scss';
 
-import { products as ingredients } from '@data/dataExamples';
+type RecipeIngredientsProps = {
+	ingredients: {
+		id: number;
+		name: string;
+		measure_unit: string;
+		quantity: number;
+		photo?: string;
+		amount?: number;
+	}[];
+};
 
-export default function IngredientsListPopup() {
+const IngredientsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) => {
 	return (
 		<div className={styles['popup-ingredients']}>
 			<p className={styles['popup-ingredients__title']}>Из рецепта:</p>
 			<ul className={styles['popup-ingredients__list']}>
-				{ingredients.map((ingredient) => (
-					<li className={styles['popup-ingredients__item']} key={ingredient.cardName}>
-						<span className={styles['popup-ingredients__name']}>
-							{ingredient.cardName}
-						</span>
-						<span
-							className={styles['popup-ingredients__weight']}
-						>{`${ingredient.weight} ${ingredient.measure_unit}`}</span>
-					</li>
-				))}
+				{ingredients?.map((ingredient, index) => {
+					return (
+						<li className={styles['popup-ingredients__item']} key={index}>
+							<span className={styles['popup-ingredients__name']}>
+								{ingredient?.name}
+							</span>
+							<span
+								className={styles['popup-ingredients__weight']}
+							>{`${ingredient?.amount} ${ingredient?.measure_unit}`}</span>
+						</li>
+					);
+				})}
 			</ul>
 		</div>
 	);
-}
+};
+
+export default IngredientsListPopup;

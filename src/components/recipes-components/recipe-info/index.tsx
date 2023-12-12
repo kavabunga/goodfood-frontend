@@ -1,26 +1,28 @@
 import styles from './recipe-info.module.scss';
 import EnergyValue from '@components/energy-value';
+import { useParams } from 'react-router';
 
-import Image from '@images/recipe.jpg';
-
-const info = {
-	description: 'Оладьи идеально подойдут в пост и для вегетарианцев.',
-	photo: Image,
-	kcal: 278,
-	proteins: 8,
-	fats: 1,
-	carbohydrates: 60,
+type RecipeInfoProps = {
+	img: string;
+	recipe_nutrients?: {
+		proteins: number;
+		fats: number;
+		carbonhydrates: number;
+		kcal: number;
+	};
 };
 
-export default function RecipeInfo() {
+const RecipeInfo: React.FC<RecipeInfoProps> = ({ img, recipe_nutrients }) => {
+	const { id } = useParams();
 	return (
 		<div className={styles['recipe-info']}>
 			<div className={styles['recipe-info__image']}>
-				<img src={info.photo} alt={info.description} />
+				<img src={img} alt={id} />
 			</div>
-			<p className={styles['recipe-info__description']}>{info.description}</p>
 			<p className={styles['recipe-info__info']}>Энергетическая ценность на порцию</p>
-			<EnergyValue {...info} />
+			<EnergyValue {...recipe_nutrients} />
 		</div>
 	);
-}
+};
+
+export default RecipeInfo;

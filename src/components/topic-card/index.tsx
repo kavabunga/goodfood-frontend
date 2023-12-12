@@ -9,7 +9,7 @@ type TopicCardProps = {
 const TopicCard: React.FC<TopicCardProps> = ({ recipe }) => {
 	return (
 		<li className={styles.card}>
-			<Link className={styles.card__link} to="/recipes">
+			<Link className={styles.card__link} to={`/recipes/${recipe.id}`}>
 				<figure className={styles['card__image-container']}>
 					<img
 						className={styles.card__image}

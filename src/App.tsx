@@ -20,6 +20,7 @@ import Recipes from '@pages/recipe/index.tsx';
 import Contacts from '@pages/contacts/index.tsx';
 import NotFound from '@pages/not_found/not-found.tsx';
 import { CartProvider } from '@contexts/cart-context.tsx';
+import RecipeList from '@pages/recipe-list/index.tsx';
 
 // импорт временных массивов для отображения каталогов и продуктов
 // временное решение для верстки, потом удалить
@@ -44,8 +45,9 @@ function App() {
 						<Route path="/catalog/:category/:id" element={<Product />} />
 						<Route path="/cart" element={<ShoppingCart />} />
 						<Route path="/cart/order" element={<Checkout />} />
-						<Route path="/recipes" element={<Recipes />} />
+						<Route path="/recipes" element={<RecipeList />} />
 						<Route path="/contacts" element={<Contacts />} />
+						<Route path="/recipes/:id" element={<Recipes />} />
 						<Route
 							path={URLS.PROFILE}
 							element={<ProtectedRoute element={Profile} loggedIn={isLoggedIn} />}

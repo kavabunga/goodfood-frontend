@@ -1,0 +1,119 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+html {
+	scroll-behavior: smooth;
+}
+
+.link {
+	cursor: pointer;
+	text-decoration: none;
+
+	:hover {
+		opacity: 0.5;
+		transition: opacity 0.5s ease-in-out;
+	}
+}
+
+h1 {
+	@extend %zero-padding-margin;
+
+	font-family: $ubuntu-font;
+	color: black;
+	font-size: 36px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 140%;
+}
+
+h2 {
+	@extend %zero-padding-margin;
+
+	font-family: $ubuntu-font;
+	font-size: 30px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 140%;
+
+	@media screen and (width <= 768px) {
+		font-size: 18px;
+	}
+}
+
+h3 {
+	@extend %zero-padding-margin;
+
+	font-family: $ubuntu-font;
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 140%;
+
+	@media screen and (width <= 768px) {
+		font-size: 15px;
+	}
+}
+
+.text-xl {
+	@extend %text;
+
+	font-family: $ubuntu-font;
+	font-size: 22px;
+	font-weight: 500;
+
+	@media screen and (width <= 768px) {
+		font-size: 15px;
+	}
+}
+
+.text-x {
+	@extend %text;
+
+	font-family: $ubuntu-font;
+	font-size: 20px;
+
+	@media screen and (width <= 768px) {
+		font-size: 14px;
+	}
+}
+
+.text-s {
+	@extend %text;
+
+	font-family: $ubuntu-font;
+	font-size: 13px;
+}
+
+.text-m {
+	@extend %text;
+
+	font-family: $ubuntu-font;
+	font-size: 22px;
+
+	@media screen and (width <= 768px) {
+		font-size: 15px;
+		font-style: normal;
+		font-weight: 700;
+	}
+}
+
+.text {
+	@extend %text;
+
+	font-family: $work-sans-font;
+	font-size: 20px;
+}
+
+.text_type_u {
+	@extend %text;
+
+	font-size: 20px;
+
+	@media screen and (width <= 768px) {
+		font-size: 14px;
+	}
+}
+
+ul {
+	list-style-type: none;
+}

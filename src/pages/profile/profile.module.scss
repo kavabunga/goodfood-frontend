@@ -1,0 +1,43 @@
+.container {
+	width: 80%;
+	margin: 0 auto;
+
+	@media screen and (width <= 768px) {
+		width: calc(100% - 2 * 20px);
+	}
+}
+
+.wrapper {
+	display: flex;
+	padding-top: 52px;
+
+	@media screen and (width <= 768px) {
+		padding-top: 4px;
+		justify-content: center;
+	}
+}
+
+.menu {
+	display: flex;
+	flex-direction: column;
+	gap: 80px;
+
+	@media screen and (width <= 768px) {
+		min-width: 280px;
+		gap: 45px;
+	}
+}
+
+.content {
+	flex-grow: 1;
+
+	@media screen and (width <= 768px) {
+		flex-grow: 0;
+	}
+}
+
+.display {
+	@media screen and (width <= 768px) {
+		display: none;
+	}
+}

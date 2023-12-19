@@ -1,0 +1,36 @@
+@use './variables' as *;
+
+%zero-padding-margin {
+	padding: 0;
+	margin: 0;
+}
+
+%text {
+	@extend %zero-padding-margin;
+
+	color: $active-text-color;
+	font-family: $ubuntu-font;
+	font-style: normal;
+	line-height: 140%;
+}
+
+%header-icon {
+	color: $accent-color-darkgreen;
+	width: 27px;
+	height: 27px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 27px 27px;
+}
+
+%default-button-text {
+	@extend %zero-padding-margin;
+
+	color: $active-text-color;
+	font-family: $ubuntu-font;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 140%;
+	text-align: center;
+}

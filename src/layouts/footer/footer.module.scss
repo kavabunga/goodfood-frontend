@@ -1,0 +1,155 @@
+@use '@scss/variables' as *;
+@use '@scss/base.scss' as *;
+
+.footer {
+	margin-top: 200px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	background-color: #212333;
+	padding: 56px 127px;
+	box-sizing: border-box;
+
+	@media screen and (width <= 1024px) {
+		padding: 20px 20px 23px;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+	}
+
+	@media screen and (width <= 768px) {
+		margin-top: 50px;
+	}
+}
+
+.footer__container {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+
+	@media screen and (width <= 1024px) {
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+}
+
+.footer__leftBlock {
+	max-width: 240px;
+	width: 100%;
+
+	@media screen and (width <= 570px) {
+		width: 126px;
+	}
+
+	@media screen and (width >= 571px) and (width <= 1024px) {
+		width: 30%;
+	}
+}
+
+.footer__centerBlock {
+	width: 239px;
+
+	@media screen and (width <= 410px) {
+		width: 56px;
+	}
+
+	@media screen and (width <= 492px) {
+		min-width: 126px;
+		max-width: 200px;
+	}
+}
+
+.footer__rightBlock {
+	width: 241px;
+
+	@media screen and (width <= 570px) {
+		width: 126px;
+	}
+
+	@media screen and (width >= 571px) and (width <= 1024px) {
+		width: 30%;
+	}
+}
+
+.footer__title {
+	@extend %zero-padding-margin;
+
+	font-family: $work-sans-font;
+	font-size: 40px;
+	font-weight: 700;
+	letter-spacing: -0.8px;
+	color: white;
+
+	@media screen and (width <= 1024px) {
+		font-size: 24px;
+	}
+}
+
+.footer__text {
+	@extend %zero-padding-margin;
+
+	font-family: $ubuntu-font;
+	font-size: 16px;
+	color: white;
+	line-height: 140%;
+
+	@media screen and (width <= 1024px) {
+		font-size: 12px;
+	}
+}
+
+.footer__text_middle {
+	font-size: 22px;
+	font-weight: 500;
+
+	@media screen and (width <= 1024px) {
+		font-size: 14px;
+	}
+}
+
+.footer__list {
+	margin-bottom: 16px;
+
+	@media screen and (width <= 1024px) {
+		margin-bottom: 12px;
+	}
+}
+
+.footer__link {
+	text-decoration: none;
+	color: white;
+	cursor: pointer;
+	transition: opacity 0.2s linear;
+}
+
+.footer__link:hover {
+	opacity: 0.5;
+}
+
+.footer__text_desktop {
+	@media screen and (width <= 768px) {
+		display: none;
+	}
+}
+
+.footer__text_mobile {
+	margin-top: 60px;
+	font-size: 13px;
+
+	@media screen and (width >= 768px) {
+		display: none;
+	}
+}
+
+// Делаем неактивными для демонстрации приложения
+.footer__list_disabled {
+	text-decoration: none;
+	color: white;
+	cursor: not-allowed;
+	opacity: 0.5;
+	margin-bottom: 16px;
+
+	@media screen and (width <= 1024px) {
+		margin-bottom: 12px;
+	}
+}

@@ -1,0 +1,76 @@
+@use '@scss/_variables' as *;
+@use '@scss/_mixins' as *;
+
+.slider__ItemContent {
+	position: relative;
+	height: 294px;
+	border-bottom-left-radius: 16px;
+	border-bottom-right-radius: 16px;
+	background: $accent-color-lightest-green;
+
+	@media screen and (width <= 768px) {
+		background: white;
+		height: 209px;
+	}
+}
+
+.slider__content {
+	display: flex;
+	justify-content: flex-end;
+	color: var(--unnamed, #1a1a1a);
+	text-align: center;
+	font-size: 36px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 140%;
+	letter-spacing: 14.4px;
+
+	@media screen and (width <= 768px) {
+		display: none;
+	}
+}
+
+.slider__title {
+	@extend %zero-padding-margin;
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	font-family: $arsenal-font;
+	margin-top: 87px;
+}
+
+.firstLine {
+	max-width: 392px;
+	width: 100%;
+	margin-right: 326px;
+}
+
+.secondLine {
+	max-width: 442px;
+	width: 100%;
+	margin-right: 156px;
+	margin-top: 8px;
+}
+
+.slider__image {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+
+	@media screen and (width <= 768px) {
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+@media screen and (width <= 1220px) {
+	.firstLine {
+		margin-right: 15vw;
+	}
+
+	.secondLine {
+		margin-right: 12vw;
+	}
+}

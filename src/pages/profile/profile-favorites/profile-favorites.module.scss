@@ -1,0 +1,90 @@
+@use '@scss/variables.scss' as *;
+@use '@scss/_mixins.scss' as *;
+
+.wrapper {
+	margin-left: 87px;
+
+	@media screen and (width <= 768px) {
+		max-width: 320px;
+		margin: auto;
+	}
+}
+
+.title {
+	color: $active-text-color;
+	margin-bottom: 50px;
+	display: flex;
+	justify-content: space-between;
+
+	&__button {
+		background-color: transparent;
+		border: none;
+		font-size: 20px;
+		font-family: $ubuntu-font;
+		cursor: pointer;
+		color: $active-text-color;
+
+		@media screen and (width <= 768px) {
+			font-size: 15px;
+			font-weight: 700;
+		}
+	}
+}
+
+.favorites__list {
+	@extend %zero-padding-margin;
+
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 328px);
+	gap: 40px 20px;
+	justify-content: center;
+	margin-bottom: 20px;
+
+	@media screen and (width <= 768px) {
+		grid-template-columns: repeat(auto-fit, 138px);
+		gap: 4px;
+	}
+}
+
+.favorites__item {
+	place-self: center;
+
+	@media screen and (width <= 768px) {
+		max-width: 138px;
+	}
+}
+
+.list__empty {
+	font-family: $ubuntu-font;
+	font-size: 20px;
+	text-align: center;
+	grid-column: span 2;
+}
+
+.link {
+	text-decoration: none;
+	color: $green-primary-700;
+	font-weight: 700;
+}
+
+.button {
+	padding: 8px 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-radius: 16px;
+	font-size: 18px;
+	font-family: $ubuntu-font;
+	line-height: 1.4;
+	cursor: pointer;
+	color: #fff;
+	background: $form-button-color;
+}
+
+.button:disabled {
+	cursor: default;
+	background: $accent-color-lightest-green;
+	user-select: none;
+	pointer-events: none;
+}

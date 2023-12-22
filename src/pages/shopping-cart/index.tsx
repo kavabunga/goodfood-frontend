@@ -118,7 +118,10 @@ const ShoppingCart: React.FC = () => {
 								</p>
 							</div>
 						</div>
-						<MakingOrderBtn onClick={handleSubmitOrderClick} />
+						<MakingOrderBtn
+							onClick={handleSubmitOrderClick}
+							isDisabled={cartData.products.length === 0}
+						/>
 					</div>
 				</div>
 			)}

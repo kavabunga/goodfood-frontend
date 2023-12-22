@@ -86,7 +86,7 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 								>
 									<img src={minusIcon} alt="минус" />
 								</button>
-								<p className={styles.counter__value}>{`${product.amount_of_pack} уп.`}</p>
+								<p className={styles.counter__value}>{product.amount_of_pack}</p>
 								<button
 									className={styles.counter__button}
 									onClick={() =>

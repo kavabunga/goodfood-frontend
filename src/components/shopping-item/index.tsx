@@ -50,9 +50,7 @@ const ShoppingItem: React.FC<ShoppingItemProps> = (props) => {
 						className={`${styles.item_btn} ${styles.item__decrease_btn}`}
 						onClick={handleDecreaseClick}
 					></button>
-					<p
-						className={`text_type_u ${styles.item__measure}`}
-					>{`${product.quantity} шт`}</p>
+					<p className={`text_type_u ${styles.item__measure}`}>{product.quantity}</p>
 					<button
 						className={`${styles.item_btn} ${styles.item__increase_btn}`}
 						onClick={handleIncreaseClick}

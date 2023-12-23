@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './button.module.scss';
 
-type ButtonProps = {
+export type ButtonProps = {
 	buttonText: string;
 	buttonStyle: string;
 	classNameActive?: string;

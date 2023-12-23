@@ -120,7 +120,7 @@ const ShoppingCart: React.FC = () => {
 						</div>
 						<MakingOrderBtn
 							onClick={handleSubmitOrderClick}
-							isDisabled={cartData.products.length === 0}
+							disabled={cartData.products.length === 0}
 						/>
 					</div>
 				</div>

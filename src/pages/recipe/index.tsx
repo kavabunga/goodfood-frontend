@@ -13,14 +13,14 @@ import { usePopup } from '@hooks/use-popup';
 import PopupRecipe from '@components/popups/popup-recipe';
 
 type ReceipeIngredientInfoProps = {
+	amount: number;
+	final_price: number;
 	id: number;
-	name: string;
-	measure_unit: string;
-	quantity: number;
 	ingredient_photo: string;
-	amount_of_pack: number;
-	amount?: number;
-	price?: number;
+	measure_unit: string;
+	name: string;
+	need_to_buy: number;
+	quantity_in_recipe: number;
 };
 
 type ReceipeInfoProps = {
@@ -59,33 +59,7 @@ const Recipe: React.FC = () => {
 			const recipe = await api.getRecipeById(recipeId);
 			setRecipeByLines(recipe.text.split('\n'));
 			setNumeralizeWord(declOfNum(recipe.cooking_time, ['минута', 'минуты', 'минут']));
-
-			const promises = recipe.ingredients.map(
-				(ingredient: ReceipeIngredientInfoProps) => {
-					return api.productsRead(ingredient.id);
-				}
-			);
-
-			const newProducts = await Promise.all(promises);
-			const filteredProducts = newProducts.filter((product) => product !== null);
-
-			const addFieldsToRecipe = (prevReceipe: ReceipeInfoProps) => {
-				filteredProducts.map((product) => {
-					const index = prevReceipe.ingredients.findIndex((i) => i.id == product.id);
-					if (index === -1) {
-						return;
-					}
-					prevReceipe.ingredients[index].amount = product.amount;
-					prevReceipe.ingredients[index].price = product.price;
-					prevReceipe.ingredients[index].amount_of_pack = Math.ceil(
-						prevReceipe.ingredients[index].quantity / product.amount
-					);
-				});
-
-				return prevReceipe;
-			};
-
-			setRecipeInfo(addFieldsToRecipe(recipe));
+			setRecipeInfo(recipe);
 		};
 
 		fetchReceiptAndProducts().finally(() => setIsLoading(false));

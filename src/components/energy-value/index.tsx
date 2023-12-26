@@ -2,10 +2,10 @@ import clsx from 'clsx';
 import styles from './energy-value.module.scss';
 
 type Props = {
-	kcal?: number;
-	proteins?: number;
-	fats?: number;
-	carbohydrates?: number;
+	kcal: number;
+	proteins: number;
+	fats: number;
+	carbonhydrates: number;
 	className?: string;
 };
 
@@ -13,7 +13,7 @@ export default function EnergyValue({
 	kcal = 0,
 	proteins = 0,
 	fats = 0,
-	carbohydrates = 0,
+	carbonhydrates = 0,
 	className,
 }: Props) {
 	return (
@@ -28,7 +28,7 @@ export default function EnergyValue({
 			</p>
 			<p className={styles['energy-value__item']}>
 				<span>углеводы</span>
-				<span>{`${carbohydrates}г`}</span>
+				<span>{`${carbonhydrates}г`}</span>
 			</p>
 			<p className={styles['energy-value__item']}>
 				<span>ккал</span>

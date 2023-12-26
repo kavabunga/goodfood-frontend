@@ -31,7 +31,7 @@ class Api {
 
 	_checkResponse(res: Response) {
 		if (res.ok) {
-			if (res.status === 204) return res;
+			if (res.status === 204 || res.status === 205) return res;
 			return res.json();
 		}
 

@@ -3,14 +3,14 @@ import styles from './ingredients-list-popup.module.scss';
 
 type RecipeIngredientsProps = {
 	ingredients: {
+		amount: number;
+		final_price: number;
 		id: number;
-		name: string;
-		measure_unit: string;
-		quantity: number;
 		ingredient_photo: string;
-		amount_of_pack: number;
-		amount?: number;
-		price?: number;
+		measure_unit: string;
+		name: string;
+		need_to_buy: number;
+		quantity_in_recipe: number;
 	}[];
 };
 
@@ -27,7 +27,7 @@ const IngredientsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients })
 							</span>
 							<span
 								className={styles['popup-ingredients__weight']}
-							>{`${ingredient?.quantity} ${ingredient?.measure_unit}`}</span>
+							>{`${ingredient?.quantity_in_recipe} ${ingredient?.measure_unit}`}</span>
 						</li>
 					);
 				})}

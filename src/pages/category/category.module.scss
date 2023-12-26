@@ -66,8 +66,10 @@
 .category__sorting {
 	width: 328px;
 	margin-right: 20px;
+	padding-top: 58px;
 
 	@media screen and (width <= 768px) {
+		padding-top: 0;
 		margin-right: 0;
 		max-width: 280px;
 	}

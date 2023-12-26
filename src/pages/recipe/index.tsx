@@ -14,31 +14,29 @@ import { usePopup } from '@hooks/use-popup';
 import PopupRecipe from '@components/popups/popup-recipe';
 
 type ReceipeIngredientInfoProps = {
+	amount: number;
+	final_price: number;
 	id: number;
-	name: string;
-	measure_unit: string;
-	quantity: number;
 	ingredient_photo: string;
-	amount_of_pack: number;
-	amount?: number;
-	price?: number;
+	measure_unit: string;
+	name: string;
+	need_to_buy: number;
+	quantity_in_recipe: number;
 };
 
 type ReceipeInfoProps = {
-	id: number;
 	author: number;
-	name: string;
-	text: string;
+	carbohydrates: number;
+	cooking_time: number;
+	fats: number;
+	id: number;
 	image: string;
 	ingredients: ReceipeIngredientInfoProps[];
-	total_ingredients?: string;
-	recipe_nutrients?: {
-		proteins: number;
-		fats: number;
-		carbonhydrates: number;
-		kcal: number;
-	};
-	cooking_time: number;
+	kcal: number;
+	name: string;
+	proteins: number;
+	text: string;
+	total_ingredients?: number;
 };
 
 const Recipe: React.FC = () => {
@@ -50,6 +48,12 @@ const Recipe: React.FC = () => {
 	const [recipeByLines, setRecipeByLines] = useState<string[]>(['']);
 	const [numeralizeWord, setNumeralizeWord] = useState('');
 	const { reset } = useCart();
+	const [recipeNutrients, setRecipeNutrients] = useState({
+		proteins: 0,
+		fats: 0,
+		carbonhydrates: 0,
+		kcal: 0,
+	});
 
 	useEffect(() => {
 		if (!id) {
@@ -61,33 +65,13 @@ const Recipe: React.FC = () => {
 			const recipe = await api.getRecipeById(recipeId);
 			setRecipeByLines(recipe.text.split('\n'));
 			setNumeralizeWord(declOfNum(recipe.cooking_time, ['минута', 'минуты', 'минут']));
-
-			const promises = recipe.ingredients.map(
-				(ingredient: ReceipeIngredientInfoProps) => {
-					return api.productsRead(ingredient.id);
-				}
-			);
-
-			const newProducts = await Promise.all(promises);
-			const filteredProducts = newProducts.filter((product) => product !== null);
-
-			const addFieldsToRecipe = (prevReceipe: ReceipeInfoProps) => {
-				filteredProducts.map((product) => {
-					const index = prevReceipe.ingredients.findIndex((i) => i.id == product.id);
-					if (index === -1) {
-						return;
-					}
-					prevReceipe.ingredients[index].amount = product.amount;
-					prevReceipe.ingredients[index].price = product.price;
-					prevReceipe.ingredients[index].amount_of_pack = Math.ceil(
-						prevReceipe.ingredients[index].quantity / product.amount
-					);
-				});
-
-				return prevReceipe;
-			};
-
-			setRecipeInfo(addFieldsToRecipe(recipe));
+			setRecipeInfo(recipe);
+			setRecipeNutrients({
+				proteins: recipe.proteins,
+				fats: recipe.fats,
+				carbonhydrates: recipe.carbohydrates,
+				kcal: recipe.kcal,
+			});
 		};
 
 		fetchReceiptAndProducts().finally(() => setIsLoading(false));
@@ -130,10 +114,7 @@ const Recipe: React.FC = () => {
 							</p>
 						</div>
 						<div className={styles.recipes__info}>
-							<RecipeInfo
-								img={recipeInfo.image}
-								recipe_nutrients={recipeInfo.recipe_nutrients}
-							/>
+							<RecipeInfo img={recipeInfo.image} recipeNutrients={recipeNutrients} />
 						</div>
 					</div>
 					<div className={clsx(styles.recipes__instructions, styles.instructions)}>

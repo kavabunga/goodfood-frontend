@@ -431,6 +431,7 @@ const Checkout: React.FC = () => {
 								!isLoggedIn && !isValid ? `${styles['orderse__buttonStyle_error']}` : ''
 							}`}
 							onClick={handleSubmitOrder}
+							disabled={cartData.products.length === 0}
 						>
 							Оформить заказ
 						</button>

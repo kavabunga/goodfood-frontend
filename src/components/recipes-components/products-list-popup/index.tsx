@@ -7,14 +7,14 @@ import plusIcon from '@images/plus_button.svg';
 import minusIcon from '@images/minus_button.svg';
 
 type ReceipeIngredient = {
+	amount: number;
+	final_price: number;
 	id: number;
-	name: string;
-	measure_unit: string;
-	quantity: number;
 	ingredient_photo: string;
-	amount_of_pack: number;
-	amount?: number;
-	price?: number;
+	measure_unit: string;
+	name: string;
+	need_to_buy: number;
+	quantity_in_recipe: number;
 };
 
 type RecipeIngredientsProps = {
@@ -36,7 +36,7 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 			setProducts(
 				products?.map((product, i) => {
 					if (i === index) {
-						product.amount_of_pack = Math.min(Math.max(newAmount, 1), 20);
+						product.need_to_buy = Math.min(Math.max(newAmount, 1), 20);
 					}
 					return product;
 				})
@@ -46,7 +46,7 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 
 	const handleAddToCart = () => {
 		const data = products.map((prod) => {
-			return { id: prod.id, quantity: prod.amount_of_pack };
+			return { id: prod.id, quantity: prod.need_to_buy };
 		});
 		updateCart(data);
 	};
@@ -80,27 +80,25 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 								<button
 									className={styles.counter__button}
 									onClick={() =>
-										product.amount_of_pack &&
-										changeAmount(index)(product.amount_of_pack - 1)
+										product.need_to_buy && changeAmount(index)(product.need_to_buy - 1)
 									}
 								>
 									<img src={minusIcon} alt="минус" />
 								</button>
-								<p className={styles.counter__value}>{`${product.amount_of_pack} уп.`}</p>
+								<p className={styles.counter__value}>{product.need_to_buy}</p>
 								<button
 									className={styles.counter__button}
 									onClick={() =>
-										product.amount_of_pack &&
-										changeAmount(index)(product.amount_of_pack + 1)
+										product.need_to_buy && changeAmount(index)(product.need_to_buy + 1)
 									}
 								>
 									<img src={plusIcon} alt="плюс" />
 								</button>
 							</div>
 
-							{product.price && product.amount_of_pack && (
+							{product.final_price && product.need_to_buy && (
 								<p className={styles.product__price}>{`${
-									product.price * product.amount_of_pack
+									product.final_price * product.need_to_buy
 								} руб.`}</p>
 							)}
 							<button

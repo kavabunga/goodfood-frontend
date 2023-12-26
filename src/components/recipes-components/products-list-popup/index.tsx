@@ -46,7 +46,7 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 
 	const handleAddToCart = () => {
 		const data = products.map((prod) => {
-			return { id: prod.id, quantity: prod.amount_of_pack };
+			return { id: prod.id, quantity: prod.need_to_buy };
 		});
 		updateCart(data);
 	};

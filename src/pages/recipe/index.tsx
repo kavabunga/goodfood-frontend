@@ -25,20 +25,18 @@ type ReceipeIngredientInfoProps = {
 };
 
 type ReceipeInfoProps = {
-	id: number;
 	author: number;
-	name: string;
-	text: string;
+	carbohydrates: number;
+	cooking_time: number;
+	fats: number;
+	id: number;
 	image: string;
 	ingredients: ReceipeIngredientInfoProps[];
-	total_ingredients?: string;
-	recipe_nutrients?: {
-		proteins: number;
-		fats: number;
-		carbonhydrates: number;
-		kcal: number;
-	};
-	cooking_time: number;
+	kcal: number;
+	name: string;
+	proteins: number;
+	text: string;
+	total_ingredients?: number;
 };
 
 const Recipe: React.FC = () => {
@@ -50,6 +48,12 @@ const Recipe: React.FC = () => {
 	const [recipeByLines, setRecipeByLines] = useState<string[]>(['']);
 	const [numeralizeWord, setNumeralizeWord] = useState('');
 	const { reset } = useCart();
+	const [recipeNutrients, setRecipeNutrients] = useState({
+		proteins: 0,
+		fats: 0,
+		carbonhydrates: 0,
+		kcal: 0,
+	});
 
 	useEffect(() => {
 		if (!id) {
@@ -62,6 +66,12 @@ const Recipe: React.FC = () => {
 			setRecipeByLines(recipe.text.split('\n'));
 			setNumeralizeWord(declOfNum(recipe.cooking_time, ['минута', 'минуты', 'минут']));
 			setRecipeInfo(recipe);
+			setRecipeNutrients({
+				proteins: recipe.proteins,
+				fats: recipe.fats,
+				carbonhydrates: recipe.carbohydrates,
+				kcal: recipe.kcal,
+			});
 		};
 
 		fetchReceiptAndProducts().finally(() => setIsLoading(false));
@@ -104,10 +114,7 @@ const Recipe: React.FC = () => {
 							</p>
 						</div>
 						<div className={styles.recipes__info}>
-							<RecipeInfo
-								img={recipeInfo.image}
-								recipe_nutrients={recipeInfo.recipe_nutrients}
-							/>
+							<RecipeInfo img={recipeInfo.image} recipeNutrients={recipeNutrients} />
 						</div>
 					</div>
 					<div className={clsx(styles.recipes__instructions, styles.instructions)}>

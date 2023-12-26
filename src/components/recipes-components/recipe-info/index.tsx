@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 type RecipeInfoProps = {
 	img: string;
-	recipe_nutrients?: {
+	recipeNutrients: {
 		proteins: number;
 		fats: number;
 		carbonhydrates: number;
@@ -12,7 +12,7 @@ type RecipeInfoProps = {
 	};
 };
 
-const RecipeInfo: React.FC<RecipeInfoProps> = ({ img, recipe_nutrients }) => {
+const RecipeInfo: React.FC<RecipeInfoProps> = ({ img, recipeNutrients }) => {
 	const { id } = useParams();
 	return (
 		<div className={styles['recipe-info']}>
@@ -20,7 +20,7 @@ const RecipeInfo: React.FC<RecipeInfoProps> = ({ img, recipe_nutrients }) => {
 				<img src={img} alt={id} />
 			</div>
 			<p className={styles['recipe-info__info']}>Энергетическая ценность на порцию</p>
-			<EnergyValue {...recipe_nutrients} />
+			<EnergyValue {...recipeNutrients} />
 		</div>
 	);
 };

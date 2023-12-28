@@ -24,6 +24,7 @@ import RecipeList from '@pages/recipe-list/index.tsx';
 import Agreement from '@pages/agreement/index.tsx';
 import DeliveryConditions from '@pages/delivery-conditions/index.tsx';
 import CheckoutSuccess from '@pages/checkout/checkout-success/index.tsx';
+import RatingStars from '@components/ratings-and-reviews-components/rating-stars/index.tsx';
 
 // импорт временных массивов для отображения каталогов и продуктов
 // временное решение для верстки, потом удалить
@@ -52,6 +53,8 @@ function App() {
 						<Route path="/recipes" element={<RecipeList />} />
 						<Route path="/contacts" element={<Contacts />} />
 						<Route path="/recipes/:id" element={<Recipes />} />
+						{/* // TODO: Clean up after Ratings and Reviews task completed */}
+						<Route path="/test" element={<RatingStars defaultRating={4} />} />
 						<Route
 							path={URLS.PROFILE}
 							element={<ProtectedRoute element={Profile} loggedIn={isLoggedIn} />}

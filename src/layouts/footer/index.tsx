@@ -19,7 +19,9 @@ const Footer: React.FC = () => {
 				<div className={styles.footer__centerBlock}>
 					<ul className={styles.footer__text}>
 						<li className={styles.footer__list_disabled}>О нас</li>
-						<li className={styles.footer__list_disabled}>Условия доставки</li>
+						<Link to={URLS.DELIVERY_COND} className={styles.footer__link}>
+							<li className={styles.footer__list}>Условия доставки</li>
+						</Link>
 						<li className={styles.footer__list_disabled}>Оплата</li>
 						<Link to={'/contacts'} className={styles.footer__link}>
 							<li className={styles.footer__list}>Контакты</li>

@@ -22,6 +22,7 @@ import NotFound from '@pages/not_found/not-found.tsx';
 import { CartProvider } from '@contexts/cart-context.tsx';
 import RecipeList from '@pages/recipe-list/index.tsx';
 import Agreement from '@pages/agreement/index.tsx';
+import DeliveryConditions from '@pages/delivery-conditions/index.tsx';
 import CheckoutSuccess from '@pages/checkout/checkout-success/index.tsx';
 
 // импорт временных массивов для отображения каталогов и продуктов
@@ -61,6 +62,7 @@ function App() {
 							<Route path="favorites" element={<ProfileFavorites />} />
 						</Route>
 						<Route path={URLS.AGREEMENT} element={<Agreement />} />
+						<Route path={URLS.DELIVERY_COND} element={<DeliveryConditions />} />
 						<Route path="*" element={<NotFound />} />
 					</Routes>
 				</Layout>

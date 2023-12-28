@@ -6,4 +6,5 @@ export const URLS = {
 	PROFILE: '/profile',
 	CATALOG: '/catalog',
 	AGREEMENT: '/agreement',
+	DELIVERY_COND: '/delivery-conditions',
 };

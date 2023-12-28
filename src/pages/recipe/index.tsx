@@ -8,36 +8,35 @@ import api from '@services/api.ts';
 import Preloader from '@components/preloader';
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
+import { useCart } from '@hooks/use-cart-context';
 import RecipeInfo from '@components/recipes-components/recipe-info';
 import { usePopup } from '@hooks/use-popup';
 import PopupRecipe from '@components/popups/popup-recipe';
 
 type ReceipeIngredientInfoProps = {
+	amount: number;
+	final_price: number;
 	id: number;
-	name: string;
-	measure_unit: string;
-	quantity: number;
 	ingredient_photo: string;
-	photo?: string;
-	amount?: number;
-	price?: number;
+	measure_unit: string;
+	name: string;
+	need_to_buy: number;
+	quantity_in_recipe: number;
 };
 
 type ReceipeInfoProps = {
-	id: number;
 	author: number;
-	name: string;
-	text: string;
+	carbohydrates: number;
+	cooking_time: number;
+	fats: number;
+	id: number;
 	image: string;
 	ingredients: ReceipeIngredientInfoProps[];
-	total_ingredients?: string;
-	recipe_nutrients?: {
-		proteins: number;
-		fats: number;
-		carbonhydrates: number;
-		kcal: number;
-	};
-	cooking_time: number;
+	kcal: number;
+	name: string;
+	proteins: number;
+	text: string;
+	total_ingredients?: number;
 };
 
 const Recipe: React.FC = () => {
@@ -48,6 +47,13 @@ const Recipe: React.FC = () => {
 	const [recipeInfo, setRecipeInfo] = useState<ReceipeInfoProps>(Object);
 	const [recipeByLines, setRecipeByLines] = useState<string[]>(['']);
 	const [numeralizeWord, setNumeralizeWord] = useState('');
+	const { reset } = useCart();
+	const [recipeNutrients, setRecipeNutrients] = useState({
+		proteins: 0,
+		fats: 0,
+		carbonhydrates: 0,
+		kcal: 0,
+	});
 
 	useEffect(() => {
 		if (!id) {
@@ -56,37 +62,25 @@ const Recipe: React.FC = () => {
 
 		const recipeId: number = parseInt(id, 10);
 		const fetchReceiptAndProducts = async () => {
-			const data = await api.getRecipeById(recipeId);
-			setRecipeInfo(data);
-			setRecipeByLines(data.text.split('\n'));
-			setNumeralizeWord(declOfNum(data.cooking_time, ['минута', 'минуты', 'минут']));
-
-			const promises = data.ingredients.map((ingredient: ReceipeIngredientInfoProps) => {
-				return api.productsRead(ingredient.id);
-			});
-
-			const newProducts = await Promise.all(promises);
-			const filteredProducts = newProducts.filter((product) => product !== null);
-
-			setRecipeInfo((prevReceipeInfo) => {
-				filteredProducts.map((product) => {
-					const index = prevReceipeInfo.ingredients.findIndex((i) => i.id == product.id);
-					if (index === -1) {
-						return;
-					}
-
-					prevReceipeInfo.ingredients[index].photo = product.photo;
-					prevReceipeInfo.ingredients[index].amount = product.amount;
-					prevReceipeInfo.ingredients[index].price = product.price;
-				});
-
-				return prevReceipeInfo;
+			const recipe = await api.getRecipeById(recipeId);
+			setRecipeByLines(recipe.text.split('\n'));
+			setNumeralizeWord(declOfNum(recipe.cooking_time, ['минута', 'минуты', 'минут']));
+			setRecipeInfo(recipe);
+			setRecipeNutrients({
+				proteins: recipe.proteins,
+				fats: recipe.fats,
+				carbonhydrates: recipe.carbohydrates,
+				kcal: recipe.kcal,
 			});
 		};
 
 		fetchReceiptAndProducts().finally(() => setIsLoading(false));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [id]);
+
+	const handleAddToCart = () => {
+		reset();
+		handleOpenPopup('openPopupRecipe');
+	};
 
 	return (
 		<div className={styles.recipes}>
@@ -110,7 +104,7 @@ const Recipe: React.FC = () => {
 							<button
 								className={styles.ingredients__button}
 								type="button"
-								onClick={() => handleOpenPopup('openPopupRecipe')}
+								onClick={handleAddToCart}
 							>
 								Добавить все в корзину
 							</button>
@@ -120,10 +114,7 @@ const Recipe: React.FC = () => {
 							</p>
 						</div>
 						<div className={styles.recipes__info}>
-							<RecipeInfo
-								img={recipeInfo.image}
-								recipe_nutrients={recipeInfo.recipe_nutrients}
-							/>
+							<RecipeInfo img={recipeInfo.image} recipeNutrients={recipeNutrients} />
 						</div>
 					</div>
 					<div className={clsx(styles.recipes__instructions, styles.instructions)}>

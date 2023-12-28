@@ -1,10 +1,14 @@
 import clsx from 'clsx';
 import styles from './button.module.scss';
 
-type ButtonProps = {
+export type ButtonProps = {
 	buttonText: string;
-	buttonStyle: string;
-	classNameActive?: string;
+	buttonStyle:
+		| 'green-border-button'
+		| 'green-border-button__active'
+		| 'greenish-button'
+		| 'green-button';
+	classNameActive?: 'greenish-button__active' | '';
 	onClick?: () => void;
 	disabled?: boolean;
 	classNames?: string;

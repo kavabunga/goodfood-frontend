@@ -5,13 +5,14 @@ import clsx from 'clsx';
 
 type RecipeIngredientsProps = {
 	ingredients: {
+		amount: number;
+		final_price: number;
 		id: number;
-		name: string;
+		ingredient_photo: string;
 		measure_unit: string;
-		quantity: number;
-		ingredient_photo?: string;
-		amount?: number;
-		price?: number;
+		name: string;
+		need_to_buy: number;
+		quantity_in_recipe: number;
 	}[];
 };
 
@@ -45,10 +46,12 @@ const IngredientsList: React.FC<RecipeIngredientsProps> = ({ ingredients }) => {
 									alt={ingredient.name as string}
 								/>
 							</div>
-							<p className={styles.ingredient__name}>{ingredient.name}</p>
+							<p
+								className={styles.ingredient__name}
+							>{`${ingredient.name}, ${ingredient.amount}${ingredient.measure_unit}`}</p>
 							<p
 								className={styles.ingredient__weight}
-							>{`${ingredient?.quantity} ${ingredient.measure_unit}`}</p>
+							>{`${ingredient?.quantity_in_recipe} ${ingredient.measure_unit}`}</p>
 						</div>
 					);
 				})}

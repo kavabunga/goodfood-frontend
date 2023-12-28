@@ -23,6 +23,7 @@ import { CartProvider } from '@contexts/cart-context.tsx';
 import RecipeList from '@pages/recipe-list/index.tsx';
 import Agreement from '@pages/agreement/index.tsx';
 import DeliveryConditions from '@pages/delivery-conditions/index.tsx';
+import CheckoutSuccess from '@pages/checkout/checkout-success/index.tsx';
 
 // импорт временных массивов для отображения каталогов и продуктов
 // временное решение для верстки, потом удалить
@@ -47,6 +48,7 @@ function App() {
 						<Route path="/catalog/:category/:id" element={<Product />} />
 						<Route path="/cart" element={<ShoppingCart />} />
 						<Route path="/cart/order" element={<Checkout />} />
+						<Route path="/cart/success" element={<CheckoutSuccess />} />
 						<Route path="/recipes" element={<RecipeList />} />
 						<Route path="/contacts" element={<Contacts />} />
 						<Route path="/recipes/:id" element={<Recipes />} />

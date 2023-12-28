@@ -31,7 +31,7 @@ class Api {
 
 	_checkResponse(res: Response) {
 		if (res.ok) {
-			if (res.status === 204) return res;
+			if (res.status === 204 || res.status === 205) return res;
 			return res.json();
 		}
 
@@ -270,6 +270,7 @@ class Api {
 		});
 	}
 
+	/* ---------------------------- ShoppingCart ---------------------------- */
 	usersShoppingCartList() {
 		return this._request(`shopping_cart/`, {
 			method: 'GET',
@@ -301,20 +302,13 @@ class Api {
 		});
 	}
 
-	usersShoppingCartRead(userId: string, id: number) {
-		return this._request(`users/${userId}/shopping_cart/${id}/`, {
-			method: 'GET',
-		});
-	}
-
-	usersShoppingCartPartialUpdate(
-		userId: string,
-		id: number,
-		data: ShoppingCartPostUpdateDelete
-	) {
-		return this._request(`users/${userId}/shopping_cart/${id}/`, {
-			method: 'PATCH',
-			body: JSON.stringify(data),
+	usersShoppingCartDeleteAll() {
+		return this._request('shopping_cart/remove_all/', {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 

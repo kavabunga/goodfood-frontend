@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './products-list-popup.module.scss';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useCart } from '@hooks/use-cart-context';
 import closeIcon from '@images/profile/close.svg';
 import plusIcon from '@images/plus_button.svg';
 import minusIcon from '@images/minus_button.svg';
 
 type ReceipeIngredient = {
+	amount: number;
+	final_price: number;
 	id: number;
-	name: string;
+	ingredient_photo: string;
 	measure_unit: string;
-	quantity: number;
-	photo?: string;
-	amount?: number;
-	price?: number;
+	name: string;
+	need_to_buy: number;
+	quantity_in_recipe: number;
 };
 
 type RecipeIngredientsProps = {
@@ -22,17 +23,20 @@ type RecipeIngredientsProps = {
 
 const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) => {
 	const [products, setProducts] = useState<ReceipeIngredient[]>(Array);
+	const { updateCart, error, reset, successText, cartUpdating } = useCart();
 
 	const filterProducts = (index: number) => {
 		setProducts((prev) => prev.filter((_, i) => i !== index));
 	};
 
 	const changeAmount = (index: number) => {
+		reset();
+
 		return (newAmount: number) => {
 			setProducts(
 				products?.map((product, i) => {
 					if (i === index) {
-						product.amount = Math.min(Math.max(newAmount, 1), 20);
+						product.need_to_buy = Math.min(Math.max(newAmount, 1), 20);
 					}
 					return product;
 				})
@@ -40,17 +44,19 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 		};
 	};
 
+	const handleAddToCart = () => {
+		const data = products.map((prod) => {
+			return { id: prod.id, quantity: prod.need_to_buy };
+		});
+		updateCart(data);
+	};
+
 	React.useEffect(() => {
 		if (!ingredients) {
 			return;
 		}
 
-		setProducts(
-			ingredients.map((i) => {
-				i.amount = 1;
-				return i;
-			})
-		);
+		setProducts(ingredients);
 	}, [ingredients]);
 
 	return (
@@ -64,33 +70,35 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 							key={product.name}
 						>
 							<div className={styles.product__image}>
-								<img src={product.photo} alt={product.name} />
+								<img src={product.ingredient_photo} alt={product.name} />
 							</div>
-							<p className={styles.product__name}>{product.name}</p>
+							<p
+								className={styles.product__name}
+							>{`${product.name}, ${product.amount}${product.measure_unit}`}</p>
 
 							<div className={clsx(styles.product__counter, styles.counter)}>
 								<button
 									className={styles.counter__button}
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-ignore
-									onClick={() => changeAmount(index)(product.amount - 1)}
+									onClick={() =>
+										product.need_to_buy && changeAmount(index)(product.need_to_buy - 1)
+									}
 								>
 									<img src={minusIcon} alt="минус" />
 								</button>
-								<p className={styles.counter__value}>{`${product.amount} уп.`}</p>
+								<p className={styles.counter__value}>{product.need_to_buy}</p>
 								<button
 									className={styles.counter__button}
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-ignore
-									onClick={() => changeAmount(index)(product.amount + 1)}
+									onClick={() =>
+										product.need_to_buy && changeAmount(index)(product.need_to_buy + 1)
+									}
 								>
 									<img src={plusIcon} alt="плюс" />
 								</button>
 							</div>
 
-							{product.price && product.amount && (
+							{product.final_price && product.need_to_buy && (
 								<p className={styles.product__price}>{`${
-									product.price * product.amount
+									product.final_price * product.need_to_buy
 								} руб.`}</p>
 							)}
 							<button
@@ -103,7 +111,22 @@ const ProductsListPopup: React.FC<RecipeIngredientsProps> = ({ ingredients }) =>
 						</li>
 					))}
 				</ul>
-				<button className={styles['products-popup__button']}>Добавить в корзину</button>
+				<p
+					className={clsx(
+						styles.product__resultText,
+						successText.updateCart && styles.product__success,
+						error.updateCart && styles.product__error
+					)}
+				>
+					{successText.updateCart || error.updateCart}
+				</p>
+				<button
+					className={styles['products-popup__button']}
+					onClick={handleAddToCart}
+					disabled={cartUpdating}
+				>
+					Добавить в корзину
+				</button>
 			</div>
 		)
 	);

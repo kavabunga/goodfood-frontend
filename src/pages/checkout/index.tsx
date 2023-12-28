@@ -84,12 +84,12 @@ const Checkout: React.FC = () => {
 
 		api
 			.usersOrderCreate(formData)
-			.then(() => {
-				navigate('/cart');
+			.then((res) => {
+				navigate('/cart/success', { state: { order: res.order_number } });
 				loadCartData();
-				alert('заказ оформлен');
 			})
 			.catch((error) => {
+				console.log(error);
 				if (error.response && error.response.data && error.response.data.errors) {
 					const errorMessage = error.response.data.errors;
 					alert('Ошибка при создании заказа: ' + errorMessage);
@@ -431,6 +431,7 @@ const Checkout: React.FC = () => {
 								!isLoggedIn && !isValid ? `${styles['orderse__buttonStyle_error']}` : ''
 							}`}
 							onClick={handleSubmitOrder}
+							disabled={cartData.products.length === 0}
 						>
 							Оформить заказ
 						</button>

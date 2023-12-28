@@ -30,6 +30,7 @@ export interface Category {
 	 * @maxLength 100
 	 */
 	name: string;
+	image: string;
 	/**
 	 * Slug
 	 * @format slug
@@ -38,8 +39,8 @@ export interface Category {
 	 */
 	slug?: string;
 	subcategories?: SubcategoryLight[];
-	/** Top three products */
-	top_three_products?: string;
+	/** Top products */
+	top_products: string;
 }
 
 export interface CategoryCreate {

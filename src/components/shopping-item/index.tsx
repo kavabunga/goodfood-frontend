@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './shopping-item.module.scss';
 import { Link } from 'react-router-dom';
 import { useCart } from '@hooks/use-cart-context.ts';
+import { translateMeasureUnit } from '@utils/utils';
 
 type ShoppingItemProps = {
 	product: {
@@ -12,12 +13,18 @@ type ShoppingItemProps = {
 		quantity: number;
 		final_price: number;
 		total_price: number;
+		amount: number;
+		measure_unit: string;
 	};
 };
 
 const ShoppingItem: React.FC<ShoppingItemProps> = (props) => {
 	const { addItemToCart, removeItemFromCart, deleteCart } = useCart();
 	const { product } = props;
+	const { measureUnit, amount } = translateMeasureUnit(
+		product.measure_unit,
+		product.amount
+	);
 
 	const handleDeleteClick = () => {
 		deleteCart(product.id);
@@ -43,16 +50,21 @@ const ShoppingItem: React.FC<ShoppingItemProps> = (props) => {
 			</Link>
 			<div className={styles.item__container}>
 				<div className={`${styles['item__title-container']}`}>
-					<p className={`text_type_u ${styles.item__title}`}>{product.name}</p>
+					<Link
+						className={styles.item__link}
+						to={`/catalog/${product.category}/${product.id}`}
+					>
+						<p className={`text_type_u ${styles.item__title}`}>{`${product.name}, ${
+							amount + measureUnit
+						}`}</p>
+					</Link>
 				</div>
 				<div className={styles.item__weight}>
 					<button
 						className={`${styles.item_btn} ${styles.item__decrease_btn}`}
 						onClick={handleDecreaseClick}
 					></button>
-					<p
-						className={`text_type_u ${styles.item__measure}`}
-					>{`${product.quantity} шт`}</p>
+					<p className={`text_type_u ${styles.item__measure}`}>{product.quantity}</p>
 					<button
 						className={`${styles.item_btn} ${styles.item__increase_btn}`}
 						onClick={handleIncreaseClick}

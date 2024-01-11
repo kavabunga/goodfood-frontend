@@ -1,53 +1,120 @@
-import React, { useState } from 'react';
-import styles from './recipe.module.scss';
-import Breadcrumbs from '@components/breadcrumbs';
-import IngredientsList from '@components/recipes-components/ingredients-list';
-import { declOfNum } from '@utils/utils';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import clsx from 'clsx';
-import api from '@services/api.ts';
+
+import Breadcrumbs from '@components/breadcrumbs';
 import Preloader from '@components/preloader';
-import { useEffect } from 'react';
-import { useParams } from 'react-router';
 import RecipeInfo from '@components/recipes-components/recipe-info';
-import { usePopup } from '@hooks/use-popup';
+import IngredientsList from '@components/recipes-components/ingredients-list';
 import PopupRecipe from '@components/popups/popup-recipe';
 
-type ReceipeIngredientInfoProps = {
-	id: number;
-	name: string;
-	measure_unit: string;
-	quantity: number;
-	ingredient_photo: string;
-	photo?: string;
-	amount?: number;
-	price?: number;
-};
-
-type ReceipeInfoProps = {
-	id: number;
-	author: number;
-	name: string;
-	text: string;
-	image: string;
-	ingredients: ReceipeIngredientInfoProps[];
-	total_ingredients?: string;
-	recipe_nutrients?: {
-		proteins: number;
-		fats: number;
-		carbonhydrates: number;
-		kcal: number;
-	};
-	cooking_time: number;
-};
+import type {
+	ReceipeIngredient,
+	ReceipeInfoProps,
+} from '@components/recipes-components/types';
+import type { Product } from '@services/generated-api/data-contracts';
+import api from '@services/api.ts';
+import { declOfNum } from '@utils/utils';
+import { translateMeasureUnit } from '@utils/utils';
+import { useCart } from '@hooks/use-cart-context';
+import { usePopup } from '@hooks/use-popup';
+import styles from './recipe.module.scss';
 
 const Recipe: React.FC = () => {
 	const { id } = useParams();
-	const { handleOpenPopup } = usePopup();
+	const { handleOpenPopup, handleClosePopup } = usePopup();
 
+	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
 	const [recipeInfo, setRecipeInfo] = useState<ReceipeInfoProps>(Object);
 	const [recipeByLines, setRecipeByLines] = useState<string[]>(['']);
 	const [numeralizeWord, setNumeralizeWord] = useState('');
+	const [productsIdAndCategories, setProductsIdAndCategories] = useState<
+		(string | number | undefined)[][]
+	>([[]]);
+	const { reset } = useCart();
+	const [recipeNutrients, setRecipeNutrients] = useState({
+		proteins: 0,
+		fats: 0,
+		carbonhydrates: 0,
+		kcal: 0,
+	});
+	const [ingredients, setIngredients] = useState<ReceipeIngredient[]>([
+		{
+			amount: 0,
+			final_price: 0,
+			id: 0,
+			ingredient_photo: '',
+			measure_unit: '',
+			name: '',
+			need_to_buy: 0,
+			quantity_in_recipe: 0,
+			quantity_in_recipe_measure: '',
+		},
+	]);
+
+	const updateIngredientMeasureUnits = (ingredients: ReceipeIngredient[]) => {
+		return ingredients.map((ingredient) => {
+			const ingredientMeasureUnit = ingredient.measure_unit;
+			const { measureUnit, amount } = translateMeasureUnit(
+				ingredientMeasureUnit,
+				ingredient.amount
+			);
+
+			const { measureUnit: newMeasureUnit, amount: newAmount } = translateMeasureUnit(
+				ingredientMeasureUnit,
+				ingredient.quantity_in_recipe
+			);
+			return {
+				...ingredient,
+				amount,
+				measure_unit: measureUnit,
+				quantity_in_recipe: newAmount,
+				quantity_in_recipe_measure: `${newAmount} ${newMeasureUnit}`,
+			};
+		});
+	};
+
+	const getRecipeByLines = (recipeText: string) => {
+		return recipeText.split('\n');
+	};
+	const getNumeralizeWord = (cookingTime: number) => {
+		return declOfNum(cookingTime, ['минута', 'минуты', 'минут']);
+	};
+	const extractRecipeNutrients = (recipe: ReceipeInfoProps) => {
+		return {
+			proteins: recipe.proteins,
+			fats: recipe.fats,
+			carbonhydrates: recipe.carbohydrates,
+			kcal: recipe.kcal,
+		};
+	};
+
+	const fetchProducts = useCallback(async (products: ReceipeIngredient[]) => {
+		const updatedProductsPromises = await products.map((product) => {
+			return api.productsRead(product.id);
+		});
+		const updatedProducts: Product[] = await Promise.all(updatedProductsPromises);
+
+		return updatedProducts.map((product) => {
+			const categoryName = product.category?.category_slug;
+			return [product.id, categoryName];
+		});
+	}, []);
+
+	const handleClick = (
+		id: number,
+		idAndCategories: (string | number | undefined)[][] = productsIdAndCategories
+	) => {
+		for (const idAndCategory of idAndCategories) {
+			if (idAndCategory.includes(id)) {
+				handleClosePopup('openPopupRecipe');
+				const id = idAndCategory[0];
+				const category = idAndCategory[1];
+				return navigate(`/catalog/${category}/${id}`);
+			}
+		}
+	};
 
 	useEffect(() => {
 		if (!id) {
@@ -55,38 +122,33 @@ const Recipe: React.FC = () => {
 		}
 
 		const recipeId: number = parseInt(id, 10);
+
 		const fetchReceiptAndProducts = async () => {
-			const data = await api.getRecipeById(recipeId);
-			setRecipeInfo(data);
-			setRecipeByLines(data.text.split('\n'));
-			setNumeralizeWord(declOfNum(data.cooking_time, ['минута', 'минуты', 'минут']));
+			const recipe: ReceipeInfoProps = await api.getRecipeById(recipeId);
 
-			const promises = data.ingredients.map((ingredient: ReceipeIngredientInfoProps) => {
-				return api.productsRead(ingredient.id);
-			});
+			const recipeByLines = getRecipeByLines(recipe.text);
+			const numeralizeWord = getNumeralizeWord(recipe.cooking_time);
+			const updatedIngredients = updateIngredientMeasureUnits(recipe.ingredients);
+			const nutrients = extractRecipeNutrients(recipe);
+			const fetchedProductsIdAndCategories = await fetchProducts(updatedIngredients);
 
-			const newProducts = await Promise.all(promises);
-			const filteredProducts = newProducts.filter((product) => product !== null);
-
-			setRecipeInfo((prevReceipeInfo) => {
-				filteredProducts.map((product) => {
-					const index = prevReceipeInfo.ingredients.findIndex((i) => i.id == product.id);
-					if (index === -1) {
-						return;
-					}
-
-					prevReceipeInfo.ingredients[index].photo = product.photo;
-					prevReceipeInfo.ingredients[index].amount = product.amount;
-					prevReceipeInfo.ingredients[index].price = product.price;
-				});
-
-				return prevReceipeInfo;
-			});
+			if (fetchedProductsIdAndCategories !== undefined) {
+				setProductsIdAndCategories(fetchedProductsIdAndCategories);
+			}
+			setRecipeInfo(recipe);
+			setRecipeByLines(recipeByLines);
+			setNumeralizeWord(numeralizeWord);
+			setIngredients(updatedIngredients);
+			setRecipeNutrients(nutrients);
 		};
 
 		fetchReceiptAndProducts().finally(() => setIsLoading(false));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [fetchProducts, id]);
+
+	const handleAddToCart = () => {
+		reset();
+		handleOpenPopup('openPopupRecipe');
+	};
 
 	return (
 		<div className={styles.recipes}>
@@ -105,12 +167,12 @@ const Recipe: React.FC = () => {
 								<span>{`${recipeInfo.cooking_time} ${numeralizeWord}`}</span>
 							</p>
 							<div className={styles.ingredients__list}>
-								<IngredientsList ingredients={recipeInfo.ingredients} />
+								<IngredientsList handleClick={handleClick} ingredients={ingredients} />
 							</div>
 							<button
 								className={styles.ingredients__button}
 								type="button"
-								onClick={() => handleOpenPopup('openPopupRecipe')}
+								onClick={handleAddToCart}
 							>
 								Добавить все в корзину
 							</button>
@@ -122,14 +184,15 @@ const Recipe: React.FC = () => {
 						<div className={styles.recipes__info}>
 							<RecipeInfo
 								img={recipeInfo.image}
-								recipe_nutrients={recipeInfo.recipe_nutrients}
+								recipeNutrients={recipeNutrients}
+								description={recipeByLines[1]}
 							/>
 						</div>
 					</div>
 					<div className={clsx(styles.recipes__instructions, styles.instructions)}>
 						<p className={styles.instructions__title}>Инструкция приготовления</p>
 						<div className={styles.instructions__list}>
-							{recipeByLines.map((line, index) => (
+							{recipeByLines.slice(2).map((line, index) => (
 								<p key={index} className={styles.instructions__item}>
 									{line}
 								</p>
@@ -139,7 +202,7 @@ const Recipe: React.FC = () => {
 				</div>
 			)}
 
-			<PopupRecipe ingredients={recipeInfo.ingredients} />
+			<PopupRecipe handleClick={handleClick} ingredients={ingredients} />
 		</div>
 	);
 };

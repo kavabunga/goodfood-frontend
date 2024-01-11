@@ -1,24 +1,12 @@
 import React from 'react';
-import styles from './popup-recipe.module.scss';
 import Popup from '@components/popup';
-import { usePopup } from '@hooks/use-popup';
 import IngredientsListPopup from '@components/recipes-components/ingredients-list-popup';
 import ProductsListPopup from '@components/recipes-components/products-list-popup';
+import type { RecipeIngredientsProps } from '@components/recipes-components/types';
+import { usePopup } from '@hooks/use-popup';
+import styles from './popup-recipe.module.scss';
 
-type RecipeIngredientsProps = {
-	ingredients: {
-		id: number;
-		name: string;
-		measure_unit: string;
-		quantity: number;
-		ingredient_photo: string;
-		photo?: string;
-		amount?: number;
-		price?: number;
-	}[];
-};
-
-const PopupRecipe: React.FC<RecipeIngredientsProps> = ({ ingredients }) => {
+const PopupRecipe: React.FC<RecipeIngredientsProps> = ({ ingredients, handleClick }) => {
 	const {
 		popupState: { openPopupRecipe },
 		handleClosePopup,
@@ -33,8 +21,8 @@ const PopupRecipe: React.FC<RecipeIngredientsProps> = ({ ingredients }) => {
 					Выберите товары для добавления в корзину
 				</h1>
 				<div className={styles['popup-recipe__content']}>
-					<IngredientsListPopup ingredients={ingredients} />
-					<ProductsListPopup ingredients={ingredients} />
+					<IngredientsListPopup handleClick={handleClick} ingredients={ingredients} />
+					<ProductsListPopup handleClick={handleClick} ingredients={ingredients} />
 				</div>
 			</div>
 		</Popup>

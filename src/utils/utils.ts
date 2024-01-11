@@ -18,24 +18,53 @@ export function declOfNum(n: number, titles: [string, string, string]) {
 	];
 }
 
-export function toMeasureUnit(
-	measureUnit: string | undefined | null,
-	weight: number | null
-) {
-	let newMeasureUnit = 'шт';
-	let newWeight = weight;
+type translationsType = {
+	grams: {
+		singular: 'гр';
+		plural: 'кг';
+	};
+	milliliters: {
+		singular: 'мл';
+		plural: 'л';
+	};
+	items: {
+		singular: 'шт';
+		plural: 'шт';
+	};
+};
 
-	if (newWeight != null) {
-		if (measureUnit === 'milliliters') {
-			newMeasureUnit = 'мл';
-		} else if (measureUnit === 'grams') {
-			newMeasureUnit = 'гр';
-			if (newWeight > 999) {
-				newMeasureUnit = 'кг';
-				newWeight = newWeight / 1000;
-			}
-		}
+export const translations: translationsType = {
+	grams: { singular: 'гр', plural: 'кг' },
+	milliliters: { singular: 'мл', plural: 'л' },
+	items: { singular: 'шт', plural: 'шт' },
+};
+
+export const translateMeasureUnit = (measureUnit: string, amount: number) => {
+	const translatedMeasureObj = { measureUnit, amount };
+
+	switch (true) {
+		case !measureUnit || !amount:
+			translatedMeasureObj.measureUnit = translations.items.singular;
+			translatedMeasureObj.amount = 1;
+			return translatedMeasureObj;
+		case amount > 499 && measureUnit === 'grams':
+			translatedMeasureObj.measureUnit = translations.grams.plural;
+			translatedMeasureObj.amount = amount / 1000;
+			return translatedMeasureObj;
+		case amount > 499 && measureUnit === 'milliliters':
+			translatedMeasureObj.measureUnit = translations.milliliters.plural;
+			translatedMeasureObj.amount = amount / 1000;
+			return translatedMeasureObj;
+		case measureUnit === 'grams':
+			translatedMeasureObj.measureUnit = translations.grams.singular;
+			return translatedMeasureObj;
+		case measureUnit === 'milliliters':
+			translatedMeasureObj.measureUnit = translations.milliliters.singular;
+			return translatedMeasureObj;
+		case measureUnit === 'items':
+			translatedMeasureObj.measureUnit = translations.items.singular;
+			return translatedMeasureObj;
+		default:
+			return translatedMeasureObj;
 	}
-
-	return { newMeasureUnit, newWeight };
-}
+};

@@ -8,7 +8,19 @@ jobs:
   check_codestyle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+      - name: send start message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.workflow }} started!
+
+            Repository: ${{ github.repository }}.
+            Branch name: ${{ github.ref_name }}.
+            Commit author: ${{ github.actor }}.
+            Commit message: ${{ github.event.commits[0].message }}.
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
@@ -20,7 +32,7 @@ jobs:
           npm run lint:styles
           npm run lint:prettier
       - name: send message
-        if: ${{ github.ref != 'refs/heads/develop' || github.ref != 'refs/heads/main' }}
+        if: ${{ github.ref != 'refs/heads/main' }}
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
@@ -37,7 +49,7 @@ jobs:
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Check out the repo

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '@services/api';
 import type { Product } from '@services/generated-api/data-contracts';
-import Button from '@components/Button';
+import Button from '@components/button';
 import ProductCard from '@components/product-card';
 import styles from './top-selling-this-week.module.scss';
 
@@ -62,7 +62,7 @@ const TopSellingThisWeek: React.FC = () => {
 			findTopThreeProducts();
 		}
 		if (buttonId === 2) {
-			const slugs = ['fruits', 'vegetables'];
+			const slugs = ['fruits', 'vegetables-and-herbs'];
 			findTopThreeProducts(slugs);
 		}
 		if (buttonId === 3) {

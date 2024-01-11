@@ -30,6 +30,7 @@ export interface Category {
 	 * @maxLength 100
 	 */
 	name: string;
+	image: string;
 	/**
 	 * Slug
 	 * @format slug
@@ -38,8 +39,8 @@ export interface Category {
 	 */
 	slug?: string;
 	subcategories?: SubcategoryLight[];
-	/** Top three products */
-	top_three_products?: string;
+	/** Top products */
+	top_products: string;
 }
 
 export interface CategoryCreate {
@@ -333,14 +334,14 @@ export interface Product {
 	discontinued?: boolean;
 	producer: ProducerLight;
 	/** Measure unit */
-	measure_unit?: 'grams' | 'milliliters' | 'items';
+	measure_unit: 'grams' | 'milliliters' | 'items';
 	/**
 	 * Amount
 	 * Number of grams, milliliters or items
 	 * @min 0
 	 * @max 32767
 	 */
-	amount?: number;
+	amount: number;
 	/**
 	 * Price
 	 * Price per one product unit
@@ -357,6 +358,7 @@ export interface Product {
 	 * @format uri
 	 */
 	photo?: string;
+	rating?: number;
 	components: ComponentLight[];
 	/**
 	 * Kcal
@@ -1005,9 +1007,9 @@ export interface OrderList {
 		| 'Delivered'
 		| 'Completed';
 	/** Payment Method */
-	payment_method?: 'Payment at the point of delivery' | 'In getting by cash';
+	payment_method?: 'Payment at the point of delivery' | 'In getting by cash' | 'Online';
 	/** Is paid */
-	is_paid?: boolean;
+	is_paid: boolean;
 	/** Delivery Method */
 	delivery_method?: 'Point of delivery' | 'By courier';
 	/** Address */
@@ -1037,7 +1039,7 @@ export interface OrderList {
 
 export interface OrderPostDelete {
 	/** Payment Method */
-	payment_method?: 'Payment at the point of delivery' | 'In getting by cash';
+	payment_method?: 'Payment at the point of delivery' | 'In getting by cash' | 'Online';
 	/** Delivery Method */
 	delivery_method?: 'Point of delivery' | 'By courier';
 	/** Delivery Point */
@@ -1055,7 +1057,7 @@ export interface OrderPostDelete {
 }
 
 export interface OrderPostAdd extends OrderPostDelete {
-	user_data: {
+	user_data?: {
 		first_name: string;
 		last_name: string;
 		phone_number: string;
@@ -1063,3 +1065,71 @@ export interface OrderPostAdd extends OrderPostDelete {
 	};
 	address?: number;
 }
+
+export interface ReviewCreate {
+	/** Rating Score
+	 * @min 1
+	 * @max 5
+	 */
+	score: number;
+
+	/** Review Text */
+	text?: string;
+}
+export interface ReviewUpdate {
+	/** Rating Score
+	 * @min 1
+	 * @max 5
+	 */
+	score?: number;
+
+	/** ReviewText */
+	text?: string;
+}
+
+export interface Review {
+	/** ID */
+	id: number;
+
+	/** Author */
+	author: {
+		/** ID of author */
+		id: number;
+
+		/** Name of author
+		 * @pattern ^[\w.@+-]+$
+		 * */
+		username: string;
+	};
+
+	/** Product */
+	product: string;
+
+	/** Rating Score
+	 * @min 1
+	 * @max 5
+	 */
+	score: number;
+
+	/**
+	 * Publication date
+	 * @format date-time
+	 */
+	pub_date: string;
+
+	/** Was Edited */
+	was_edited: boolean;
+
+	/** Review Text */
+	text: string;
+}
+
+export interface OrderCheck {
+	product: number;
+	user: number;
+	ordered: boolean;
+}
+
+export type Payment = {
+	stripe_session_id: string;
+};

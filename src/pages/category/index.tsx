@@ -44,16 +44,12 @@ const Category: React.FC = () => {
 				setCategoryObj(data.results[0]?.category);
 			})
 			.catch(() => {
-				navigate('/упс');
+				navigate('/404');
 			})
 			.finally(() => {
 				setIsLoading(false);
 			});
 	}, [category, navigate]);
-
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
 
 	const changeCheckboxState = (e: ChangeEvent<HTMLInputElement>) => {
 		if (e.target.name === 'vegetarian') {

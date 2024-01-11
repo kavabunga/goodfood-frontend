@@ -1,63 +1,98 @@
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import styles from './checkout.module.scss';
-import api from '@services/api.ts';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import PopupCheckoutResponse from '@components/popups/popup-checkout-response';
+import Breadcrumbs from '@components/breadcrumbs';
 import Input from '@ui/input';
+
+import api from '@services/api.ts';
+import { pickupPointAddresses, URLS, popupInfoText } from '@data/constants';
 import { useFormAndValidation } from '@hooks/use-form-and-validation.ts';
-import { OrderPostAdd } from '@services/generated-api/data-contracts.ts';
+import { usePopup } from '@hooks/use-popup';
 import { useAuth } from '@hooks/use-auth.ts';
 import { useCart } from '@hooks/use-cart-context.ts';
+import type { OrderPostAdd } from '@services/generated-api/data-contracts.ts';
+import styles from './checkout.module.scss';
 
 type Address = {
 	id: number;
 	address: string;
 };
 
+enum deliveryTypeEnum {
+	pointOfDelivery = 'Point of delivery',
+	byCourier = 'By courier',
+}
+
+enum paymentMethodEnum {
+	pointOfDelivery = 'Payment at the point of delivery',
+	onDelivery = 'In getting by cash',
+	online = 'Online',
+}
+
 const Checkout: React.FC = () => {
 	const { isLoggedIn, user } = useAuth();
 	const { loadCartData, cartData } = useCart();
+	const { handleOpenPopup, handleClosePopup } = usePopup();
 	const location = useLocation();
-	const recievedType = location.state?.orderType;
+	const receivedType = location.state?.orderType;
+	const deliveryType = receivedType || deliveryTypeEnum.pointOfDelivery;
 	const { values, handleChange, errors, isValid } = useFormAndValidation();
 	const navigate = useNavigate();
-
-	const [deliveryType, setDeliveryType] = React.useState<string>('shipment');
 	const [selectedPayment, setSelectedPayment] = React.useState<string>('');
 	const [selectedTime, setSelectedTime] = React.useState<string>('');
 	const [selectedAddress, setSelectedAddress] = React.useState<string>('');
-	const [actualDeliveryType, setActualDeliveryType] = React.useState<string>('');
 	const userAddresses = user?.addresses as unknown[] as Address[];
 	const [comment, setComment] = React.useState<string>('');
-	const addressesById = {
-		1: 'Ленина, 23, кв. 19',
-		2: 'Улица 2, дом 5',
-		3: 'Другой адрес и т.д.',
+	const [popupText, setPopupText] = useState('');
+	const [isAgreed, setIsAgreed] = useState(false);
+
+	const openInfoPopup = (text: string) => {
+		setPopupText(text);
+		handleOpenPopup('openPopupCheckoutResponse');
+	};
+
+	const validateOrderData = () => {
+		switch (true) {
+			case isLoggedIn && !user.first_name:
+				return openInfoPopup(popupInfoText.fillNameAuth);
+			case isLoggedIn && !user.last_name:
+				return openInfoPopup(popupInfoText.fillSurnameAuth);
+			case isLoggedIn && !user.phone_number:
+				return openInfoPopup(popupInfoText.fillPhoneAuth);
+			case isLoggedIn &&
+				deliveryType === deliveryTypeEnum.pointOfDelivery &&
+				!selectedAddress?.toString().trim():
+				return openInfoPopup(popupInfoText.chooseAddress);
+			case isLoggedIn && !selectedAddress?.toString().trim():
+				return openInfoPopup(popupInfoText.chooseOrFillAddress);
+			case isLoggedIn && !selectedPayment:
+				return openInfoPopup(popupInfoText.choosePaymentMethod);
+			case !isLoggedIn && !values.order_firstName?.toString().trim():
+				return openInfoPopup(popupInfoText.enterName);
+			case !isLoggedIn && !values.order_lastName?.toString().trim():
+				return openInfoPopup(popupInfoText.enterSurname);
+			case !isLoggedIn && !values.order_phoneNumber?.toString().trim():
+				return openInfoPopup(popupInfoText.enterPhone);
+			case !isLoggedIn && !values.order_email?.toString().trim():
+				return openInfoPopup(popupInfoText.enterEmail);
+			case !isLoggedIn &&
+				deliveryType === deliveryTypeEnum.pointOfDelivery &&
+				!selectedAddress?.toString().trim():
+				return openInfoPopup(popupInfoText.chooseAddress);
+			case !isLoggedIn && !selectedAddress?.toString().trim():
+				return openInfoPopup(popupInfoText.enterAddress);
+			case !isLoggedIn && !selectedPayment:
+				return openInfoPopup(popupInfoText.choosePaymentMethod);
+			case !isAgreed:
+				return openInfoPopup(popupInfoText.selectAgreement);
+			default:
+				return true;
+		}
 	};
 
 	const handleSubmitOrder = () => {
-		if (isLoggedIn) {
-			if (
-				!selectedPayment ||
-				!actualDeliveryType ||
-				(actualDeliveryType !== 'shipment' && !selectedAddress?.toString().trim())
-			) {
-				alert('Пожалуйста, заполните все обязательные поля');
-				return;
-			}
-		} else {
-			if (
-				!values.order_firstName?.toString().trim() ||
-				!values.order_lastName?.toString().trim() ||
-				!values.order_phoneNumber?.toString().trim() ||
-				!values.order_email?.toString().trim() ||
-				!selectedPayment ||
-				!actualDeliveryType ||
-				(actualDeliveryType !== 'shipment' && !selectedAddress?.toString().trim())
-			) {
-				alert('Пожалуйста, заполните все обязательные поля');
-				return;
-			}
-		}
+		if (!validateOrderData()) return;
 
 		let formData: OrderPostAdd = {
 			user_data: {
@@ -67,34 +102,42 @@ const Checkout: React.FC = () => {
 				email: values.order_email?.toString() || '',
 			},
 			payment_method: selectedPayment as
-				| 'Payment at the point of delivery'
-				| 'In getting by cash',
-			delivery_method: actualDeliveryType as 'Point of delivery' | 'By courier',
+				| paymentMethodEnum.pointOfDelivery
+				| paymentMethodEnum.onDelivery
+				| paymentMethodEnum.online,
+			delivery_method: deliveryType as
+				| deliveryTypeEnum.pointOfDelivery
+				| deliveryTypeEnum.byCourier,
 			delivery_point:
-				actualDeliveryType === 'shipment' ? Number(selectedAddress) || 2 : 2,
+				deliveryType === deliveryTypeEnum.pointOfDelivery
+					? Number(selectedAddress)
+					: null,
 			package: 0,
 			comment: comment,
 			add_address: selectedAddress || '',
 		};
 
-		if (isLoggedIn && actualDeliveryType === 'By courier') {
+		deliveryType === deliveryTypeEnum.byCourier && delete formData.delivery_point;
+		isLoggedIn && delete formData.user_data;
+
+		if (isLoggedIn && deliveryType === deliveryTypeEnum.byCourier) {
 			delete formData.add_address;
 			formData = { ...formData, address: parseInt(selectedAddress, 10) };
 		}
 
 		api
 			.usersOrderCreate(formData)
-			.then(() => {
-				navigate('/cart');
+			.then((res) => {
+				navigate(URLS.CART_SUCCESS, {
+					state: { orderNumber: res.order_number, orderId: res.id },
+				});
 				loadCartData();
-				alert('заказ оформлен');
 			})
 			.catch((error) => {
-				if (error.response && error.response.data && error.response.data.errors) {
-					const errorMessage = error.response.data.errors;
-					alert('Ошибка при создании заказа: ' + errorMessage);
+				if (error.errors[0].detail) {
+					openInfoPopup(popupInfoText.errorShort + error.errors[0].detail);
 				} else {
-					alert('Произошла ошибка при создании заказа.');
+					openInfoPopup(popupInfoText.errorLong);
 				}
 			});
 	};
@@ -116,24 +159,18 @@ const Checkout: React.FC = () => {
 		setSelectedAddress(event.target.value);
 	};
 
-	React.useState(() => {
-		if (!recievedType) {
-			setDeliveryType('shipment');
-		} else {
-			setDeliveryType(recievedType);
-		}
-	});
+	const handleClose = () => {
+		handleClosePopup('openPopupCheckoutResponse');
+		setPopupText('');
+	};
 
-	useEffect(() => {
-		if (deliveryType === 'shipment') {
-			setActualDeliveryType('By courier');
-		} else {
-			setActualDeliveryType('Point of delivery');
-		}
-	}, [deliveryType]);
+	const handleAgreementChange = () => {
+		setIsAgreed(!isAgreed);
+	};
 
 	return (
 		<section className={styles.order}>
+			<Breadcrumbs />
 			<div className={styles.details}>
 				<div className={styles.execution}>
 					<h2 className={styles.execution__title_mob}>Оформление заказа</h2>
@@ -220,7 +257,7 @@ const Checkout: React.FC = () => {
 						)}
 
 						<label className={styles.execution__address}>
-							{deliveryType !== 'shipment' ? (
+							{deliveryType !== deliveryTypeEnum.byCourier ? (
 								<>
 									Адрес пункта самовывоза
 									{selectedAddress !== null ? (
@@ -232,7 +269,7 @@ const Checkout: React.FC = () => {
 											<option value="" className={styles.order__address_option}>
 												Выберите адрес
 											</option>
-											{Object.entries(addressesById).map(([id, address]) => (
+											{Object.entries(pickupPointAddresses).map(([id, address]) => (
 												<option
 													key={id}
 													value={id}
@@ -308,7 +345,6 @@ const Checkout: React.FC = () => {
 										name="time"
 										value="9.00-12.00"
 										id="time_early-morning"
-										className={styles.execution__radio}
 										onChange={handleTimeChange}
 										checked={selectedTime === '9.00-12.00'}
 									/>
@@ -321,7 +357,6 @@ const Checkout: React.FC = () => {
 										name="time"
 										value="12.00-15.00"
 										id="time_lunch"
-										className={styles.execution__radio}
 										onChange={handleTimeChange}
 										checked={selectedTime === '12.00-15.00'}
 									/>
@@ -334,7 +369,6 @@ const Checkout: React.FC = () => {
 										name="time"
 										value="15.00-18.00"
 										id="time_day"
-										className={styles.execution__radio}
 										onChange={handleTimeChange}
 										checked={selectedTime === '15.00-18.00'}
 									/>
@@ -347,7 +381,6 @@ const Checkout: React.FC = () => {
 										name="time"
 										value="18.00-21.00"
 										id="time_evening"
-										className={styles.execution__radio}
 										onChange={handleTimeChange}
 										checked={selectedTime === '18.00-21.00'}
 									/>
@@ -363,25 +396,37 @@ const Checkout: React.FC = () => {
 									<input
 										type="radio"
 										name="payment"
-										value="In getting by cash"
-										id="payment_cash"
-										className={styles.execution__radio}
+										value="Online"
+										id="payment_online"
 										onChange={handlePaymentChange}
 									/>
-									<label htmlFor="payment_cash">Наличными курьеру</label>
+									<label htmlFor="payment_online">Оплата онлайн</label>
 								</div>
 								<hr className={styles.pricelist__divider} />
-								<div className={styles.execution__item}>
-									<input
-										type="radio"
-										name="payment"
-										value="Payment at the point of delivery"
-										id="payment_offline"
-										className={styles.execution__radio}
-										onChange={handlePaymentChange}
-									/>
-									<label htmlFor="payment_offline">Оплата в пункте выдачи</label>
-								</div>
+								{deliveryType === deliveryTypeEnum.byCourier && (
+									<div className={styles.execution__item}>
+										<input
+											type="radio"
+											name="payment"
+											value="In getting by cash"
+											id="payment_cash"
+											onChange={handlePaymentChange}
+										/>
+										<label htmlFor="payment_cash">Оплата курьеру</label>
+									</div>
+								)}
+								{deliveryType === deliveryTypeEnum.pointOfDelivery && (
+									<div className={styles.execution__item}>
+										<input
+											type="radio"
+											name="payment"
+											value="Payment at the point of delivery"
+											id="payment_offline"
+											onChange={handlePaymentChange}
+										/>
+										<label htmlFor="payment_offline">Оплата в пункте выдачи</label>
+									</div>
+								)}
 							</div>
 						</label>
 						<label className={styles.execution__address}>
@@ -411,7 +456,7 @@ const Checkout: React.FC = () => {
 							</div>
 							<div className={styles.pricelist__item}>
 								<p className={styles.pricelist__title}>
-									{deliveryType === 'shipment' ? 'Доставка' : 'Самовывоз'}
+									{deliveryType === deliveryTypeEnum.byCourier ? 'Доставка' : 'Самовывоз'}
 								</p>
 								<p className={`text_type_u ${styles.pricelist__price}`}>0 руб.</p>
 							</div>
@@ -431,17 +476,33 @@ const Checkout: React.FC = () => {
 								!isLoggedIn && !isValid ? `${styles['orderse__buttonStyle_error']}` : ''
 							}`}
 							onClick={handleSubmitOrder}
+							disabled={cartData.products.length === 0}
 						>
 							Оформить заказ
 						</button>
-						<p className={`${styles.orderse__title}`}>
-							Нажимая на&nbsp;кнопку &laquo;Оформить заказ&raquo;, вы&nbsp;соглашаетесь
-							с&nbsp;условиями обработки персональных данных, а&nbsp;также
-							с&nbsp;условиями продажи.
-						</p>
+						<div className={styles.execution__item}>
+							<input
+								type="checkbox"
+								name="agreement"
+								value="agreed"
+								id="agreement"
+								onChange={handleAgreementChange}
+							/>
+							<label htmlFor="agreement">
+								<span className={styles.orderse__title}>Я согласен с&nbsp;</span>
+								<Link className={styles.orderse__title} to={URLS.AGREEMENT}>
+									условиями обработки персональных данных
+								</Link>
+								<span className={styles.orderse__title}> и&nbsp;</span>
+								<Link className={styles.orderse__title} to={URLS.DELIVERY_COND}>
+									условиями продажи
+								</Link>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
+			<PopupCheckoutResponse handleClose={handleClose} text={popupText} />
 		</section>
 	);
 };

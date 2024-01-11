@@ -1,40 +1,11 @@
-import styles from './profile-order.module.scss';
-import OrderStatus from '../order-status';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-
-type OrderStatusType =
-	| 'Ordered'
-	| 'In processing'
-	| 'Collecting'
-	| 'Gathered'
-	| 'In delivering'
-	| 'Delivered'
-	| 'Completed';
-
-type Product = {
-	amount: number;
-	final_price: number;
-	id: number;
-	measure_unit: string;
-	name: string;
-	quantity: string;
-	photo: string;
-	category: {
-		category_name: string;
-		category_slug: string;
-	};
-};
-
-type CommonOrder = {
-	id: number;
-	order_number?: string;
-	ordering_date?: string;
-	total_price?: string;
-	payment_method?: string;
-	delivery_method?: string;
-	status?: OrderStatusType;
-	products: Array<{ product: Product; quantity: string }> | Product[];
-};
+import PaymentButton from '@components/payment-button';
+import OrderStatus from '../order-status';
+import { translateMeasureUnit } from '@utils/utils';
+import type { CommonOrder, Product } from '@pages/profile/utils/types';
+import { getDeliveryMethodRu, getPaymentMethodRu } from '@pages/profile/utils/utils';
+import styles from './profile-order.module.scss';
 
 type Props = {
 	readonly isShowedProductsDetails?: boolean;
@@ -57,25 +28,20 @@ const ProfileOrder = ({
 		products,
 	} = order;
 
-	console.log(status);
-	let payment_method_ru =
-		payment_method === 'Payment at the point of delivery'
-			? 'Банковской картой'
-			: 'Наличные';
-
-	let delivery_method_ru;
-	if (delivery_method === 'Point of delivery') {
-		delivery_method_ru = 'Самовывоз';
-	} else {
-		delivery_method_ru = 'Курьером';
-		payment_method_ru += 'курьеру';
-	}
+	const getAmountWithMeasureUnit = (
+		unitOfMeasure: string,
+		size: number,
+		multiplier: number
+	) => {
+		const totalAmount = size * multiplier;
+		const { measureUnit, amount } = translateMeasureUnit(unitOfMeasure, totalAmount);
+		return `${amount} ${measureUnit}`;
+	};
 
 	const date = ordering_date && new Date(ordering_date).toLocaleDateString();
 	return (
 		<>
-			<button
-				type="button"
+			<div
 				className={clsx(styles.order, isShowedProductsDetails && styles.details)}
 				onClick={showDetails}
 			>
@@ -85,28 +51,42 @@ const ProfileOrder = ({
 				</h4>
 				{isShowedProductsDetails ? (
 					<ul className={styles['order-products']}>
-						{(products as Array<{ product: Product; quantity: string }>).map((item) => (
+						{(products as Array<{ product: Product; quantity: number }>).map((item) => (
 							<li className={styles.product} key={item.product.name}>
-								<div className={styles['product__image-large']}>
-									<img
-										className={styles.product__image}
-										src={item.product.photo}
-										alt={item.product.name}
-									/>
-								</div>
-								<p className={styles.product__name}>{item.product.name}</p>
-								<p className={styles.product__weight}>{`${
-									item.product.amount * Number(item.quantity)
-								} ${item.product.measure_unit}`}</p>
-								<p
-									className={styles.product__price}
-								>{`${item.product.final_price} руб.`}</p>
+								<Link
+									className={styles.product__linkImage}
+									to={`/catalog/${item.product.category.category_slug}/${item.product.id}`}
+								>
+									<div className={styles['product__image-large']}>
+										<img
+											className={styles.product__image}
+											src={item.product.photo}
+											alt={item.product.name}
+										/>
+									</div>
+								</Link>
+								<Link
+									className={styles.product__linkText}
+									to={`/catalog/${item.product.category.category_slug}/${item.product.id}`}
+								>
+									<p className={styles.product__name}>{item.product.name}</p>
+								</Link>
+								<p className={styles.product__weight}>
+									{getAmountWithMeasureUnit(
+										item.product.measure_unit,
+										item.product.amount,
+										item.quantity
+									)}
+								</p>
+								<p className={styles.product__price}>{`${
+									item.product.final_price * item.quantity
+								} руб.`}</p>
 							</li>
 						))}
 					</ul>
 				) : (
 					<ul className={styles['order-products']}>
-						{(products as Array<{ product: Product; quantity: string }>).map(
+						{(products as Array<{ product: Product; quantity: number }>).map(
 							(item, index) => (
 								<li className={styles.product} key={index}>
 									{index < 5 && (
@@ -126,14 +106,22 @@ const ProfileOrder = ({
 
 				<div className={styles['order-details']}>
 					<div className={styles.info}>
-						<p className={styles.text}>{`Способ оплаты: ${payment_method_ru}`}</p>
-						<p className={styles.text}>{`Способ получения: ${delivery_method_ru}`}</p>
+						<p className={styles.text}>{`Оплата: ${getPaymentMethodRu(
+							payment_method
+						)}`}</p>
+						<p className={styles.text}>{`Получение: ${getDeliveryMethodRu(
+							delivery_method
+						)}`}</p>
 					</div>
 					<div className={styles.status}>
-						<OrderStatus status={status} />
+						{order.is_paid || payment_method !== 'Online' ? (
+							<OrderStatus status={order.is_paid ? 'In delivering' : status} />
+						) : (
+							<PaymentButton orderId={order.id} />
+						)}
 					</div>
 				</div>
-			</button>
+			</div>
 		</>
 	);
 };

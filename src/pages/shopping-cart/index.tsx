@@ -11,8 +11,8 @@ import Preloader from '@components/preloader';
 import { Product } from '@services/generated-api/data-contracts';
 
 const ShoppingCart: React.FC = () => {
-	const { cartData, loading } = useCart();
-	const [activeButton, setActiveButton] = React.useState<string>('shipment');
+	const { cartData, clearCart, loading } = useCart();
+	const [deliveryMethod, setDeliveryMethod] = React.useState<string>('By courier');
 	const navigate = useNavigate();
 	const [promotionProducts, setPromotionProducts] = useState<Product[]>([]);
 
@@ -41,17 +41,19 @@ const ShoppingCart: React.FC = () => {
 	}, []);
 
 	const handleOrderTypeClick = (type: string) => {
-		setActiveButton(type);
+		setDeliveryMethod(type);
 	};
 
 	const handleSubmitOrderClick = () => {
-		const typeToSend = activeButton;
-
 		navigate('/cart/order', {
 			state: {
-				orderType: typeToSend,
+				orderType: deliveryMethod,
 			},
 		});
+	};
+
+	const handleClearCart = () => {
+		clearCart();
 	};
 
 	return (
@@ -66,7 +68,13 @@ const ShoppingCart: React.FC = () => {
 							<h3
 								className={styles.products__title_mob}
 							>{`${cartData.count_of_products} товаров`}</h3>
-							<button className={styles.products__btn}>Очистить корзину</button>
+							<button
+								className={styles.products__btn}
+								onClick={handleClearCart}
+								disabled={cartData.products.length === 0}
+							>
+								Очистить корзину
+							</button>
 						</div>
 
 						{cartData.products.length > 0 ? (
@@ -79,16 +87,19 @@ const ShoppingCart: React.FC = () => {
 						<div className={styles.details__sum}>
 							<p className={`text-m`}>Итого</p>
 							<p className={`text-m`}>
-								{cartData.total_price ? `${cartData.total_price.toFixed(2)} руб.` : 'N/A'}
+								{cartData.total_price ? `${cartData.total_price.toFixed(2)} руб.` : '0'}
 							</p>
 						</div>
 						<div className={styles.delivery}>
 							<div
 								className={`${styles.delivery__btn} ${styles.delivery__btn_byCar} ${
-									activeButton === 'pickup' && styles.delivery__btn_byCar_unactive
-								} ${activeButton === 'pickup' && styles.delivery__btn_unactive}`}
+									deliveryMethod === 'Point of delivery' &&
+									styles.delivery__btn_byCar_unactive
+								} ${
+									deliveryMethod === 'Point of delivery' && styles.delivery__btn_unactive
+								}`}
 								onClick={() => {
-									handleOrderTypeClick('shipment');
+									handleOrderTypeClick('By courier');
 								}}
 							>
 								<div
@@ -98,27 +109,32 @@ const ShoppingCart: React.FC = () => {
 							</div>
 							<div
 								className={`${styles.delivery__btn} ${
-									activeButton === 'shipment' && styles.delivery__btn_unactive
+									deliveryMethod === 'By courier' && styles.delivery__btn_unactive
 								} ${styles.delivery__btn_byThemselves}`}
 								onClick={() => {
-									handleOrderTypeClick('pickup');
+									handleOrderTypeClick('Point of delivery');
 								}}
 							>
 								<div
 									className={`${styles.delivery__icon} ${
-										activeButton === 'shipment' && styles.delivery__icon_flag_unactive
-									} ${activeButton === 'pickup' && styles.delivery__icon_flag}`}
+										deliveryMethod === 'By courier' && styles.delivery__icon_flag_unactive
+									} ${
+										deliveryMethod === 'Point of delivery' && styles.delivery__icon_flag
+									}`}
 								></div>
 								<p
 									className={`text_type_u ${styles.delivery__title} ${
-										activeButton === 'shipment' && styles.delivery__title_unactive
+										deliveryMethod === 'By courier' && styles.delivery__title_unactive
 									}`}
 								>
 									Самовывоз
 								</p>
 							</div>
 						</div>
-						<MakingOrderBtn onClick={handleSubmitOrderClick} />
+						<MakingOrderBtn
+							onClick={handleSubmitOrderClick}
+							disabled={cartData.products.length === 0}
+						/>
 					</div>
 				</div>
 			)}

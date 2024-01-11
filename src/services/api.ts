@@ -18,6 +18,9 @@ import type {
 	Subcategory,
 	Tag,
 	OrderPostAdd,
+	ReviewCreate,
+	ReviewUpdate,
+	Payment,
 } from './generated-api/data-contracts';
 import { BACKEND_URL } from '@data/constants.ts';
 import Cookies from 'js-cookie';
@@ -31,7 +34,7 @@ class Api {
 
 	_checkResponse(res: Response) {
 		if (res.ok) {
-			if (res.status === 204) return res;
+			if (res.status === 204 || res.status === 205) return res;
 			return res.json();
 		}
 
@@ -232,6 +235,7 @@ class Api {
 		});
 	}
 
+	/* ------------------------------- Order ------------------------------- */
 	usersOrderList() {
 		return this._request(`order/`, {
 			method: 'GET',
@@ -258,6 +262,20 @@ class Api {
 		});
 	}
 
+	usersOrderPay(id: number) {
+		const headers: HeadersInit = {
+			'Content-Type': 'application/json',
+		};
+		const token = Cookies.get('token');
+		if (token) {
+			headers.Authorization = `Token ${token}`;
+		}
+		return this._request(`order/${id}/pay/`, {
+			method: 'POST',
+			headers,
+		});
+	}
+
 	usersOrderRead(userId: string, id: number) {
 		return this._request(`users/${userId}/order/${id}/`, {
 			method: 'GET',
@@ -270,6 +288,7 @@ class Api {
 		});
 	}
 
+	/* ---------------------------- ShoppingCart ---------------------------- */
 	usersShoppingCartList() {
 		return this._request(`shopping_cart/`, {
 			method: 'GET',
@@ -301,20 +320,13 @@ class Api {
 		});
 	}
 
-	usersShoppingCartRead(userId: string, id: number) {
-		return this._request(`users/${userId}/shopping_cart/${id}/`, {
-			method: 'GET',
-		});
-	}
-
-	usersShoppingCartPartialUpdate(
-		userId: string,
-		id: number,
-		data: ShoppingCartPostUpdateDelete
-	) {
-		return this._request(`users/${userId}/shopping_cart/${id}/`, {
-			method: 'PATCH',
-			body: JSON.stringify(data),
+	usersShoppingCartDeleteAll() {
+		return this._request('shopping_cart/remove_all/', {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			},
 		});
 	}
 
@@ -380,6 +392,16 @@ class Api {
 	productsFavoriteDelete(id: number) {
 		return this._request(`products/${id}/favorite/`, {
 			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${Cookies.get('token')}`,
+			},
+		});
+	}
+
+	productsOrderCheck(id: number) {
+		return this._request(`products/${id}/order-user-check/`, {
+			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Token ${Cookies.get('token')}`,
@@ -619,6 +641,46 @@ class Api {
 	getRecipeById(id: number) {
 		return this._request(`recipes/${id}`, {
 			method: 'GET',
+		});
+	}
+
+	/* ------------------------ Ratings and Reviews -------------------------- */
+	reviewsCreate(productId: number, data: ReviewCreate) {
+		return this._request(`products/${productId}/reviews/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${Cookies.get('token')}`,
+			},
+			body: JSON.stringify(data),
+		});
+	}
+
+	reviewsUpdate(productId: number, reviewId: number, data: ReviewUpdate) {
+		return this._request(`products/${productId}/reviews/${reviewId}/`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Token ${Cookies.get('token')}`,
+			},
+			body: JSON.stringify(data),
+		});
+	}
+
+	reviewsList(productId: number) {
+		return this._request(`products/${productId}/reviews/`, {
+			method: 'GET',
+		});
+	}
+
+	/* ----------------------------- Payment ------------------------------- */
+	paymentCheck(data: Payment) {
+		return this._request('order/successful_pay/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
 		});
 	}
 }

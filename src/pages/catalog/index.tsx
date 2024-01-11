@@ -11,7 +11,7 @@ type Catalog = {
 	id: number;
 	name: string;
 	slug: string;
-	top_three_products: Product[];
+	top_products: Product[];
 };
 
 const Catalog: React.FC = () => {
@@ -28,8 +28,6 @@ const Catalog: React.FC = () => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-
-		window.scrollTo(0, 0);
 	}, []);
 
 	return (
@@ -53,7 +51,7 @@ const Catalog: React.FC = () => {
 									title={catalog.name}
 									category={catalog.slug}
 									type="single-row"
-									array={catalog.top_three_products}
+									array={catalog.top_products.slice(0, 3)}
 								/>
 							))}
 						</div>

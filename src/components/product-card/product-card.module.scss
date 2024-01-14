@@ -1,152 +1,117 @@
 @use '@scss/variables' as *;
 
 .card {
+	font-family: $ubuntu-font;
+	box-sizing: border-box;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	color: $active-text-color;
+	background: #fff;
 	border-radius: 20px;
 	border: 1px solid #ddd;
-	background: #fff;
-	padding: 20px;
 	list-style: none;
-	max-width: 328px;
-	max-height: 357px;
-	box-sizing: border-box;
-	width: 100%;
-	color: $active-text-color;
-	overflow: hidden;
 
-	@media screen and (width <= 768px) {
-		max-width: 138px;
-		min-width: 138px;
-		max-height: 231px;
+	@media screen and (width <= 1024px) {
 		padding: 12px 8px;
+		gap: 8px;
 	}
 }
 
-.addedCardClassName:last-of-type {
-	display: none;
-
-	@media screen and (width <= 768px) {
-		display: block;
-	}
-}
-
-.card__link {
+.link {
+	color: $active-text-color;
 	text-decoration: none;
-	width: 100%;
-	height: 100%;
 }
 
-.card__image {
+.image {
 	border-radius: 20px;
 	width: 100%;
-	aspect-ratio: 1.767;
+	aspect-ratio: 1.8;
 	object-fit: cover;
 }
 
-.card__caption {
-	color: $active-text-color;
-	font-family: Ubuntu, Arial, sans-serif;
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+
+	@media screen and (width <= 768px) {
+		gap: 2px;
+	}
+}
+
+.title {
+	overflow: hidden;
 	font-size: 22px;
 	font-weight: 500;
 	line-height: 140%;
 	margin: 0;
-	padding: 24px 0 7px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 
-	@media screen and (width <= 1000px) {
+	@media screen and (width <= 1024px) {
 		font-size: 16px;
+		min-height: 40px;
+
+		/* // NOTE: Text overflow limited for 2 lines */
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+
+	@media screen and (width > 1024px) {
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	@media screen and (width <= 768px) {
-		padding: 4px 0 0;
 		font-size: 14px;
-		font-weight: 400;
 	}
 }
 
-.card__params {
+.params {
 	display: flex;
+	gap: 16px;
 
-	@media screen and (width <= 768px) {
+	@media screen and (width <= 1024px) {
 		flex-direction: column-reverse;
-		min-height: 62px;
+		gap: 2px;
 	}
 }
 
-.card__params-text {
-	font-family: Ubuntu, Arial, sans-serif;
+.text {
+	color: $footer-background-color;
 	font-size: 20px;
 	font-weight: 400;
 	line-height: 140%;
-	color: $footer-background-color;
-}
 
-.card__params-text_price {
-	@media screen and (width <= 1000px) {
+	@media screen and (width <= 1024px) {
 		font-size: 16px;
 	}
+}
 
+.price {
 	@media screen and (width <= 768px) {
+		color: $active-text-color;
 		font-size: 15px;
 		font-weight: 700;
-		color: $active-text-color;
 	}
 }
 
-.card__params-text_weight {
-	padding: 0 0 0 16px;
-	color: $footer-background-color;
-
-	@media screen and (width <= 1000px) {
-		font-size: 16px;
-	}
-
+.weight {
 	@media screen and (width <= 768px) {
-		padding: 0;
 		font-size: 12px;
 	}
 }
 
-.card__button-container {
+.buttons {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding-top: 18px;
-
-	@media screen and (width <= 768px) {
-		padding-top: 8px;
-	}
 }
 
-// .card__cart-button {
-// 	background: #eaeaea;
-// 	padding: 11px 32px;
-// 	border: none;
-// 	color: #1a1a1a;
-// 	font-family: Ubuntu, Arial, sans-serif;
-// 	font-size: 18px;
-// 	font-weight: 400;
-// 	line-height: 140%;
-// 	border-radius: 16px;
-// 	max-width: 153px;
-
-// 	&:hover {
-// 		color: white;
-// 		background-color: $accent-color-bright-green;
-// 		cursor: pointer;
-// 	}
-
-// 	transition: 0.3s;
-
-// 	@media screen and (width <= 768px) {
-// 		padding: 8px 16px;
-// 		font-size: 13px;
-// 		border-radius: 12px;
-// 	}
-// }
-
-.card__like-button {
+.likeButton {
 	width: 28px;
 	height: 28px;
 	object-fit: cover;
@@ -163,7 +128,7 @@
 	}
 }
 
-.card__like-icon {
+.likeIcon {
 	fill: transparent;
 	stroke: $active-text-color;
 	transition-property: fill, stroke;
@@ -180,11 +145,14 @@
 }
 
 .checkbox {
+	box-sizing: border-box;
 	width: 24px;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	border-radius: 4px;
 	border: 2px solid $form-button-color;
-	display: grid;
 	transition: background-color 0.3s;
 
 	@media screen and (width <= 768px) {
@@ -194,8 +162,7 @@
 
 .check {
 	width: 16px;
-	height: 16px;
-	place-self: center;
+	aspect-ratio: 1;
 	fill: transparent;
 	transition: fill 0.3s;
 }
@@ -212,5 +179,37 @@
 		& .check {
 			fill: #fff;
 		}
+	}
+}
+
+.cartButton {
+	box-sizing: border-box;
+	padding: 12px 34px;
+	margin: 0;
+	background-color: $gray-button;
+	border-radius: 16px;
+	border: none;
+	box-shadow: unset;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 140%;
+	cursor: pointer;
+	transition:
+		background-color 0.5s,
+		color 0.5s;
+
+	&__active {
+		background-color: $green-primary-700;
+		color: white;
+	}
+
+	&:hover {
+		background-color: $form-button-color;
+		color: white;
+	}
+
+	@media screen and (width <= 1024px) {
+		padding: 8px 16px;
+		font-size: 13px;
 	}
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styles from './shopping-cart.module.scss';
 import ProductCard from '@components/product-card';
 import api from '@services/api';
 import ShoppingList from '@components/shopping-list';
@@ -8,13 +7,19 @@ import { useNavigate } from 'react-router-dom';
 import MakingOrderBtn from '@components/making-order-btn';
 import { useCart } from '@hooks/use-cart-context.ts';
 import Preloader from '@components/preloader';
-import { Product } from '@services/generated-api/data-contracts';
+import { OrderPostAdd, Product } from '@services/generated-api/data-contracts';
+import styles from './shopping-cart.module.scss';
+import DeliveryMethodToggle from '@components/delivery-method-toggle';
+
+interface DeliveryMethod extends Pick<OrderPostAdd, 'delivery_method'> {}
 
 const ShoppingCart: React.FC = () => {
 	const { cartData, clearCart, loading } = useCart();
-	const [deliveryMethod, setDeliveryMethod] = React.useState<string>('By courier');
+	const [deliveryMethod, setDeliveryMethod] = React.useState<DeliveryMethod>(
+		'By courier' as DeliveryMethod
+	);
 	const navigate = useNavigate();
-	const [promotionProducts, setPromotionProducts] = useState<Product[]>([]);
+	const [promotionProducts, setPromotionProducts] = useState<Product[] | null>(null);
 
 	const randomNumbers = (): number[] => {
 		const unicNumbers = new Set();
@@ -32,15 +37,11 @@ const ShoppingCart: React.FC = () => {
 				return api.productsRead(id);
 			}),
 		])
-			.then((products) => {
-				setPromotionProducts(products);
-			})
-			.catch((error) => {
-				console.log('Ошибка Promise.all:', error);
-			});
+			.then((products) => setPromotionProducts(products))
+			.catch((error) => console.log('Ошибка Promise.all:', error));
 	}, []);
 
-	const handleOrderTypeClick = (type: string) => {
+	const handleOrderTypeClick = (type: DeliveryMethod) => {
 		setDeliveryMethod(type);
 	};
 
@@ -77,86 +78,52 @@ const ShoppingCart: React.FC = () => {
 							</button>
 						</div>
 
-						{cartData.products.length > 0 ? (
+						{cartData.products.length > 0 && (
 							<ShoppingList products={cartData.products} />
-						) : (
-							<p>Добавьте продукт</p>
 						)}
 					</div>
-					<div className={styles.details__form}>
-						<div className={styles.details__sum}>
-							<p className={`text-m`}>Итого</p>
-							<p className={`text-m`}>
-								{cartData.total_price ? `${cartData.total_price.toFixed(2)} руб.` : '0'}
-							</p>
-						</div>
-						<div className={styles.delivery}>
-							<div
-								className={`${styles.delivery__btn} ${styles.delivery__btn_byCar} ${
-									deliveryMethod === 'Point of delivery' &&
-									styles.delivery__btn_byCar_unactive
-								} ${
-									deliveryMethod === 'Point of delivery' && styles.delivery__btn_unactive
-								}`}
-								onClick={() => {
-									handleOrderTypeClick('By courier');
-								}}
-							>
-								<div
-									className={`${styles.delivery__icon} ${styles.delivery__icon_truck}`}
-								></div>
-								<p className={`text_type_u ${styles.delivery__title}`}>Доставка</p>
+					{cartData.products.length > 0 && (
+						<div className={styles.details__form}>
+							<div className={styles.details__sum}>
+								<span>Итого</span>
+								<span>
+									{cartData.total_price ? `${cartData.total_price.toFixed(2)} руб.` : '0'}
+								</span>
 							</div>
-							<div
-								className={`${styles.delivery__btn} ${
-									deliveryMethod === 'By courier' && styles.delivery__btn_unactive
-								} ${styles.delivery__btn_byThemselves}`}
-								onClick={() => {
-									handleOrderTypeClick('Point of delivery');
-								}}
-							>
-								<div
-									className={`${styles.delivery__icon} ${
-										deliveryMethod === 'By courier' && styles.delivery__icon_flag_unactive
-									} ${
-										deliveryMethod === 'Point of delivery' && styles.delivery__icon_flag
-									}`}
-								></div>
-								<p
-									className={`text_type_u ${styles.delivery__title} ${
-										deliveryMethod === 'By courier' && styles.delivery__title_unactive
-									}`}
-								>
-									Самовывоз
-								</p>
-							</div>
+							<DeliveryMethodToggle
+								handleButtonClick={handleOrderTypeClick}
+								deliveryMethod={deliveryMethod}
+							/>
+							<MakingOrderBtn
+								onClick={handleSubmitOrderClick}
+								disabled={cartData.products.length === 0}
+							/>
 						</div>
-						<MakingOrderBtn
-							onClick={handleSubmitOrderClick}
-							disabled={cartData.products.length === 0}
-						/>
-					</div>
+					)}
 				</div>
 			)}
-			<div className={styles.cart__recomendation}>
-				<h2 className={styles.cart__title}>Вас также может заинтересовать</h2>
-				<div className={styles.cart__advertisement}>
-					{promotionProducts.map((product) => (
-						<ProductCard
-							idCard={product.id}
-							key={product.id}
-							cardImage={product.photo || ''}
-							cardName={product.name}
-							price={product.price}
-							weight={product.amount || 0}
-							measureUnit={product.measure_unit}
-							category={product.category?.category_slug}
-							is_favorited={product.is_favorited}
-							addedClassName="addedCardClassName"
-						/>
-					))}
+			{promotionProducts && (
+				<div className={styles.cart__recomendation}>
+					<h2 className={styles.cart__title}>Вас также может заинтересовать</h2>
+					<ul className={styles.cart__advertisement}>
+						{promotionProducts.map((product) => (
+							<li key={product.id}>
+								<ProductCard
+									idCard={product.id}
+									cardImage={product.photo || ''}
+									cardName={product.name}
+									price={product.price}
+									weight={product.amount || 0}
+									measureUnit={product.measure_unit}
+									category={product.category?.category_slug}
+									is_favorited={product.is_favorited}
+									addedClassName="addedCardClassName"
+								/>
+							</li>
+						))}
+					</ul>
 				</div>
-			</div>
+			)}
 		</section>
 	);
 };

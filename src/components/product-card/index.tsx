@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '@components/button';
 import styles from './product-card.module.scss';
 import { BASE_URL } from '@data/constants.ts';
 import LikeIcon from '@images/like-icon.svg?react';
@@ -24,6 +23,7 @@ type ProductCardProps = {
 	is_favorited?: boolean;
 	checkboxControl?: { checked: boolean; onChange: () => void };
 	addedClassName?: string;
+	withButtons?: boolean;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -37,6 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	measureUnit,
 	addedClassName = '',
 	is_favorited = false,
+	withButtons = true,
 }) => {
 	const { isLoggedIn } = useAuth();
 	const { handleOpenPopup } = usePopup();
@@ -82,9 +83,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
 	return (
 		<div className={`${styles.card} ${addedClassName && styles[addedClassName]}`}>
-			<Link className={styles.card__link} to={`/catalog/${category}/${idCard}`}>
+			<Link className={styles.link} to={`/catalog/${category}/${idCard}`}>
 				<img
-					className={styles.card__image}
+					className={styles.image}
 					src={
 						cardImage !== undefined && cardImage !== null
 							? cardImage.startsWith('/')
@@ -94,48 +95,50 @@ const ProductCard: React.FC<ProductCardProps> = ({
 					}
 					alt="карточка товара"
 				/>
-				<h2 className={styles.card__caption}>{cardName}</h2>
 			</Link>
-			<div className={styles.card__params}>
-				<span
-					className={`${styles['card__params-text']} ${styles['card__params-text_price']}`}
-				>
-					{price} руб.
-				</span>
-				<span
-					className={`${styles['card__params-text']} ${styles['card__params-text_weight']}`}
-				>{`${amount + newMeasureUnit}`}</span>
+			<div className={styles.content}>
+				<Link className={styles.link} to={`/catalog/${category}/${idCard}`}>
+					<h2 className={styles.title}>{cardName}</h2>
+				</Link>
+				<div className={styles.params}>
+					<span className={`${styles.text} ${styles.price}`}>{price} руб.</span>
+					<span className={`${styles.text} ${styles.weight}`}>
+						{amount} {newMeasureUnit}
+					</span>
+				</div>
 			</div>
-
-			<div className={styles['card__button-container']}>
-				<Button
-					buttonText={isInCart ? 'В корзине' : 'В корзину'}
-					buttonStyle={isInCart ? 'green-border-button' : 'green-border-button__active'}
-					onClick={handleCartButton}
-				/>
-
-				{checkboxControl ? (
-					<label className={styles.label}>
-						<input
-							className={styles.input}
-							type="checkbox"
-							onChange={checkboxControl.onChange}
-							checked={checkboxControl.checked}
-						/>
-						<span className={styles.checkbox}>
-							<CheckIcon className={styles.check} />
-						</span>
-					</label>
-				) : (
-					<>
-						<button onClick={handleLikeButton} className={styles['card__like-button']}>
-							<LikeIcon
-								className={clsx(styles['card__like-icon'], isFavorite && styles.favorite)}
+			{withButtons && (
+				<div className={styles.buttons}>
+					<button
+						className={`${styles.cartButton} ${isInCart && styles.cartButton__active}`}
+						type="button"
+						onClick={handleCartButton}
+					>
+						{isInCart ? 'В корзине' : 'В корзину'}
+					</button>
+					{checkboxControl ? (
+						<label className={styles.label}>
+							<input
+								className={styles.input}
+								type="checkbox"
+								onChange={checkboxControl.onChange}
+								checked={checkboxControl.checked}
 							/>
-						</button>
-					</>
-				)}
-			</div>
+							<span className={styles.checkbox}>
+								<CheckIcon className={styles.check} />
+							</span>
+						</label>
+					) : (
+						<>
+							<button onClick={handleLikeButton} className={styles.likeButton}>
+								<LikeIcon
+									className={clsx(styles.likeIcon, isFavorite && styles.favorite)}
+								/>
+							</button>
+						</>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

@@ -1,21 +1,28 @@
+@use '@scss/variables.scss' as *;
+
 .item {
-	width: 676px;
-	max-width: 676px;
+	padding: 8px 16px;
 	display: flex;
 	flex-direction: row;
 	gap: 38px;
 	align-items: center;
-	font-family: inherit;
-	line-height: 140%;
-	font-style: normal;
+	font-family: $ubuntu-font;
+	color: $active-text-color;
+	font-size: 20px;
 	font-weight: 400;
-	padding: 8px 16px;
-	box-sizing: border-box;
+
+	@media screen and (width <= 1024px) {
+		padding: 8px 4px;
+		gap: 25px;
+	}
+}
+
+.item__title {
+	padding: 0;
+	margin: 0;
+	line-height: 140%;
 
 	@media screen and (width <= 768px) {
-		max-width: 100%;
-		width: 100%;
-		padding: 8px 4px;
 		font-size: 14px;
 		font-weight: 500;
 	}
@@ -25,128 +32,120 @@
 	border-radius: 16px;
 	object-fit: contain;
 	width: 74px;
-	height: 74px;
+	aspect-ratio: 1;
 
 	@media screen and (width <= 768px) {
 		width: 45px;
-		height: 45px;
 		border-radius: 4px;
 	}
 }
 
-.item__title-container {
-	max-width: 153px;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-}
-
-.item__title {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	height: 100%;
-	overflow-wrap: break-word;
-}
-
 .item__weight {
-	max-width: 161px;
-	width: 100%;
 	border: 1px solid #cfcfcf;
 	border-radius: 8px;
 	display: flex;
 	flex-wrap: nowrap;
-	justify-content: space-evenly;
 	align-items: center;
-	padding: 10px 0;
+	gap: 16px;
+	padding: 10px 16px;
 
 	@media screen and (width <= 768px) {
-		max-width: 100px;
-		padding: 4px 8px;
+		gap: 8px;
+		padding: 4px 14px;
 		border-radius: 4px;
 	}
 }
 
 .item__container {
+	flex-grow: 1;
 	display: flex;
+	flex-direction: row;
+	align-items: center;
 	gap: 38px;
-	width: 100%;
 
-	@media screen and (width <= 768px) {
+	@media screen and (width <= 480px) {
+		flex-grow: unset;
 		max-width: 100px;
 		flex-direction: column;
+		align-items: flex-start;
 		gap: 4px;
-		justify-content: center;
-		padding: 0;
 	}
 }
 
 .item_btn {
-	all: unset;
-	content: '';
+	width: 24px;
+	aspect-ratio: 1;
+	box-shadow: none;
+	border: none;
 	cursor: pointer;
-	background-size: 24px 24px;
-	width: 25px;
-	height: 24px;
-	background-position: center center;
+	background-color: transparent;
+	background-size: cover;
+	background-position: center;
 	background-repeat: no-repeat;
+	transition: opacity 0.5s ease-in-out;
 
 	:hover {
 		opacity: 0.5;
-		transition: opacity 0.5s ease-in-out;
 	}
 
 	@media screen and (width <= 768px) {
 		width: 12px;
-		height: 12px;
 	}
 }
 
 .item__delete_btn {
-	background: url('@images/delete_button.svg');
-	width: 35px;
+	background-image: url('@images/delete_button.svg');
 
-	@media screen and (width <= 768px) {
+	@media screen and (width <= 1024px) {
 		display: none;
-		visibility: hidden;
 	}
 }
 
 .item__decrease_btn {
-	background: url('@images/minus_button.svg');
-
-	@media screen and (width <= 768px) {
-		background: url('@images/decrease_btn_small.svg');
-		background-position: center;
-		background-repeat: no-repeat;
-	}
+	background-image: url('@images/minus_button.svg');
 }
 
 .item__increase_btn {
-	background: url('@images/plus_button.svg');
-
-	@media screen and (width <= 768px) {
-		background: url('@images/plus_btn_small.svg');
-		background-position: center;
-		background-repeat: no-repeat;
-	}
+	background-image: url('@images/plus_button.svg');
 }
 
 .item__measure {
+	padding: 0;
+	margin: 0;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 140%;
+
 	@media screen and (width <= 768px) {
-		font-family: inherit;
 		font-size: 12px;
-		font-style: normal;
-		font-weight: 400;
 	}
 }
 
 .item__price {
-	width: 100%;
-	max-width: 100px;
+	padding: 0;
+	margin: 0;
+	min-width: 100px;
+	line-height: 140%;
+	text-align: right;
+
+	@media screen and (width <= 768px) {
+		min-width: 80px;
+		font-size: 15px;
+		font-weight: 700;
+	}
+
+	@media screen and (width <= 480px) {
+		flex-grow: 1;
+		justify-self: end;
+	}
 }
 
 .item__link {
+	flex-grow: 1;
 	text-decoration: none;
+	color: $active-text-color;
+
+	@media screen and (width <= 480px) {
+		flex-grow: unset;
+	}
 }

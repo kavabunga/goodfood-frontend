@@ -121,13 +121,15 @@ export default function ProfileFavorites() {
 					</p>
 				)}
 			</ul>
-			<button
-				className={styles.button}
-				onClick={handleAddToCart}
-				disabled={!Object.values(checkboxesValues).some((i) => i)}
-			>
-				В корзину
-			</button>
+			{Object.values(checkboxesValues).some((item) => item === true) && (
+				<button
+					className={styles.button}
+					onClick={handleAddToCart}
+					disabled={!Object.values(checkboxesValues).some((i) => i)}
+				>
+					В корзину
+				</button>
+			)}
 		</div>
 	);
 }

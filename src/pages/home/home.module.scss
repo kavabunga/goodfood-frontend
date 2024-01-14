@@ -30,6 +30,8 @@
 
 .home__topSellingThisWeek {
 	margin-top: 116px;
+	display: flex;
+	flex-direction: column;
 
 	@media screen and (width <= 768px) {
 		margin-top: 60px;

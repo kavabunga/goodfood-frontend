@@ -7,6 +7,10 @@ export const URLS = {
 	CATALOG: '/catalog',
 	AGREEMENT: '/agreement',
 	DELIVERY_COND: '/delivery-conditions',
+	DELIVERY: '/delivery',
+	ABOUT_US: '/about-us',
+	PAYMENT: '/payment',
+	SUPPORT: '/support',
 	CART_SUCCESS: '/cart/success',
 	PROFILE_ORDERS: '/profile/orders/',
 };
@@ -39,3 +43,8 @@ export const popupInfoText = {
 	selectAgreement:
 		'Для оформления заказа необходимо согласие с условиями обработки персональных данных и условиями продажи.',
 };
+
+export const textIfOrderPaid =
+	'Пока вы ждёте заказ, можете ознакомиться с рецептами из нашего блога';
+export const textIfOrderNotPaid =
+	'Пока решается проблема с оплатой, вы можете ознакомиться с рецептами из нашего блога';

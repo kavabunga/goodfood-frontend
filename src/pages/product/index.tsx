@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './product.module.scss';
-import Button from '@components/button';
+import Button from '@components/Button';
 import { useParams } from 'react-router';
 import api from '@services/api.ts';
 import Preloader from '@components/preloader';
@@ -47,7 +47,7 @@ const Product: React.FC = () => {
 				.then((data) => setProductItem(data))
 				.catch((error) => {
 					console.log(error);
-					navigate('/упс');
+					navigate('/404');
 				});
 			api
 				.reviewsList(Number(id))
@@ -58,7 +58,7 @@ const Product: React.FC = () => {
 				.catch((err) => console.log(err));
 		} else {
 			console.log('ID is undefined');
-			navigate('/упс');
+			navigate('/404');
 		}
 	}, [id, navigate]);
 

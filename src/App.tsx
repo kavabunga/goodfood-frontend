@@ -24,15 +24,9 @@ import RecipeList from '@pages/recipe-list/index.tsx';
 import Agreement from '@pages/agreement/index.tsx';
 import DeliveryConditions from '@pages/delivery-conditions/index.tsx';
 import CheckoutSuccess from '@pages/checkout/checkout-success/index.tsx';
-
-// импорт временных массивов для отображения каталогов и продуктов
-// временное решение для верстки, потом удалить
-
-// import { mainPageBlockLinks, products } from './data/dataExamples.ts';
-
-// примеры рендера каталогов
-// <CardCatalogLink title="Каталог" type="bento-grid" array={mainPageBlockLinks} />
-// <CardCatalogLink title="Овощи" type="single-row" array={products} />
+import PaymentResults from '@pages/payment-results/index.tsx';
+import InfoPage from '@pages/info-page/';
+import AboutUs from '@pages/about-us/';
 
 function App() {
 	const { isLoggedIn } = useAuth();
@@ -63,6 +57,19 @@ function App() {
 						</Route>
 						<Route path={URLS.AGREEMENT} element={<Agreement />} />
 						<Route path={URLS.DELIVERY_COND} element={<DeliveryConditions />} />
+						<Route path={URLS.DELIVERY} element={<InfoPage />} />
+						<Route path={URLS.ABOUT_US} element={<AboutUs />} />
+						<Route path={URLS.SUPPORT} element={<InfoPage />} />
+						<Route path={URLS.PAYMENT} element={<InfoPage />} />
+						<Route
+							path={'payment-is-processing'}
+							element={<PaymentResults isPaid={true} />}
+						/>
+						<Route
+							path={'payment-cancelled'}
+							element={<PaymentResults isPaid={false} />}
+						/>
+						<Route path="/404" element={<NotFound />} />
 						<Route path="*" element={<NotFound />} />
 					</Routes>
 				</Layout>

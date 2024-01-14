@@ -20,9 +20,10 @@ type ProductItem = {
 	photo: string;
 	category: string;
 	quantity: number;
-	created_at: number;
 	final_price: number;
 	total_price: number;
+	amount: number;
+	measure_unit: string;
 };
 
 type CartDataItem = {
@@ -114,7 +115,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 			})
 			.catch((error) => {
 				setError((prev) => {
-					return { ...prev, loadCartData: error.errors[0].detail };
+					return {
+						...prev,
+						loadCartData: error.errors?.[0]?.detail || 'Ошибка загрузки корзины покупок',
+					};
 				});
 			})
 			.finally(() => {
@@ -140,7 +144,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 			})
 			.catch((error) => {
 				setError((prev) => {
-					return { ...prev, updateCart: error.errors[0].detail };
+					return {
+						...prev,
+						updateCart: error.errors?.[0]?.detail || 'Ошибка обновления корзины покупок',
+					};
 				});
 			})
 			.finally(() => {
@@ -154,7 +161,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 			.catch((error) => {
 				if (error?.errors) {
 					setError((prev) => {
-						return { ...prev, deleteCart: error.errors[0]?.detail };
+						return {
+							...prev,
+							deleteCart:
+								error.errors[0]?.detail || 'Ошибка удаления товара из корзины покупок',
+						};
 					});
 				}
 			})
@@ -172,9 +183,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 					return { ...prev, clearCart: message };
 				});
 			})
-			.catch(({ errors }) => {
+			.catch((error) => {
 				setError((prev) => {
-					return { ...prev, clearCart: errors };
+					return {
+						...prev,
+						clearCart: error.errors || 'Ошибка очистки корзины покупок',
+					};
 				});
 			});
 	};

@@ -2,43 +2,10 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PaymentButton from '@components/payment-button';
 import OrderStatus from '../order-status';
-import styles from './profile-order.module.scss';
 import { translateMeasureUnit } from '@utils/utils';
-
-type OrderStatusType =
-	| 'Ordered'
-	| 'In processing'
-	| 'Collecting'
-	| 'Gathered'
-	| 'In delivering'
-	| 'Delivered'
-	| 'Completed';
-
-type Product = {
-	amount: number;
-	final_price: number;
-	id: number;
-	measure_unit: string;
-	name: string;
-	quantity: string;
-	photo: string;
-	category: {
-		category_name: string;
-		category_slug: string;
-	};
-};
-
-type CommonOrder = {
-	id: number;
-	is_paid: boolean;
-	order_number?: string;
-	ordering_date?: string;
-	total_price?: string;
-	payment_method?: string;
-	delivery_method?: string;
-	status?: OrderStatusType;
-	products: Array<{ product: Product; quantity: number }> | Product[];
-};
+import type { CommonOrder, Product } from '@pages/profile/utils/types';
+import { getDeliveryMethodRu, getPaymentMethodRu } from '@pages/profile/utils/utils';
+import styles from './profile-order.module.scss';
 
 type Props = {
 	readonly isShowedProductsDetails?: boolean;
@@ -70,19 +37,6 @@ const ProfileOrder = ({
 		const { measureUnit, amount } = translateMeasureUnit(unitOfMeasure, totalAmount);
 		return `${amount} ${measureUnit}`;
 	};
-
-	let payment_method_ru =
-		payment_method === 'Payment at the point of delivery'
-			? 'Банковской картой'
-			: 'Наличные';
-
-	let delivery_method_ru;
-	if (delivery_method === 'Point of delivery') {
-		delivery_method_ru = 'Самовывоз';
-	} else {
-		delivery_method_ru = 'Курьером';
-		payment_method_ru += 'курьеру';
-	}
 
 	const date = ordering_date && new Date(ordering_date).toLocaleDateString();
 	return (
@@ -152,12 +106,16 @@ const ProfileOrder = ({
 
 				<div className={styles['order-details']}>
 					<div className={styles.info}>
-						<p className={styles.text}>{`Способ оплаты: ${payment_method_ru}`}</p>
-						<p className={styles.text}>{`Способ получения: ${delivery_method_ru}`}</p>
+						<p className={styles.text}>{`Оплата: ${getPaymentMethodRu(
+							payment_method
+						)}`}</p>
+						<p className={styles.text}>{`Получение: ${getDeliveryMethodRu(
+							delivery_method
+						)}`}</p>
 					</div>
 					<div className={styles.status}>
-						{order.is_paid ? (
-							<OrderStatus status={status} />
+						{order.is_paid || payment_method !== 'Online' ? (
+							<OrderStatus status={order.is_paid ? 'In delivering' : status} />
 						) : (
 							<PaymentButton orderId={order.id} />
 						)}

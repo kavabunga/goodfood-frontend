@@ -1009,7 +1009,7 @@ export interface OrderList {
 	/** Payment Method */
 	payment_method?: 'Payment at the point of delivery' | 'In getting by cash' | 'Online';
 	/** Is paid */
-	is_paid?: boolean;
+	is_paid: boolean;
 	/** Delivery Method */
 	delivery_method?: 'Point of delivery' | 'By courier';
 	/** Address */
@@ -1129,3 +1129,7 @@ export interface OrderCheck {
 	user: number;
 	ordered: boolean;
 }
+
+export type Payment = {
+	stripe_session_id: string;
+};

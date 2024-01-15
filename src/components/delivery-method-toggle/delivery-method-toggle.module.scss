@@ -1,0 +1,48 @@
+@use '@scss/variables' as *;
+
+.delivery {
+	border: 1px solid #6c6c6c;
+	border-radius: 16px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	overflow: hidden;
+}
+
+.button {
+	padding: 12px 8px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	background-color: transparent;
+	font-family: $ubuntu-font;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 140%;
+	border: unset;
+	cursor: pointer;
+
+	&:hover {
+		transition: opacity 0.2s ease-in-out;
+		opacity: 0.5;
+	}
+
+	&__active {
+		background-color: #c3e4b6;
+	}
+
+	@media screen and (width <= 480px) {
+		padding: 8px;
+		font-size: 13px;
+	}
+}
+
+.icon {
+	width: 24px;
+	aspect-ratio: 1;
+
+	@media screen and (width <= 480px) {
+		width: 17px;
+	}
+}

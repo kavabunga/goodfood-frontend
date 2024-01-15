@@ -5,8 +5,7 @@
 	margin-left: 87px;
 
 	@media screen and (width <= 768px) {
-		max-width: 320px;
-		margin: auto;
+		margin: 0;
 	}
 }
 
@@ -35,23 +34,14 @@
 	@extend %zero-padding-margin;
 
 	display: grid;
-	grid-template-columns: repeat(auto-fit, 328px);
+	grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 	gap: 40px 20px;
 	justify-content: center;
 	margin-bottom: 20px;
 
 	@media screen and (width <= 768px) {
-		grid-template-columns: repeat(auto-fit, 138px);
+		grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
 		gap: 4px;
-	}
-}
-
-.favorites__item {
-	place-self: center;
-	width: 100%;
-
-	@media screen and (width <= 768px) {
-		max-width: 138px;
 	}
 }
 

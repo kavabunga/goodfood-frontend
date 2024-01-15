@@ -49,29 +49,27 @@ const ShoppingItem: React.FC<ShoppingItemProps> = (props) => {
 				/>
 			</Link>
 			<div className={styles.item__container}>
-				<div className={`${styles['item__title-container']}`}>
-					<Link
-						className={styles.item__link}
-						to={`/catalog/${product.category}/${product.id}`}
-					>
-						<p className={`text_type_u ${styles.item__title}`}>{`${product.name}, ${
-							amount + measureUnit
-						}`}</p>
-					</Link>
-				</div>
+				<Link
+					className={styles.item__link}
+					to={`/catalog/${product.category}/${product.id}`}
+				>
+					<p className={styles.item__title}>{`${product.name}, ${
+						amount + measureUnit
+					}`}</p>
+				</Link>
 				<div className={styles.item__weight}>
 					<button
 						className={`${styles.item_btn} ${styles.item__decrease_btn}`}
 						onClick={handleDecreaseClick}
-					></button>
-					<p className={`text_type_u ${styles.item__measure}`}>{product.quantity}</p>
+					/>
+					<p className={styles.item__measure}>{product.quantity}</p>
 					<button
 						className={`${styles.item_btn} ${styles.item__increase_btn}`}
 						onClick={handleIncreaseClick}
-					></button>
+					/>
 				</div>
 			</div>
-			<p className={`text_type_u ${styles.item__price}`}>{product.total_price} руб.</p>
+			<p className={styles.item__price}>{product.total_price} руб.</p>
 			<button
 				className={`${styles.item_btn} ${styles.item__delete_btn}`}
 				onClick={handleDeleteClick}

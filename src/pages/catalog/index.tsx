@@ -33,31 +33,25 @@ const Catalog: React.FC = () => {
 	return (
 		<>
 			<SliderComponent />
-			<section className={styles.catalogBlock}>
-				{isLoading ? (
-					<Preloader />
-				) : (
-					<div className={styles.catalog}>
-						<Breadcrumbs />
-						<h1 className={styles.title}>Каталог товаров</h1>
-						<div
-							className={`${styles['catalog__cardlist']}, ${
-								!isLoading && styles['catalog__cardlist-active']
-							}`}
-						>
-							{catalogs.map((catalog) => (
+			{isLoading ? (
+				<Preloader />
+			) : (
+				<section className={styles.section}>
+					<Breadcrumbs />
+					<h1 className={styles.title}>Каталог товаров</h1>
+					<ul className={`${styles.list}, ${!isLoading && styles.listActive}`}>
+						{catalogs.map((catalog) => (
+							<li key={catalog.id} className={styles.item}>
 								<CardCatalogLink
-									key={catalog.id}
 									title={catalog.name}
 									category={catalog.slug}
-									type="single-row"
 									array={catalog.top_products.slice(0, 3)}
 								/>
-							))}
-						</div>
-					</div>
-				)}
-			</section>
+							</li>
+						))}
+					</ul>
+				</section>
+			)}
 		</>
 	);
 };

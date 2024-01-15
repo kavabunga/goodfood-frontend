@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from './shopping-list.module.scss';
 import ShoppingItem from '@components/shopping-item';
+import styles from './shopping-list.module.scss';
 
 type ProductItem = {
 	id: number;
@@ -22,11 +22,13 @@ const ShoppingList: React.FC<CartDataItem> = (props) => {
 	const { products } = props;
 
 	return (
-		<div className={styles.products}>
-			{products.map((product, index) => (
-				<ShoppingItem key={index} product={product} />
+		<ul className={styles.products}>
+			{products.map((product) => (
+				<li key={product.id}>
+					<ShoppingItem product={product} />
+				</li>
 			))}
-		</div>
+		</ul>
 	);
 };
 

@@ -29,8 +29,7 @@ const ProfileOrderMobile = ({
 
 	const date = ordering_date && new Date(ordering_date).toLocaleDateString();
 	return (
-		<button
-			type="button"
+		<div
 			className={clsx(styles.order, isShowedProductsDetails && styles.details)}
 			onClick={showDetails}
 		>
@@ -38,7 +37,7 @@ const ProfileOrderMobile = ({
 				<span>{`Заказ № ${order_number} от ${date}`}</span>
 			</h4>
 			{isShowedProductsDetails && (
-				<div className={styles['order-products']}>
+				<ul className={styles['order-products']}>
 					{(products as Array<{ product: Product; quantity: number }>).map((item) => (
 						<li key={item.product.id}>
 							<ProductCard
@@ -49,10 +48,11 @@ const ProfileOrderMobile = ({
 								idCard={item.product.id}
 								measureUnit={item.product.measure_unit}
 								category={item.product.category.category_slug}
+								withButtons={false}
 							/>
 						</li>
 					))}
-				</div>
+				</ul>
 			)}
 
 			<div className={styles['order-details']}>
@@ -79,7 +79,7 @@ const ProfileOrderMobile = ({
 					<PaymentButton orderId={order.id} />
 				)}
 			</div>
-		</button>
+		</div>
 	);
 };
 

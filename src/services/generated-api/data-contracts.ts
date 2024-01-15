@@ -349,7 +349,7 @@ export interface Product {
 	 */
 	price: number;
 	/** Final price */
-	final_price?: number;
+	final_price: number;
 	promotions?: PromotionLight[];
 	/** Promotion quantity */
 	promotion_quantity?: number;
@@ -357,7 +357,7 @@ export interface Product {
 	 * Photo
 	 * @format uri
 	 */
-	photo?: string;
+	photo: string;
 	rating?: number;
 	components: ComponentLight[];
 	/**

@@ -130,49 +130,46 @@ const Category: React.FC = () => {
 		<>
 			<SliderComponent />
 			<section className={styles['section-container']}>
-				<div className={styles['breadcrumbs-container']}>
-					<Breadcrumbs category={categoryObj} />
-				</div>
-				<div className={styles.category}>
-					{isLoading ? (
-						<Preloader />
-					) : (
-						<div
-							className={`${styles['category__content']}, ${
-								!isLoading && styles['category__content-active']
-							}`}
-						>
-							<div className={styles['category__sorting']}>
-								<Filter
-									sortProducts={sortProducts}
-									changeCheckboxState={changeCheckboxState}
-								></Filter>
-							</div>
-							<div className={styles['category__product']}>
-								<h1 className={styles['category__product-title']}>{categoryName}</h1>
-								<ul className={styles['product__product-container']}>
-									{products &&
-										products
-											.filter((item) => handleFilter(item))
-											.map((item) => (
-												<li key={item.id}>
-													<ProductCard
-														cardName={item.name}
-														price={item.price}
-														weight={item.amount || 0}
-														cardImage={item.photo || ''}
-														idCard={item.id}
-														category={category}
-														measureUnit={item.measure_unit}
-														is_favorited={item.is_favorited}
-													/>
-												</li>
-											))}
-								</ul>
-							</div>
+				<Breadcrumbs category={categoryObj} />
+
+				{isLoading ? (
+					<Preloader />
+				) : (
+					<div
+						className={`${styles['category__content']}, ${
+							!isLoading && styles['category__content-active']
+						}`}
+					>
+						<div className={styles['category__sorting']}>
+							<Filter
+								sortProducts={sortProducts}
+								changeCheckboxState={changeCheckboxState}
+							/>
 						</div>
-					)}
-				</div>
+						<div className={styles['category__product']}>
+							<h1 className={styles['category__product-title']}>{categoryName}</h1>
+							<ul className={styles['product__product-container']}>
+								{products &&
+									products
+										.filter((item) => handleFilter(item))
+										.map((item) => (
+											<li key={item.id}>
+												<ProductCard
+													cardName={item.name}
+													price={item.price}
+													weight={item.amount || 0}
+													cardImage={item.photo || ''}
+													idCard={item.id}
+													category={category}
+													measureUnit={item.measure_unit}
+													is_favorited={item.is_favorited}
+												/>
+											</li>
+										))}
+							</ul>
+						</div>
+					</div>
+				)}
 			</section>
 		</>
 	);

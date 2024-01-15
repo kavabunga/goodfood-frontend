@@ -84,7 +84,7 @@ export default function ProfileFavorites() {
 			<div className={styles.title}>
 				<h2 className={styles.title__text}>Избранное</h2>
 				<button className={styles.title__button} onClick={toggleAll} type="button">
-					{isChooseAll ? 'Удалить все' : 'Выбрать все'}
+					{isChooseAll ? 'Отменить выбор' : 'Выбрать все'}
 				</button>
 				{isMobileScreen && <ReturnBackButton />}
 			</div>
@@ -121,13 +121,15 @@ export default function ProfileFavorites() {
 					</p>
 				)}
 			</ul>
-			<button
-				className={styles.button}
-				onClick={handleAddToCart}
-				disabled={!Object.values(checkboxesValues).some((i) => i)}
-			>
-				В корзину
-			</button>
+			{Object.values(checkboxesValues).some((item) => item === true) && (
+				<button
+					className={styles.button}
+					onClick={handleAddToCart}
+					disabled={!Object.values(checkboxesValues).some((i) => i)}
+				>
+					В корзину
+				</button>
+			)}
 		</div>
 	);
 }

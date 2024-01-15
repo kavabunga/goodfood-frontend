@@ -32,13 +32,11 @@
 
 .order-products {
 	display: grid;
-	justify-items: center;
 	grid-template-columns: repeat(auto-fit, minmax(133px, 1fr));
 	gap: 4px;
 	padding: 4px;
 	margin: 0;
 	grid-row: 3;
-	list-style-type: none;
 }
 
 .order-details {

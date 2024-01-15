@@ -77,47 +77,56 @@ const TopSellingThisWeek: React.FC = () => {
 		<div className={styles.topSellingThisWeek}>
 			<h2 className={styles.topSellingThisWeek__title}>Лидеры продаж этой недели</h2>
 			<div className={styles.topSellingThisWeek__scrollContainer}>
-				<div className={styles.topSellingThisWeek__buttonContainers}>
-					<Button
-						buttonText="Все категории"
-						buttonStyle="greenish-button"
-						classNameActive={`${activeButton === 1 ? 'greenish-button__active' : ''}`}
-						onClick={() => handleButtonClick(1)}
-					/>
-					<Button
-						buttonText="Овощи и Фрукты"
-						buttonStyle="greenish-button"
-						classNameActive={`${activeButton === 2 ? 'greenish-button__active' : ''}`}
-						onClick={() => handleButtonClick(2)}
-					/>
-					<Button
-						buttonText="Для вегетарианцев"
-						buttonStyle="greenish-button"
-						classNameActive={`${activeButton === 3 ? 'greenish-button__active' : ''}`}
-						onClick={() => handleButtonClick(3)}
-					/>
-					<Button
-						buttonText="Безлактозные продукты"
-						buttonStyle="greenish-button"
-						classNameActive={`${activeButton === 4 ? 'greenish-button__active' : ''}`}
-						onClick={() => handleButtonClick(4)}
-					/>
-				</div>
-				<div className={styles.topSellingThisWeek__cardsContainer}>
-					{topProducts.map((product: Product) => (
-						<ProductCard
-							key={product.id}
-							idCard={product.id}
-							cardName={product.name}
-							is_favorited={product.is_favorited}
-							price={product?.final_price || 0}
-							weight={(product.amount && product?.amount) || 0}
-							measureUnit={product.measure_unit}
-							cardImage={product.photo || ''}
-							category={product.category?.category_slug}
+				<ul className={styles.topSellingThisWeek__buttonContainers}>
+					<li>
+						<Button
+							buttonText="Все категории"
+							buttonStyle="greenish-button"
+							classNameActive={`${activeButton === 1 ? 'greenish-button__active' : ''}`}
+							onClick={() => handleButtonClick(1)}
 						/>
+					</li>
+					<li>
+						<Button
+							buttonText="Овощи и Фрукты"
+							buttonStyle="greenish-button"
+							classNameActive={`${activeButton === 2 ? 'greenish-button__active' : ''}`}
+							onClick={() => handleButtonClick(2)}
+						/>
+					</li>
+					<li>
+						<Button
+							buttonText="Для вегетарианцев"
+							buttonStyle="greenish-button"
+							classNameActive={`${activeButton === 3 ? 'greenish-button__active' : ''}`}
+							onClick={() => handleButtonClick(3)}
+						/>
+					</li>
+					<li>
+						<Button
+							buttonText="Безлактозные продукты"
+							buttonStyle="greenish-button"
+							classNameActive={`${activeButton === 4 ? 'greenish-button__active' : ''}`}
+							onClick={() => handleButtonClick(4)}
+						/>
+					</li>
+				</ul>
+				<ul className={styles.topSellingThisWeek__cardsContainer}>
+					{topProducts.map((product: Product) => (
+						<li key={product.id}>
+							<ProductCard
+								idCard={product.id}
+								cardName={product.name}
+								is_favorited={product.is_favorited}
+								price={product?.final_price || 0}
+								weight={(product.amount && product?.amount) || 0}
+								measureUnit={product.measure_unit}
+								cardImage={product.photo || ''}
+								category={product.category?.category_slug}
+							/>
+						</li>
 					))}
-				</div>
+				</ul>
 			</div>
 		</div>
 	);

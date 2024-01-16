@@ -46,6 +46,8 @@ const Checkout: React.FC = () => {
 	const [comment, setComment] = React.useState<string>('');
 	const [popupText, setPopupText] = useState('');
 	const [isAgreed, setIsAgreed] = useState(false);
+	const [promocodeError, setPromocodeError] = useState('');
+	const [inputPromoValue, setInputPromoValue] = useState('');
 
 	const openInfoPopup = (text: string) => {
 		setPopupText(text);
@@ -141,6 +143,25 @@ const Checkout: React.FC = () => {
 				}
 			});
 	};
+
+	const handleDiscount = (e: React.MouseEvent<HTMLButtonElement>) => {
+		api
+			.usersShoppingCartCouponApply({ code: inputPromoValue })
+			.then(() => {
+				setPromocodeError('');
+				loadCartData();
+			})
+			.catch((error) => {
+				setPromocodeError(error.errors[0].detail);
+				loadCartData();
+			});
+		e.preventDefault();
+	};
+
+	const handleInputPromoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInputPromoValue(e.target.value);
+	};
+
 	const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSelectedPayment(event.target.value);
 	};
@@ -460,15 +481,32 @@ const Checkout: React.FC = () => {
 								</p>
 								<p className={`text_type_u ${styles.pricelist__price}`}>0 руб.</p>
 							</div>
+							<div className={styles.pricelist__item}>
+								<p className={`text_type_u ${styles.summary__title}`}>Скидка</p>
+								<p className={`text_type_u ${styles.pricelist__price}`}>
+									{cartData.coupon_code ? cartData.discount_amount : 0} руб.
+								</p>
+							</div>
 							<hr className={styles.pricelist__divider} />
 						</div>
 					</div>
 					<div className={styles.summary__promo}>
 						<p className={`text_type_u`}>Промокод</p>
 						<form className={styles.summary__sale} noValidate>
-							<input type="text" className={`${styles.summary__input_type_sale}`}></input>
-							<button className={`${styles.summary__btn_type_submit}`}>Применить</button>
+							<input
+								value={inputPromoValue}
+								onChange={handleInputPromoChange}
+								type="text"
+								className={`${styles.summary__input_type_sale}`}
+							></input>
+							<button
+								className={`${styles.summary__btn_type_submit}`}
+								onClick={(e) => handleDiscount(e)}
+							>
+								Применить
+							</button>
 						</form>
+						<span className={styles.summary__promoError}>{promocodeError}</span>
 					</div>
 					<div className={styles.orderse}>
 						<button

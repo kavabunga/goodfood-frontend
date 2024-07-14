@@ -1,6 +1,14 @@
-## 🟢 Ветвление
+# GoodFood • frontend
 
-🔹 Один из вариантов - Git flow (with elements of GitHub Flow).
+## IMPORTANT
+
+⚠️ Do not push changes directly to develop and main; create local branches for changes, then submit them in a pull request for merging!!!
+
+⚠️ Frequently pull changes from the develop branch
+
+## Branching
+
+🔹 One option is Git flow (with elements of GitHub Flow).
 
 Creating a feature branch in Gitflow is a straightforward process.
 
@@ -18,11 +26,11 @@ Once the pull request is approved, the feature branch can be merged into the dev
 
 It's important to use continuous integration. This involves integrating the code into the main branch on a regular basis. This helps to ensure that the code is always up to date and that any potential issues or bugs are identified quickly.
 
-🔹 Названия для веток даются по шаблону:
+🔹 Branch names follow this pattern:
 
-> refactor/что затронули
+> refactor/what is affected
 
-Например:
+Examples:
 
 > test/auth-service
 >
@@ -32,91 +40,73 @@ It's important to use continuous integration. This involves integrating the code
 >
 > fix/libs/workbooks-view
 >
-> featture/questions
+> feature/questions
 >
 > refactor/user/questions/question-form
 
-## &nbsp;
-
----
-
-## 🟢 Политика слияния [Semi-linear merge](https://devblogs.microsoft.com/devops/pull-requests-with-rebase/)
+## Merge Policy [Semi-linear merge](https://devblogs.microsoft.com/devops/pull-requests-with-rebase/)
 
 ![semi linear](https://devblogs.microsoft.com/devops/wp-content/uploads/sites/6/2019/04/semilinear-1.gif)
 
-Эта стратегия представляет собой смесь rebase и merge.
+This strategy is a mix of rebase and merge.
 
-1. Сначала коммиты в PR ребейзятся поверх основной ветки.
-2. Затем происходит слияние с основной веткой с созданием мерж реквеста. Это эмулирует выполнение `git rebase master` на ветке pull request, а затем `git merge pr --no-ff` на ветке master.
+1. First, the commits in the PR are rebased onto the main branch.
+2. Then a merge is performed with the main branch, creating a merge request. This emulates doing `git rebase master` on the pull request branch, followed by `git merge pr --no-ff` on the master branch.
 
-Сочетает в себе лучшие из двух миров: отдельные коммиты сохраняются, чтобы мы могли видеть, как равивалась работа, но вместо простого ребейза у нас создается мерж коммит, чтобы мы могли увидеть начало и конец работы в каждом PR.
+It combines the best of both worlds: individual commits are preserved so we can see how the work developed, but instead of a simple rebase, a merge commit is created so we can see the start and end of the work in each PR.
 
-## &nbsp;
+## Conventional commits
 
----
+https://www.conventionalcommits.org/en/v1.0.0/
 
-## 🟢 Conventional commits
-
-https://www.conventionalcommits.org/ru/v1.0.0-beta.2/
-
-Коммиты делаются малыми шагами, используя Conventional Commits.
-Язык для комментариев En или Ru.
-Лучше использовать шаблон:
+Commits are made in small steps using Conventional Commits.
+Comments can be in English or Russian.
+It is better to use the template:
 
 ```
-<type>[optional область]: <краткое описание>
+<type>[optional scope]: <short summary>
 
-[optional тело]
+[optional body]
 
-[optional подвал]
+[optional footer]
 ```
 
-### 🔹 type
+### Type
 
-Для автоматизированной обработки важно чтобы типы были стандартизированы, их можно расширять, но базовый набор содержит следующие: feat:, fix:, build:, chore:, ci:, docs:, style:, refactor:, perf:, test:;
+For automated processing, it is important that types are standardized; they can be extended, but the basic set includes: feat:, fix:, build:, chore:, ci:, docs:, style:, refactor:, perf:, test:;
 
-_feat_ - добавление новой функциональности  
-_fix_ - исправление ошибки  
-_build_ - изменения, затрагивающие процесс сборки приложения (например, _добавление_ зависимости в package.json).  
-_ci_ - изменения, затрагивающие CI процессы  
-_docs_ - изменения в документации, не затрагивающие работу кода  
-_style_ - изменение в форматировании кода, не затрагивающие его реализацию (например переименование переменных)  
-_refactor_ - изменение в реализации кода  
-_perf_ - изменения, повышающие производительность кода (например, оптимизация работы алгоритма)  
-_test_ - изменения затрагивающие тесты и не влияющие на функциональность  
-_chore_ - изменение, не подпадающее под перечисленные категории
+_feat_ - adding new functionality  
+_fix_ - fixing a bug  
+_build_ - changes affecting the build process (e.g., adding a dependency to package.json).  
+_ci_ - changes affecting CI processes  
+_docs_ - documentation changes that do not affect the code  
+_style_ - changes in code formatting that do not affect the code's functionality (e.g., renaming variables)  
+_refactor_ - changes in code implementation  
+_perf_ - changes improving code performance (e.g., algorithm optimization)  
+_test_ - changes affecting tests without influencing functionality  
+_chore_ - changes that do not fall into the above categories
 
-### 🔹 description
+### Description
 
-Важное правило: хорошее примечание к коммиту должно заканчивать следующее предложение:
-«После применения данного коммита будет {{ текст вашего примечания }}». При этом первая часть фразы в коммите не пишется, она произносится в уме.
+An important rule: a good commit message should complete the following sentence:
+"If applied, this commit will {{ your subject line here }}". The first part of the phrase in the commit is not written; it is implied.
 
-Например:
+For example:
 
-> После применения данного коммита будет _обновлен файл readme_  
-> После применения данного коммита будет _добавлена валидация вызова GET /user/:id API_  
-> После применения данного коммита будет _отменен коммит 12345_
+> If applied, this commit will _update the readme file_  
+> If applied, this commit will _add validation for GET /user/:id API call_  
+> If applied, this commit will _revert commit 12345_
 
-Или
+Examples of commits:
 
-«If applied, this commit will {{ your subject line here }}»
-
-Например:
-
-> If applied, this commit will _refactor subsystem X for readability_  
-> If applied, this commit will _update getting started documentation_  
-> If applied, this commit will _remove deprecated methods_
-
-Примеры коммитов:
-
-> _fix: move json module to modules_ - «If applied, this commit will move json module to modules»
+> _fix: move json module to modules_ - "If applied, this commit will move the json module to modules"
 >
-> _feat: добавлен сервис для конвертации md в pdf_ - «После применения данного коммита будет добавлен сервис для конвертации md в pdf»
+> _feat: added service for converting md to pdf_ - "If applied, this commit will add a service for converting md to pdf"
 >
-> Ещё примеры коммитов:
+> More examples of commits:
 > refactor: remove unused methods
 >
-> refactor(activity-calendar): delete circle import
+> refactor(activity-calendar): delete circular import
 >
 > feat: change title
 >
@@ -126,23 +116,19 @@ _chore_ - изменение, не подпадающее под перечис�
 >
 > chore: update file with version
 
-## &nbsp;
-
----
-
-## 🟢 kebab-case for File and Folder Names
+## kebab-case for File and Folder Names
 
 MacOS has a case-insensitive file system, so MyComponent.js and myComponent.js are the same. Git didn't recognize the change, but the CI on GitHub used a Linux image, which is case-sensitive, causing issues.
 
-While this may appear to be ok, there is a danger down the track, when you come to deploy to your Linux machine with a case-sensitive file system.
+While this may appear to be ok, there is a danger down the track when you deploy to your Linux machine with a case-sensitive file system.
 
 On your Mac (or PC), you can import a file with a slightly incorrect filename, like this:
 
 > import MyWidget from './myWidget'
 
-Notice the my in ./myWidget. This will work ok, but when you deploy, it will fail. These kinds of errors are difficult to find and fix, and you are usually under pressure to get things working, so are perhaps not as calm as you should be.
+Notice the "my" in "./myWidget". This will work ok, but when you deploy, it will fail. These kinds of errors are difficult to find and fix, and you are usually under pressure to get things working, so you are perhaps not as calm as you should be.
 
-To avoid this problem, it's better to make ALL filenames/foldernames are lower case, and use kebab-case, which makes it easy to read.
+To avoid this problem, it's better to make ALL filenames/foldernames lowercase and use kebab-case, which makes it easy to read.
 
 > ❗ instead of MyComponent.js, write my-component.js.
 
@@ -150,77 +136,57 @@ To avoid this problem, it's better to make ALL filenames/foldernames are lower c
 
 Next.js uses this by default, and Angular includes it in its style guide. Kebab-case can save you and your team some headaches.
 
-## &nbsp;
-
 ## Explaining the process of creating and using .env files and consts
 
-- Переменные окружения в Vite начинаются с префикса `VITE_`
-- Для переменных окружения используется файл `.env.local` (они загружаются в любых случаях и игнорируются git'ом)
-- Загруженные env переменные также доступны клиентскому исходному коду через `import.meta.env` (например `import.meta.env.VITE_API_URL;`)
-- Файл `env.d.ts` в корне проекта для типизации переменных окружения, это необязательно, но позволит предотвратить часть ошибок, если вы пишете на ts
-- если есть файл типизации (пункт выше), то импорт в ts происходит так `const apiUrl: string = import.meta.env.VITE_API_URL;`
+- Environment variables in Vite start with the prefix `VITE_`
+- For environment variables, use the `.env.local` file (they are loaded in all cases and ignored by git)
+- Loaded env variables are also accessible to client source code via `import.meta.env` (e.g., `import.meta.env.VITE_API_URL;`)
+- The `env.d.ts` file at the root of the project is for typing environment variables; this is optional but helps prevent some errors if you are writing in TypeScript
+- If there is a typing file (previous point), then import in TypeScript as `const apiUrl: string = import.meta.env.VITE_API_URL;`
 
-## &nbsp;
+## Stages of pre-commit and commit
 
-## Этапы прекоммита и самого коммита
-
-1.  (`npm run lint`/ `npm run format` / `npm run lint:fix`) по желанию
-2.  (`npm run prepare`) первый запуск
-3.  `git rebase develop` - При выполнении этой команды, Git применяет все коммиты с вашей ветки поверх последнего коммита в ветке `develop`
-    (Важно понимать, что перебазирование изменяет историю коммитов. Поэтому, если вы делаете перебазирование ветки, которая уже была опубликована (например, синхронизирована с удаленным репозиторием), будьте осторожны, так как это может привести к проблемам с другими членами команды, использующими эту ветку.)
+1.  (`npm run lint`/ `npm run format` / `npm run lint:fix`) optionally
+2.  (`npm run prepare`) first run
+3.  `git rebase develop` - When this command is executed, Git applies all commits from your branch on top of the latest commit in the `develop` branch
+    (It's important to understand that rebasing changes commit history. Therefore, if you rebase a branch that has already been published (e.g., synchronized with a remote repository), be careful as this may cause problems for other team members using this branch.)
 
 4.  `git add . `
-5.  `npm run commit` (выбор в терминале нужных пунктов и названий, дописывание комментариев)
-6.  При необходимости, самостоятельная публикация ветки (если ее еще нет в общем репозитории), либо синхронизация с репозиторием ветки
-7.  Создание pull request'а по изменениям и запрос merg'а в ветку develop
+5.  `npm run commit` (selecting the appropriate items and names in the terminal, adding comments)
+6.  If necessary, publish the branch yourself (if it is not yet in the shared repository), or synchronize the branch with the repository
+7.  Create a pull request for changes and request a merge into the develop branch
 
-## &nbsp;
+## Merge on pull request
 
-## Merge при pull request
+To keep the commit history linear and clear, when merging in a pull request, always choose the option
+Rebase and Merge. This will help avoid tangled commit history.
 
-Чтобы история коммитов была линейной и понятной, при merg'е в pull request'е обязательно выбирайте вариант
-Rebase and Merge. Так получится избежать запутывания истории коммитов.
+Documentation: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github
 
-Документация: https://docs.github.com/ru/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github
+### Pulling changes:
 
-## &nbsp;
-
-# ВАЖНО!
-
-- Нельзя напрямую отправлять изменения в develop и main, создавайте локальные ветки для изменений, а затем закидывайте их в pull request для merg'a!!!
-
-- Как можно чаще подтягивайте изменения с ветки develop
-
-## &nbsp;
-
-### Порядок подтягивания изменений:
-
-1. Обновите вашу локальную копию основной ветки:
+1. Update your local copy of the main branch:
    `git fetch origin develop`
-   (Эта команда загрузит последние изменения из удаленного репозитория ветки develop, но не применит их к вашей локальной ветке.)
+   (This command will download the latest changes from the remote repository's develop branch but will not apply them to your local branch.)
 2. `git rebase origin/develop`
-   Эта команда перебазирует вашу ветку на последний коммит из ветки develop.
-   Важно помнить, что перебазирование изменяет историю коммитов, поэтому будьте осторожны, если ваша ветка уже была опубликована и использована другими членами команды.
+   This command rebases your branch onto the latest commit from the develop branch.
+   Remember, rebasing changes commit history, so be careful if your branch has already been published and used by other team members.
 
-3. Если Git обнаружит конфликты при слиянии или перебазировании, вам придется разрешить их вручную.
+3. If Git detects conflicts during merging or rebasing, you will need to resolve them manually.
 
-4. Коммит
+4. Commit
    `git add . `
    `git commit -m "Rebase with develop"`
 
-## &nbsp;
+### OR
 
-### ИЛИ
+1. Use the git pull command
+   `git pull --rebase origin develop` (with rebasing)
 
-1. Использование команды git pull
-   `git pull --rebase origin develop` (с перебазированием)
+This command first performs a git fetch to download the latest changes from the remote develop branch and then automatically merges them with your current branch.
 
-Эта команда сначала выполняет git fetch для загрузки последних изменений из удаленной ветки develop, а затем автоматически объединяет их с вашей текущей веткой.
-
-2. Коммит
+2. Commit
    `git add . `
-   `git commit -m "Merge (или Rebase) with develop"`
+   `git commit -m "Merge (or Rebase) with develop"`
 
-## &nbsp;
-
-Это все позволит избежать появления и накапливания конфликтов)))
+All this helps avoid conflicts and their accumulation 🥷
